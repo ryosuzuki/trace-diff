@@ -1,3 +1,3 @@
 var myText = document.getElementById("mytext");
 
-myText.textContent = "Does it work? hoge";
+myText.textContent = "Does it work? fuga";

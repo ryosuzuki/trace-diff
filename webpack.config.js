@@ -5,15 +5,14 @@ module.exports = {
   devtool: 'eval',
   entry: {
     bundle: './src/index.js',
-    html: './index.html'
   },
   output: {
-    path: path.join(__dirname, '/dist'),
+    path: path.join(__dirname, '/public'),
     filename: '[name].js',
     publicPath: '/'
   },
   plugins: [
-    new webpack.optimize.OccurrenceOrderPlugin(),
+    // new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin()
   ],
@@ -42,12 +41,12 @@ module.exports = {
     ]
   },
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
+    contentBase: path.join(__dirname, 'public'),
+    watchContentBase: true,
     publicPath: '/',
     compress: true,
     hot: true,
     inline: true,
-    watchContentBase: true,
     port: 8080
   },
   node: {

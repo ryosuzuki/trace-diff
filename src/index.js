@@ -1,3 +1,5 @@
-var myText = document.getElementById("mytext");
+import 'semantic-ui-css/semantic.css'
+import 'semantic-ui-css/semantic.js'
+import 'font-awesome/css/font-awesome.css'
+import './style.css'
 
-myText.textContent = "Does it work? fuga";

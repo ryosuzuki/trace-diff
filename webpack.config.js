@@ -4,17 +4,20 @@ var path = require('path')
 module.exports = {
   devtool: 'eval',
   entry: {
-    bundle: './src/index.js',
+    bundle: path.join(__dirname, '/src/index.js'),
   },
   output: {
     path: path.join(__dirname, '/public'),
-    filename: '[name].js',
+    filename: 'bundle.js',
     publicPath: '/'
   },
   plugins: [
-    // new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin(),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery'
+    })
   ],
   module: {
     rules: [
@@ -25,18 +28,21 @@ module.exports = {
         options: {
           presets: ['react', 'es2015', 'stage-3']
         }
-      },
-      {
-        test: /\.less$/,
+      }, {
+        test: /\.css$/,
         use: [
           'style-loader',
-          'css-loader',
-          'less-loader'
+          'css-loader'
         ]
-      },
-      {
+      }, {
         test: /\.html$/,
         loader: 'html-loader',
+      }, {
+        test: /\.(eot|png|svg|[ot]tf|woff2?)(\?v=\d+\.\d+\.\d+)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000
+        }
       }
     ]
   },

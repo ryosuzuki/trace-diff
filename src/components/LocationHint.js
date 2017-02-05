@@ -8,6 +8,7 @@ class LocationHint extends Component {
     this.state = {
       code: ''
     }
+    window.locationHint = this
   }
 
   componentDidMount() {
@@ -20,6 +21,11 @@ class LocationHint extends Component {
     })
   }
 
+  showHint() {
+    this.cm = this.refs.editor.getCodeMirror()
+    this.cm.addLineClass(4, '', 'highlight')
+  }
+
   render() {
     const options = {
       mode: 'python',
@@ -28,7 +34,11 @@ class LocationHint extends Component {
     return (
       <div id="location-hint">
         <h1>Location Hint</h1>
-        <CodeMirror value={ this.state.code } options={ options } />
+        <button className="ui basic button" onClick={ this.showHint.bind(this) }>Show Hint</button>
+        <CodeMirror value={ this.state.code }
+                    ref="editor"
+                    options={ options }
+        />
       </div>
     )
   }

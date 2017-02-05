@@ -1,7 +1,7 @@
-def accumulate(combiner, base, n, term):
-  if n == 0:
-    return base
-  if n == 1:
-    return combiner(base, term(1))
-  else:
-    return combiner(term(n), accumulate(combiner, base, n-1, term))
+def product(n, term):
+  i = 1
+  product = 1
+  while i <= n:
+    product *= i
+    i += 1
+  return product

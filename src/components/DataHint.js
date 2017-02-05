@@ -18,12 +18,19 @@ class DataHint extends Component {
     })
     .then((res) => {
       this.setState({ code: res })
+      let origin = []
+      for (let line of res.split('\n')) {
+        origin.push(line)
+      }
+      this.setState({ code: res, origin: origin })
     })
   }
 
   showHint() {
     this.cm = this.refs.editor.getCodeMirror()
-    this.cm.addLineClass(4, '', 'highlight')
+    let line = 4
+    let ch = this.state.origin[line].length + 30
+    dataHint.cm.replaceRange(' # hoge = 1, n = 0', { line: line, ch: ch }, { line: line, ch: Infinity })
   }
 
   render() {

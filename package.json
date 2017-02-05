@@ -66,6 +66,7 @@
     "jsx-control-statements": "^3.1.5",
     "less": "^2.7.2",
     "less-loader": "^2.2.3",
+    "react-codemirror": "^0.3.0",
     "react-hot-loader": "^1.3.1",
     "react-scripts": "^0.8.4",
     "static-loader": "^0.1.8",

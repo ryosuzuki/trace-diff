@@ -30,10 +30,10 @@ class BehaviorHint extends Component {
 
   showHint() {
     this.cm = this.refs.editor.getCodeMirror()
-    let table = $('.table')
     let msg = document.createElement('div')
-    msg.append('<p>expected | 0  1  3  9  27</p><p>resut   | 0  1  2  3  4')
-    this.cm.addLineWidget(0, msg)
+    msg.append($('.table')[0])
+    // debugger
+    this.cm.addLineWidget(4, msg)
   }
 
   updateStep(value) {
@@ -62,6 +62,7 @@ class BehaviorHint extends Component {
           value={ this.state.step }
           onChange={ this.updateStep.bind(this) }
         />
+        <div style={{ display: 'none' }}>
         <table className="ui definition table">
           <thead>
             <tr>
@@ -90,6 +91,7 @@ class BehaviorHint extends Component {
             </tr>
           </tbody>
         </table>
+        </div>
       </div>
     )
   }

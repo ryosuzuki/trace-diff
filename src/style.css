@@ -26,6 +26,9 @@
   background: rgba(255, 100, 100, 0.4)
 }
 
+.ReactCodeMirror {
+  margin-top: 20px;
+}
 
 #top {
   margin: 50px 0;
@@ -34,4 +37,8 @@
 .divider {
   margin-top: 70px !important;
   margin-bottom: 50px !important;
+}
+
+.text {
+  font-size: 1.2em;
 }

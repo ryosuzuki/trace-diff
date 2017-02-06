@@ -43,6 +43,7 @@ class DataHint extends Component {
     return (
       <div id="data-hint">
         <h1>Data Hint</h1>
+        <p className="ui text">{ description }</p>
         <button className="ui basic button" onClick={ this.showHint.bind(this) }>Show Hint</button>
         <CodeMirror value={ this.state.code }
                     ref="editor"
@@ -54,3 +55,5 @@ class DataHint extends Component {
 }
 
 export default DataHint
+
+const description = 'Data hint provides information about expected internal data values of the program during a de- bugging section. The system iteratively executes the code, line-by-line, similar to a debugging tool such as PythonTu- tor [11]. When the system detects that a value of variable is incorrect, it pauses the execution of the program, and shows the difference between the expected value and the actual value.'

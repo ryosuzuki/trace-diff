@@ -29,6 +29,7 @@ class LocationHint extends Component {
   render() {
     const options = {
       mode: 'python',
+      theme: 'base16-light',
       lineNumbers: true
     }
     return (

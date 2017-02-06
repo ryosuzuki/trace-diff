@@ -13,11 +13,29 @@ class App extends Component {
   render() {
     return (
       <div>
-        <h1>Hello Worlds</h1>
-        <LocationHint />
-        <DataHint />
-        <BehaviorHint />
-        <TransformationHint />
+        <div className="ui two column centered grid">
+          <div className="nine wide column">
+            <h1 id="top" className="ui center aligned huge header">
+              Exploring the Design Space of Automated Hints
+            </h1>
+          </div>
+          <div className="nine wide column">
+            <LocationHint />
+            <div className="ui divider"></div>
+          </div>
+          <div className="nine wide column">
+            <DataHint />
+            <div className="ui divider"></div>
+          </div>
+          <div className="nine wide column">
+            <BehaviorHint />
+            <div className="ui divider"></div>
+          </div>
+          <div className="nine wide column">
+            <TransformationHint />
+            <div className="ui divider"></div>
+          </div>
+        </div>
       </div>
     )
   }

@@ -44,6 +44,7 @@ class BehaviorHint extends Component {
   render() {
     const options = {
       mode: 'python',
+      theme: 'base16-light',
       lineNumbers: true
     }
 

@@ -1,4 +1,37 @@
 
+.CodeMirror {
+  font-family: Monaco, 'Andale Mono', 'Lucida Console', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace;
+  font-size: 11pt;
+  height: 100%;
+  line-height: 18pt;
+  background: #fdfdfd !important;
+}
+
+.CodeMirror-linenumber {
+  padding-left: 30px;
+  padding-right: 20px;
+}
+
+.CodeMirror-gutters {
+  // border-right: 1px solid #ddd !important;
+  background-color: #f7f7f7 !important;
+}
+
+.CodeMirror-code {
+  padding-left: 10px;
+}
+
+
 .highlight {
   background: rgba(255, 100, 100, 0.4)
+}
+
+
+#top {
+  margin: 50px 0;
+}
+
+.divider {
+  margin-top: 70px !important;
+  margin-bottom: 50px !important;
 }

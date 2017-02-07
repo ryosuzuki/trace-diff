@@ -18,7 +18,7 @@ class BehaviorHint extends Component {
   componentDidMount() {
     $.ajax({
       method: 'GET',
-      url: '/data/behavior-hint-1.py',
+      url: 'data/behavior-hint-1.py',
     })
     .then((res) => {
       let origin = []

@@ -1,8 +1,8 @@
-# Example-based Hint
+# Description
 
 Another way of showing how to fix the code is using a similar example. In our study, we found that the teaching assistants often used this type of hint. For instance, in one scenario, the student did not know how to use the combine function. The TA explained to him: “ accumulate(add, 0, 5, identity) should return 0 + 1 + 2 + 3 + 4 + 5. In this case combiner is the two-argument add function,whichweuselikethis: 0 + 1 + 2 + 3 + 4 + 5 = ((((0 + 1) + 2) + 3) + 4) + 5 = add(add(add(add(add(0, 1), 2),3), 4), 5).”. In another scenario, the TA gave an example of proper way of using lambda functions.
 
-## Background
+# Background
 
 ### Piazza 33
 

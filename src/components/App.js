@@ -45,7 +45,13 @@ class App extends Component {
             </h1>
           </div>
           <div id="location-hint" className="nine wide column">
-            <h1 className="title">Location Hint Demo</h1>
+            <h1 className="title">Location Hint</h1>
+            <MarkdownPreview
+              className="markdown"
+              value={ this.state.location }
+            />
+            <h4 className="ui horizontal divider header">Demo</h4>
+            <h1>Location Hint Demo</h1>
             <h2>Example 1</h2>
             <LocationHint
               options={ options }
@@ -69,32 +75,32 @@ class App extends Component {
               word={ true }
               message={ 'Take a look at i in line 5.' }
             />
-            <h4 className="ui horizontal divider header">
-              Description
-            </h4>
-            <MarkdownPreview
-              className="markdown"
-              value={ this.state.location }
-            />
             <div className="ui divider"></div>
           </div>
           <div id="data-hint" className="nine wide column">
-            <h1 className="title">Data Hint Demo</h1>
+            <h1 className="title">Data Hint</h1>
+            <MarkdownPreview
+              className="markdown"
+              value={ this.state.data }
+            />
+            <h4 className="ui horizontal divider header">Demo</h4>
+            <h1>Data Hint Demo</h1>
             <h2>Example 1</h2>
             <DataHint
               options={ options }
               index={ 1 }
               message={ 'Failed Test Result: product(5, square): Expected 14400, but got 120' }
             />
-            <h4 className="ui horizontal divider header">Description</h4>
-            <MarkdownPreview
-              className="markdown"
-              value={ this.state.data }
-            />
             <div className="ui divider"></div>
           </div>
           <div id="behavior-hint" className="nine wide column">
-            <h1 className="title">Behavioral Hint Demo</h1>
+            <h1 className="title">Behavioral Hint</h1>
+            <MarkdownPreview
+              className="markdown"
+              value={ this.state.behavior }
+            />
+            <h4 className="ui horizontal divider header">Demo</h4>
+            <h1>Behavioral Hint Demo</h1>
             <h2>Example 1</h2>
             <BehaviorHint
               options={ options }
@@ -107,15 +113,16 @@ class App extends Component {
               index={ 2 }
               message={ 'Possible infinite loop' }
             />
-            <h4 className="ui horizontal divider header">Description</h4>
-            <MarkdownPreview
-              className="markdown"
-              value={ this.state.behavior }
-            />
             <div className="ui divider"></div>
           </div>
           <div id="transformation-hint" className="nine wide column">
-            <h1 className="title">Transformation Hint Demo</h1>
+            <h1 className="title">Transformation Hint</h1>
+            <MarkdownPreview
+              className="markdown"
+              value={ this.state.transformation }
+            />
+            <h4 className="ui horizontal divider header">Demo</h4>
+            <h1>Transformation Hint Demo</h1>
             <h2>Example 1</h2>
             <TransformationHint
               options={ options }
@@ -124,15 +131,16 @@ class App extends Component {
               word={ true }
               message={ 'Replace i with term(i) in line 5' }
             />
-            <h4 className="ui horizontal divider header">Description</h4>
-            <MarkdownPreview
-              className="markdown"
-              value={ this.state.transformation }
-            />
             <div className="ui divider"></div>
           </div>
           <div id="example-hint" className="nine wide column">
-            <h1 className="title">Example-based Hint Demo</h1>
+            <h1 className="title">Example-based Hint</h1>
+            <MarkdownPreview
+              className="markdown"
+              value={ this.state.example }
+            />
+            <h4 className="ui horizontal divider header">Demo</h4>
+            <h1>Example-based Hint Demo</h1>
             <h2>Example 1</h2>
             <ExampleHint
               options={ options }
@@ -140,10 +148,6 @@ class App extends Component {
               message={ 'Replace i with term(i) in line 5' }
             />
             <h4 className="ui horizontal divider header">Description</h4>
-            <MarkdownPreview
-              className="markdown"
-              value={ this.state.example }
-            />
             <div className="ui divider"></div>
           </div>
         </div>

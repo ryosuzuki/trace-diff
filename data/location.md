@@ -1,10 +1,10 @@
-# Location Hint
+# Description
 
 The location hint provides information about which part of the student code is incorrect. For instance, a location hint for our running example would be: `“There is an error in line 3"`.
 The level of abstraction of a location hint can vary. A more concrete hint would be: `“There is an error in the value assigned to the variable total in line 3”`. This type of information is easily extracted from a synthesized bug fix.
 
 
-## Background
+# Background
 
 ### Piazza 113
 

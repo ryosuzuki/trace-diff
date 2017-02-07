@@ -30,9 +30,12 @@ class BehaviorHint extends Component {
   showHint() {
     this.cm = this.refs.editor1.getCodeMirror()
     let msg = document.createElement('div')
+    msg.className = 'hoge'
+    msg.append($('.arrow-border')[0])
+    msg.append($('.arrow-up')[0])
     msg.append($('.table')[0])
     // debugger
-    this.cm.addLineWidget(4, msg)
+    this.cm.addLineWidget(4, msg, { coverGutter: true })
 
     let marker = document.createElement('div')
     marker.append($('.label')[0])
@@ -70,8 +73,10 @@ class BehaviorHint extends Component {
         />
         <div style={{ display: 'none' }}>
         <div className="ui blue label call-label">
-          Blue
+          10 calls
         </div>
+        <div className="arrow-up"></div>
+        <div className="arrow-border"></div>
         <table className="ui definition table">
           <thead>
             <tr>

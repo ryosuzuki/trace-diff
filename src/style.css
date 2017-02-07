@@ -18,6 +18,38 @@
   min-width: 62px;
 }
 
+.hoge {
+  padding: 20px 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: #eee;
+  border-top: solid 2px #bbb;
+  border-bottom: solid 2px #bbb;
+}
+
+.arrow-up {
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 2px;
+  left: 105px;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid #eee;
+}
+
+.arrow-border {
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 0px;
+  left: 100px;
+  z-index: -1;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 20px solid #bbb;
+}
+
 .highlight {
   background: rgba(255, 100, 100, 0.4)
 }
@@ -32,7 +64,9 @@
 
 .label {
   position: absolute;
-  left: -25px;
+  left: -62px;
+  width: 62px;
+  padding: 5px 3px !important;
 }
 
 .divider {

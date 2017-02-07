@@ -1,5 +1,6 @@
 def accumulate(combiner, base, n, term):
-  if n==0:
-    return term(1)
-  else:
-    return accumulate(combiner, combiner(base, term(n)), n-1, term)
+  x = 1
+  while n > 1:
+    x = combiner(x, term(n))
+    n -= 1
+  return combiner(x, base)

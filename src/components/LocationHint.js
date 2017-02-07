@@ -9,10 +9,14 @@ class LocationHint extends Component {
     super(props)
     const id = `location-hint-${this.props.index}`
     const error = this.props.error
+    const message = this.props.message
+    const word = this.props.word
     this.state = {
       code: '',
       error: error,
-      id: id
+      id: id,
+      word: word,
+      message: message
     }
     window.locationHint = this
   }
@@ -29,7 +33,11 @@ class LocationHint extends Component {
 
   showHint() {
     this.cm = this.refs.editor.getCodeMirror()
-    this.cm.addLineClass(this.state.error, '', 'highlight')
+    if (this.state.word) {
+      this.cm.markText(this.state.error.start, this.state.error.end, { className: 'highlight' })
+    } else {
+      this.cm.addLineClass(this.state.error, '', 'highlight')
+    }
     $(`#${this.state.id}`).slideToggle()
   }
 
@@ -42,7 +50,7 @@ class LocationHint extends Component {
           <div className="header">
             Location Hint
           </div>
-          <p>There is an error in line {this.state.error}.</p>
+          <p>{ this.state.message }</p>
         </div>
 
         <CodeMirror value={ this.state.code }

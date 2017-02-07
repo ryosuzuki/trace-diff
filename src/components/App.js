@@ -44,19 +44,13 @@ class App extends Component {
             </h1>
           </div>
           <div id="location-hint" className="nine wide column">
-            <MarkdownPreview
-              className="markdown"
-              value={ this.state.location }
-            />
-            <h4 className="ui horizontal divider header">
-              DEMO
-            </h4>
             <h1>Location Hint Demo</h1>
             <h2>Example 1</h2>
             <LocationHint
               options={ options }
               index={ 1 }
               error={ 4 }
+              message={ 'There is an error in line 5.' }
             />
             <br />
             <h2>Example 2</h2>
@@ -64,33 +58,52 @@ class App extends Component {
               options={ options }
               index={ 2 }
               error={ 1 }
+              message={ 'Insert code after the line 2' }
+            />
+            <h2>Example 3</h2>
+            <LocationHint
+              options={ options }
+              index={ 3 }
+              error={ { start: { line: 4, ch: 12 } , end: { line: 4, ch: 18 } } }
+              word={ true }
+              message={ 'Take a look at i in line 5.' }
+            />
+            <h4 className="ui horizontal divider header">
+              Description
+            </h4>
+            <MarkdownPreview
+              className="markdown"
+              value={ this.state.location }
             />
             <div className="ui divider"></div>
           </div>
           <div id="data-hint" className="nine wide column">
-            <MarkdownPreview
-              className="markdown"
-              value={ this.state.data }
-            />
-            <h4 className="ui horizontal divider header">
-              DEMO
-            </h4>
             <h1>Data Hint Demo</h1>
             <h2>Example 1</h2>
             <DataHint
               options={ options }
               index={ 1 }
             />
+            <h4 className="ui horizontal divider header">
+              Description
+            </h4>
+            <MarkdownPreview
+              className="markdown"
+              value={ this.state.data }
+            />
             <div className="ui divider"></div>
           </div>
           <div id="behavior-hint" className="nine wide column">
-            <MarkdownPreview
-              className="markdown"
-              value={ this.state.behavior }
-            />
             <BehaviorHint
               options={ options }
               index={ 1 }
+            />
+            <h4 className="ui horizontal divider header">
+              Description
+            </h4>
+            <MarkdownPreview
+              className="markdown"
+              value={ this.state.behavior }
             />
             <div className="ui divider"></div>
           </div>

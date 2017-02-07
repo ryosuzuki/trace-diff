@@ -3,6 +3,7 @@ import {  MarkdownPreview  } from 'react-marked-markdown';
 import LocationHint from './LocationHint'
 import DataHint from './DataHint'
 import BehaviorHint from './BehaviorHint'
+import BehaviorHint2 from './BehaviorHint2'
 import TransformationHint from './TransformationHint'
 import ExampleHint from './ExampleHint'
 
@@ -99,6 +100,12 @@ class App extends Component {
               options={ options }
               index={ 1 }
               message={ 'Failed Test Result: accumulate(add, 11, 5, identity): Expected 26, but got 16' }
+            />
+            <h2>Example 2</h2>
+            <BehaviorHint2
+              options={ options }
+              index={ 2 }
+              message={ 'Possible infinite loop' }
             />
             <h4 className="ui horizontal divider header">Description</h4>
             <MarkdownPreview

@@ -4,10 +4,10 @@ import 'codemirror/mode/python/python'
 import Slider from 'rc-slider'
 import Tooltip from 'rc-tooltip'
 
-class DataHint extends Component {
+class BehaviorHint2 extends Component {
   constructor(props) {
     super(props)
-    const id = `data-hint-${this.props.index}`
+    const id = `behavior-hint-${this.props.index}`
     const message = this.props.message
     this.state = {
       code: '',
@@ -17,7 +17,7 @@ class DataHint extends Component {
       stop: false,
       message: message,
     }
-    window.dataHint = this
+    window.behaviorHint2 = this
   }
 
   componentDidMount() {
@@ -92,7 +92,7 @@ class DataHint extends Component {
 
         <div id={ this.state.id } className="ui message">
           <div className="header">
-            Data Hint
+            behavior Hint
           </div>
           <p>{ this.state.message }</p>
 
@@ -120,4 +120,4 @@ class DataHint extends Component {
   }
 }
 
-export default DataHint
+export default BehaviorHint2

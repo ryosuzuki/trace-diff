@@ -55,7 +55,7 @@ $ python ok -q accumulate
 
 ---
 
-#### Piazza 8
+### Piazza 8
 
 ```python
 def identity(x):
@@ -77,5 +77,18 @@ factor(5, identity)
 
 [i] **You are not returning anything in your factor function**. You're only calling start(1,1), not returning it. If Python does not see a return statement in a function, it automatically returns None. [id: 8]
 
+
+
+---
+
+### Piazza 94
+
+```python
+return accumulate(lambda x: combiner(x + base) if pred(x) else nothing in range(n), base, n, term)
+```
+
+[s] I put in this code for my question 3 but I get the error of (lambda)() takes 1 positional argument but 2 were given. what is my current code doing and what way should i be thinking of making it work instead?
+
+[i] your lambda function replaces combiner, and **combiner is a function that takes in two parameters. Hence you got the error.** Try accumulate in python tutor to understand how/what/when combiner /term/base/n are used in the accumulate function, then it should help you know where to modify it to fit it for the filtered version. [id: 94]
 
 

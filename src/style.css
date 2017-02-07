@@ -9,18 +9,14 @@
 
 .CodeMirror-linenumber {
   padding-left: 30px;
-  padding-right: 20px;
+  padding-right: 10px;
+  min-width: 21px;
 }
 
 .CodeMirror-gutters {
-  // border-right: 1px solid #ddd !important;
   background-color: #f7f7f7 !important;
+  min-width: 62px;
 }
-
-.CodeMirror-code {
-  padding-left: 10px;
-}
-
 
 .highlight {
   background: rgba(255, 100, 100, 0.4)
@@ -32,6 +28,11 @@
 
 #top {
   margin: 50px 0;
+}
+
+.label {
+  position: absolute;
+  left: -25px;
 }
 
 .divider {

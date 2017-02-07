@@ -14,7 +14,7 @@ class ExampleHint extends Component {
   componentDidMount() {
     $.ajax({
       method: 'GET',
-      url: 'data/data-hint-1.py',
+      url: `${window.location.pathname}data/data-hint-1.py`,
     })
     .then((res) => {
       this.setState({ code: res })

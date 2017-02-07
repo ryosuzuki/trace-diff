@@ -14,7 +14,7 @@ class LocationHint extends Component {
   componentDidMount() {
     $.ajax({
       method: 'GET',
-      url: 'data/location-hint-1.py',
+      url: `${window.location.pathname}data/location-hint-1.py`,
     })
     .then((res) => {
       this.setState({ code: res })

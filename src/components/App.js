@@ -3,11 +3,15 @@ import LocationHint from './LocationHint'
 import DataHint from './DataHint'
 import BehaviorHint from './BehaviorHint'
 import TransformationHint from './TransformationHint'
+import ExampleHint from './ExampleHint'
 
 class App extends Component {
 
   componentDidMount() {
     window.app = this
+
+
+
   }
 
   render() {
@@ -33,6 +37,10 @@ class App extends Component {
           </div>
           <div className="nine wide column">
             <TransformationHint />
+            <div className="ui divider"></div>
+          </div>
+          <div className="nine wide column">
+            <ExampleHint />
             <div className="ui divider"></div>
           </div>
         </div>

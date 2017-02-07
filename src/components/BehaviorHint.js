@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import CodeMirror from 'react-codemirror'
 import 'codemirror/mode/python/python'
 import Slider from 'rc-slider'
+import Tooltip from 'rc-tooltip'
 
 class BehaviorHint extends Component {
   constructor() {
@@ -30,12 +31,13 @@ class BehaviorHint extends Component {
   showHint() {
     this.cm = this.refs.editor1.getCodeMirror()
     let msg = document.createElement('div')
-    msg.className = 'hoge'
+    msg.className = 'inline-hint'
     msg.append($('.arrow-border')[0])
     msg.append($('.arrow-up')[0])
-    msg.append($('.table')[0])
-    // debugger
+    msg.append($('.dynamic-hint')[0])
     this.cm.addLineWidget(4, msg, { coverGutter: true })
+
+    this.cm.markText({ line: 4, ch: 4 }, { line: 4, ch: 7 }, { className: 'highlight' })
 
     let marker = document.createElement('div')
     marker.append($('.label')[0])
@@ -45,6 +47,21 @@ class BehaviorHint extends Component {
   updateStep(value) {
     let step = Math.floor(value)
     this.setState({ step: step })
+  }
+
+  handle(props) {
+    const Handle = Slider.Handle
+    const { value, dragging, index } = props
+    return (
+      <Tooltip
+        overlay={ value }
+        visible={ dragging }
+        placement="top"
+        key={ index }
+      >
+        <Handle {...props} />
+      </Tooltip>
+    )
   }
 
   render() {
@@ -60,16 +77,17 @@ class BehaviorHint extends Component {
         <h1>Behavior Hint</h1>
         <p className="ui text">{ description }</p>
         <button className="ui basic button" onClick={ this.showHint.bind(this) }>Show Hint</button>
-        <CodeMirror value={ this.state.code1 }
-                    ref="editor1"
-                    options={ options }
-        />
         <Slider
           dots
           min={ 0 }
           max={ 15 }
           value={ this.state.step }
+          handle={ this.handle }
           onChange={ this.updateStep.bind(this) }
+        />
+        <CodeMirror value={ this.state.code1 }
+                    ref="editor1"
+                    options={ options }
         />
         <div style={{ display: 'none' }}>
         <div className="ui blue label call-label">
@@ -77,6 +95,11 @@ class BehaviorHint extends Component {
         </div>
         <div className="arrow-up"></div>
         <div className="arrow-border"></div>
+        <pre className="dynamic-hint">
+          Expected |  { [...Array(this.state.step).keys()].join('  ') }
+          <br />
+          Result   |  { [...Array(this.state.step).fill(0)].join('  ') }
+        </pre>
         <table className="ui definition table">
           <thead>
             <tr>

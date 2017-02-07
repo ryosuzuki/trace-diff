@@ -13,12 +13,16 @@
   min-width: 21px;
 }
 
+.CodeMirror-sizer {
+  margin-left: 65px !important;
+}
+
 .CodeMirror-gutters {
   background-color: #f7f7f7 !important;
   min-width: 62px;
 }
 
-.hoge {
+.inline-hint {
   padding: 20px 10px;
   margin-top: 10px;
   margin-bottom: 10px;

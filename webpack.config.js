@@ -7,7 +7,7 @@ module.exports = {
     bundle: path.join(__dirname, '/src/index.js'),
   },
   output: {
-    path: path.join(__dirname, '/public'),
+    path: path.join(__dirname, '/dist'),
     filename: 'bundle.js',
     publicPath: '/'
   },
@@ -47,9 +47,9 @@ module.exports = {
     ]
   },
   devServer: {
-    contentBase: path.join(__dirname, 'public'),
+    contentBase: '.',
     watchContentBase: true,
-    publicPath: '/',
+    publicPath: '/dist',
     compress: true,
     hot: true,
     inline: true,

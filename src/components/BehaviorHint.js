@@ -4,6 +4,7 @@ import 'codemirror/mode/python/python'
 import Slider from 'rc-slider'
 import Tooltip from 'rc-tooltip'
 
+
 class BehaviorHint extends Component {
   constructor() {
     super()

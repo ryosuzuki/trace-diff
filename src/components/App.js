@@ -56,7 +56,10 @@ class App extends Component {
           <div id="behavior-hint" className="nine wide column">
             <h1>Behavioral Hint</h1>
             <p className="ui text">{ description.behavior }</p>
-            <BehaviorHint />
+            <BehaviorHint
+              options={ options }
+              index={ 1 }
+            />
             <div className="ui divider"></div>
           </div>
           <div id="transformation-hint" className="nine wide column">

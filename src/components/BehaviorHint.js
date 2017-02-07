@@ -6,10 +6,14 @@ import Tooltip from 'rc-tooltip'
 
 
 class BehaviorHint extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
+    const gutters = ['CodeMirror-linenumbers', 'breakpoints']
+    const id = `behavior-hint-${this.props.index}`
+    this.props.options.gutters = gutters
     this.state = {
-      code: '\n',
+      code: '',
+      id: id,
       step: 0
     }
     window.behaviorHint = this
@@ -18,19 +22,17 @@ class BehaviorHint extends Component {
   componentDidMount() {
     $.ajax({
       method: 'GET',
-      url: `${window.location.pathname}data/behavior-hint-1.py`,
+      url: `${window.location.pathname}data/${this.state.id}.py`,
     })
     .then((res) => {
-      let origin = []
-      for (let line of res.split('\n')) {
-        origin.push(line)
-      }
-      this.setState({ code1: res, origin: origin })
+      this.setState({ code: res, origin: res })
     })
   }
 
   showHint() {
-    this.cm = this.refs.editor1.getCodeMirror()
+    this.cm = this.refs.editor.getCodeMirror()
+    $(`#${this.state.id}`).slideToggle()
+
     let msg = document.createElement('div')
     msg.className = 'inline-hint'
     msg.append($('.arrow-border')[0])
@@ -45,32 +47,51 @@ class BehaviorHint extends Component {
     this.cm.setGutterMarker(3, 'breakpoints', marker)
   }
 
+  playStep() {
+    let interval = 100
+    let timer = setInterval(() => {
+      if (this.state.step >= 15) {
+        clearInterval(timer)
+      } else {
+        this.updateStep(this.state.step+1)
+      }
+    }, interval)
+  }
+
   updateStep(value) {
     let step = Math.floor(value)
     this.setState({ step: step })
   }
 
   render() {
-    const options = {
-      mode: 'python',
-      theme: 'base16-light',
-      lineNumbers: true,
-      gutters: ['CodeMirror-linenumbers', 'breakpoints']
-    }
-
     return (
       <div>
         <button className="ui basic button" onClick={ this.showHint.bind(this) }>Show Hint</button>
-        <Slider
-          dots
-          min={ 0 }
-          max={ 15 }
-          value={ this.state.step }
-          onChange={ this.updateStep.bind(this) }
-        />
-        <CodeMirror value={ this.state.code1 }
-                    ref="editor1"
-                    options={ options }
+
+        <div id={ this.state.id } className="ui message">
+          <div className="header">
+            Data Hint
+          </div>
+          <p>There is an error in line {this.state.error_1}.</p>
+
+          <div className="play-area">
+          <button className="ui basic button play-button" onClick={ this.playStep.bind(this) }>
+            <i className="fa fa-play fa-fw"></i>
+          </button>
+          <Slider
+            dots
+            min={ 0 }
+            max={ 15 }
+            value={ this.state.step }
+            onChange={ this.updateStep.bind(this) }
+          />
+          </div>
+
+        </div>
+
+        <CodeMirror value={ this.state.code }
+                    ref="editor"
+                    options={ this.props.options }
         />
         <div style={{ display: 'none' }}>
         <div className="ui blue label call-label">
@@ -83,6 +104,7 @@ class BehaviorHint extends Component {
           <br />
           Result   |  { [...Array(this.state.step).fill(0)].join('  ') }
         </pre>
+        { /*
         <table className="ui definition table">
           <thead>
             <tr>
@@ -111,6 +133,7 @@ class BehaviorHint extends Component {
             </tr>
           </tbody>
         </table>
+        */ }
         </div>
       </div>
     )

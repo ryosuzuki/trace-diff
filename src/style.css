@@ -66,6 +66,10 @@
   margin: 50px 0;
 }
 
+.message {
+  display: none;
+}
+
 .label {
   position: absolute;
   left: -62px;

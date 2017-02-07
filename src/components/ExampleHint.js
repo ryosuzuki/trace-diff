@@ -41,9 +41,7 @@ class ExampleHint extends Component {
     }
 
     return (
-      <div id="data-hint">
-        <h1>Example Hint</h1>
-        <p className="ui text">{ description }</p>
+      <div>
         <button className="ui basic button" onClick={ this.showHint.bind(this) }>Show Hint</button>
         <CodeMirror value={ this.state.code }
                     ref="editor"
@@ -55,5 +53,3 @@ class ExampleHint extends Component {
 }
 
 export default ExampleHint
-
-const description = 'Another way of showing how to fix the code is using a similar example. In our study, we found that the teaching assistants often used this type of hint. For instance, in one scenario, the student did not know how to use the combine function. The TA explained to him: “ accumulate(add, 0, 5, identity) should return 0 + 1 + 2 + 3 + 4 + 5. In this case combiner is the two-argument add function,whichweuselikethis: 0 + 1 + 2 + 3 + 4 + 5 = ((((0 + 1) + 2) + 3) + 4) + 5 = add(add(add(add(add(0, 1), 2),3), 4), 5).”. In another scenario, the TA gave an example of proper way of using lambda functions.'

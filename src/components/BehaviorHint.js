@@ -74,9 +74,7 @@ class BehaviorHint extends Component {
     }
 
     return (
-      <div id="behavior-hint">
-        <h1>Behavior Hint</h1>
-        <p className="ui text">{ description }</p>
+      <div>
         <button className="ui basic button" onClick={ this.showHint.bind(this) }>Show Hint</button>
         <Slider
           dots
@@ -136,5 +134,3 @@ class BehaviorHint extends Component {
 }
 
 export default BehaviorHint
-
-const description = 'The Data hint points to a difference in the program state in a particular moment of the program execution. Sometimes, however, it is hard to understand how that difference affects the program behavior considering the entire program execution. The Behavioral hint provides information about the internal behavior of the program dur- ing its execution. For instance, in our running example, a Behavioral hint would be: “The variable total received the following values after the program execution: 0, 0, 0, 0. The expected values are: 2, 18, 72, 72. As another example of a Behavioral hint, consider a scenario where the student had forgotten to add a base case to the recursion, and the code thrown a StackOverFlowException. A Behavioral hint will show the difference in the expected number of calls to the recursive function and the actual one.'

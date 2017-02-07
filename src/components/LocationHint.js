@@ -3,10 +3,14 @@ import CodeMirror from 'react-codemirror'
 import 'codemirror/mode/python/python'
 
 class LocationHint extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
+    const id = `location-hint-${this.props.index}`
+    const error = this.props.error
     this.state = {
-      code: ''
+      code: '',
+      error: error,
+      id: id
     }
     window.locationHint = this
   }
@@ -14,7 +18,7 @@ class LocationHint extends Component {
   componentDidMount() {
     $.ajax({
       method: 'GET',
-      url: `${window.location.pathname}data/location-hint-1.py`,
+      url: `${window.location.pathname}data/${this.state.id}.py`,
     })
     .then((res) => {
       this.setState({ code: res })
@@ -23,23 +27,25 @@ class LocationHint extends Component {
 
   showHint() {
     this.cm = this.refs.editor.getCodeMirror()
-    this.cm.addLineClass(4, '', 'highlight')
+    this.cm.addLineClass(this.state.error, '', 'highlight')
+    $(`#${this.state.id}`).slideToggle()
   }
 
   render() {
-    const options = {
-      mode: 'python',
-      theme: 'base16-light',
-      lineNumbers: true
-    }
     return (
-      <div id="location-hint">
-        <h1>Location Hint</h1>
-        <p className="ui text">{ description }</p>
+      <div>
         <button className="ui basic button" onClick={ this.showHint.bind(this) }>Show Hint</button>
+
+        <div id={ this.state.id } className="ui message">
+          <div className="header">
+            Location Hint
+          </div>
+          <p>There is an error in line {this.state.error}.</p>
+        </div>
+
         <CodeMirror value={ this.state.code }
                     ref="editor"
-                    options={ options }
+                    options={ this.props.options }
         />
       </div>
     )
@@ -47,5 +53,3 @@ class LocationHint extends Component {
 }
 
 export default LocationHint
-
-const description = 'The location hint provides information about which part of the student code is incorrect. For instance, a location hint for our running example would be: “There is an error in line 3”. The level of abstraction of a location hint can vary. A more concrete hint would be: “There is an error in the value assigned to the variable total in line 3”. This type of information is easily extracted from a synthesized bug fix.'

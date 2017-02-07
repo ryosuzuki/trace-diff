@@ -30,7 +30,8 @@ class DataHint extends Component {
     this.cm = this.refs.editor.getCodeMirror()
     let line = 4
     let ch = this.state.origin[line].length + 30
-    dataHint.cm.replaceRange(' # hoge = 1, n = 0', { line: line, ch: ch }, { line: line, ch: Infinity })
+    this.cm.replaceRange(' # hoge = 1, n = 0', { line: line, ch: ch }, { line: line, ch: Infinity })
+    $('#data-hint-1').slideToggle()
   }
 
   render() {
@@ -41,10 +42,16 @@ class DataHint extends Component {
     }
 
     return (
-      <div id="data-hint">
-        <h1>Data Hint</h1>
-        <p className="ui text">{ description }</p>
+      <div>
         <button className="ui basic button" onClick={ this.showHint.bind(this) }>Show Hint</button>
+
+        <div id="data-hint-1" className="ui message">
+          <div className="header">
+            Data Hint
+          </div>
+          <p>There is an error in line {this.state.error_1}.</p>
+        </div>
+
         <CodeMirror value={ this.state.code }
                     ref="editor"
                     options={ options }
@@ -55,5 +62,3 @@ class DataHint extends Component {
 }
 
 export default DataHint
-
-const description = 'Data hint provides information about expected internal data values of the program during a de- bugging section. The system iteratively executes the code, line-by-line, similar to a debugging tool such as PythonTu- tor [11]. When the system detects that a value of variable is incorrect, it pauses the execution of the program, and shows the difference between the expected value and the actual value.'

@@ -41,9 +41,7 @@ class TransformationHint extends Component {
     }
 
     return (
-      <div id="data-hint">
-        <h1>Transformation Hint</h1>
-        <p className="ui text">{ description }</p>
+      <div>
         <button className="ui basic button" onClick={ this.showHint.bind(this) }>Show Hint</button>
         <CodeMirror value={ this.state.code }
                     ref="editor"
@@ -55,5 +53,3 @@ class TransformationHint extends Component {
 }
 
 export default TransformationHint
-
-const description = 'The Transformation hint abstracts the synthesized fix and provides an information about what change the student should do. For example: “you should replace the initialization of the variable total” or “you should add an If statement”. The abstraction level can be configured by the teaching staff. This type of hint is already used by current program synthesis techniques.'

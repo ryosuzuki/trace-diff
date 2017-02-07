@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import CodeMirror from 'react-codemirror'
+import {  MarkdownPreview  } from 'react-marked-markdown';
 import 'codemirror/mode/python/python'
+
 
 class LocationHint extends Component {
   constructor(props) {

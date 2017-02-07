@@ -82,8 +82,36 @@
   margin-bottom: 50px !important;
 }
 
-.text {
+.markdown {
+  margin-bottom: 50px;
+}
+
+.markdown p {
   font-size: 1.2em;
+}
+
+.markdown p code {
+  background: #fdfdfd !important;
+  color: purple;
+  font-size: 11pt;
+}
+
+.markdown pre {
+  background: #f7f7f7 !important;
+  padding: 16px;
+  font-size: 10.5pt;
+}
+
+.markdown strong {
+  background: #fff2a8;
+  font-size: 1.1em;
+  padding: 2px 5px;
+}
+
+.markdown code {
+  font-family: Monaco, 'Andale Mono', 'Lucida Console', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace;
+  height: 100%;
+  line-height: 18pt;
 }
 
 .play-area {

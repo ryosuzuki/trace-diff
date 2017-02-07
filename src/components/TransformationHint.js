@@ -3,34 +3,40 @@ import CodeMirror from 'react-codemirror'
 import 'codemirror/mode/python/python'
 
 class TransformationHint extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
+    const id = `transformation-hint-${this.props.index}`
+    const error = this.props.error
+    const message = this.props.message
+    const word = this.props.word
     this.state = {
-      code: ''
+      code: '',
+      error: error,
+      id: id,
+      word: word,
+      message: message,
     }
-    window.transformationHint = this
+    window.dataHint = this
   }
 
   componentDidMount() {
     $.ajax({
       method: 'GET',
-      url: `${window.location.pathname}data/data-hint-1.py`,
+      url: `${window.location.pathname}data/${this.state.id}.py`,
     })
     .then((res) => {
       this.setState({ code: res })
-      let origin = []
-      for (let line of res.split('\n')) {
-        origin.push(line)
-      }
-      this.setState({ code: res, origin: origin })
     })
   }
 
   showHint() {
     this.cm = this.refs.editor.getCodeMirror()
-    let line = 4
-    let ch = this.state.origin[line].length
-    this.cm.replaceRange(' # hoge = 1, n = 0', { line: line, ch: ch }, { line: line, ch: Infinity })
+    if (this.state.word) {
+      this.cm.markText(this.state.error.start, this.state.error.end, { className: 'highlight' })
+    } else {
+      this.cm.addLineClass(this.state.error, '', 'highlight')
+    }
+    $(`#${this.state.id}`).slideToggle()
   }
 
   render() {
@@ -43,9 +49,17 @@ class TransformationHint extends Component {
     return (
       <div>
         <button className="ui basic button" onClick={ this.showHint.bind(this) }>Show Hint</button>
+
+        <div id={ this.state.id } className="ui message">
+          <div className="header">
+            Transformation Hint
+          </div>
+          <p>{ this.state.message }</p>
+        </div>
+
         <CodeMirror value={ this.state.code }
                     ref="editor"
-                    options={ options }
+                    options={ this.props.options }
         />
       </div>
     )

@@ -14,7 +14,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    let names = ['location', 'data', 'behavior', 'transformation']
+    let names = ['location', 'data', 'behavior', 'transformation', 'example']
     for (let name of names) {
       $.ajax({
         method: 'GET',
@@ -44,7 +44,7 @@ class App extends Component {
             </h1>
           </div>
           <div id="location-hint" className="nine wide column">
-            <h1>Location Hint Demo</h1>
+            <h1 className="title">Location Hint Demo</h1>
             <h2>Example 1</h2>
             <LocationHint
               options={ options }
@@ -78,16 +78,14 @@ class App extends Component {
             <div className="ui divider"></div>
           </div>
           <div id="data-hint" className="nine wide column">
-            <h1>Data Hint Demo</h1>
+            <h1 className="title">Data Hint Demo</h1>
             <h2>Example 1</h2>
             <DataHint
               options={ options }
               index={ 1 }
               message={ 'Failed Test Result: product(5, square): Expected 14400, but got 120' }
             />
-            <h4 className="ui horizontal divider header">
-              Description
-            </h4>
+            <h4 className="ui horizontal divider header">Description</h4>
             <MarkdownPreview
               className="markdown"
               value={ this.state.data }
@@ -95,16 +93,14 @@ class App extends Component {
             <div className="ui divider"></div>
           </div>
           <div id="behavior-hint" className="nine wide column">
-            <h1>Behavioral Hint Demo</h1>
+            <h1 className="title">Behavioral Hint Demo</h1>
             <h2>Example 1</h2>
             <BehaviorHint
               options={ options }
               index={ 1 }
               message={ 'Failed Test Result: accumulate(add, 11, 5, identity): Expected 26, but got 16' }
             />
-            <h4 className="ui horizontal divider header">
-              Description
-            </h4>
+            <h4 className="ui horizontal divider header">Description</h4>
             <MarkdownPreview
               className="markdown"
               value={ this.state.behavior }
@@ -112,19 +108,35 @@ class App extends Component {
             <div className="ui divider"></div>
           </div>
           <div id="transformation-hint" className="nine wide column">
+            <h1 className="title">Transformation Hint Demo</h1>
+            <h2>Example 1</h2>
+            <TransformationHint
+              options={ options }
+              index={ 1 }
+              error={ { start: { line: 4, ch: 12 } , end: { line: 4, ch: 18 } } }
+              word={ true }
+              message={ 'Replace i with term(i) in line 5' }
+            />
+            <h4 className="ui horizontal divider header">Description</h4>
             <MarkdownPreview
               className="markdown"
               value={ this.state.transformation }
             />
-            <TransformationHint />
             <div className="ui divider"></div>
           </div>
           <div id="example-hint" className="nine wide column">
+            <h1 className="title">Example-based Hint Demo</h1>
+            <h2>Example 1</h2>
+            <ExampleHint
+              options={ options }
+              index={ 1 }
+              message={ 'Replace i with term(i) in line 5' }
+            />
+            <h4 className="ui horizontal divider header">Description</h4>
             <MarkdownPreview
               className="markdown"
               value={ this.state.example }
             />
-            <ExampleHint />
             <div className="ui divider"></div>
           </div>
         </div>

@@ -46,6 +46,7 @@ class BehaviorHint extends Component {
     this.cm = this.refs.editor.getCodeMirror()
     $(`#${this.state.id}`).slideToggle()
 
+    if (this.state.expected.length > 0) return false
     this.setState({
       expected: [11, 12, 14, 17, 21, 26],
       result: [1, 2, 4, 7, 11, 16],

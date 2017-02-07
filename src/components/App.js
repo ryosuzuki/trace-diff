@@ -48,7 +48,10 @@ class App extends Component {
               className="markdown"
               value={ this.state.location }
             />
-            <h1>Demo of Location Hint</h1>
+            <h4 className="ui horizontal divider header">
+              DEMO
+            </h4>
+            <h1>Location Hint Demo</h1>
             <h2>Example 1</h2>
             <LocationHint
               options={ options }
@@ -69,6 +72,11 @@ class App extends Component {
               className="markdown"
               value={ this.state.data }
             />
+            <h4 className="ui horizontal divider header">
+              DEMO
+            </h4>
+            <h1>Data Hint Demo</h1>
+            <h2>Example 1</h2>
             <DataHint
               options={ options }
               index={ 1 }

@@ -82,16 +82,17 @@
   margin-bottom: 50px !important;
 }
 
-.markdown {
-  margin-bottom: 50px;
-}
-
 .markdown p {
   font-size: 1.2em;
 }
 
+.markdown hr {
+  margin: 50px 0;
+}
+
 .markdown p code {
-  background: #fdfdfd !important;
+  background: #f7f7f7 !important;
+  padding: 2px 5px;
   color: purple;
   font-size: 11pt;
 }

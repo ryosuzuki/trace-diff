@@ -6,7 +6,7 @@ The level of abstraction of a location hint can vary. A more concrete hint would
 
 ## Background
 
-#### Piazza 113
+### Piazza 113
 
 ```python
 return accumulate(combiner if pred(n) else add, base, n if pred(n) else 0, term)
@@ -18,7 +18,7 @@ return accumulate(combiner if pred(n) else add, base, n if pred(n) else 0, term)
 
 ---
 
-#### Piazza 108
+### Piazza 108
 
 ```python
 def count_change(amount):
@@ -51,4 +51,24 @@ def count_change(amount):
 
 [i] **It's your base case**. Look at the textbook for count_partitions again and think about why it works. [id: 108]
 
+
+---
+
+### Piazza 111
+
+```python
+def filtered_accumulate(combiner, base, pred, n, term):
+  return accumulate(combiner, base, n, lambda n: n if pred(n)==True else base)
+
+>>> filtered_accumulate(add, 0, true, 5, identity)  # 0 + 1 + 2 + 3 + 4 + 5
+TypeError: unsupported operand type(s) for +: 'int' and 'function'
+# Error: expected
+#     15
+# but got
+#     TypeError
+```
+
+[s] I tried using a lambda function to replace the term function on filtered_accumulate, but now it's giving me a type error. I'm guessing this has something to do with the combiner? Any help would be appreciated!
+
+[i] **It seems like it has to do something with your argument for term**, since you left `combiner` unchanged. [id: 111]
 

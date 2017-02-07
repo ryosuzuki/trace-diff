@@ -83,6 +83,7 @@ class App extends Component {
             <DataHint
               options={ options }
               index={ 1 }
+              message={ 'Failed Test Result: product(5, square): Expected 14400, but got 120' }
             />
             <h4 className="ui horizontal divider header">
               Description

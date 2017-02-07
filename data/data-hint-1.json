@@ -1,1 +1,22 @@
-data-hint-1.json
+[
+{ "line": 1, "msg": "n = 5, term = square" },
+{ "line": 2, "msg": "i = 1" },
+{ "line": 3, "msg": "product = 1" },
+{ "line": 4, "msg": "True" },
+{ "line": 5, "msg": "i = 1, product = 1" },
+{ "line": 6, "msg": "i = 2" },
+{ "line": 4, "msg": "True" },
+{ "line": 5, "msg": "i = 2, product = 2 should be product = 4", "error": true },
+{ "line": 6, "msg": "i = 3" },
+{ "line": 4, "msg": "True" },
+{ "line": 5, "msg": "i = 3, product = 6 should be product = 36", "error": true },
+{ "line": 6, "msg": "i = 4" },
+{ "line": 4, "msg": "True" },
+{ "line": 5, "msg": "i = 4, product = 24 should be product = 576", "error": true },
+{ "line": 6, "msg": "i = 5" },
+{ "line": 4, "msg": "True" },
+{ "line": 5, "msg": "i = 5, product = 120 should be product = 14400", "error": true },
+{ "line": 6, "msg": "i = 6" },
+{ "line": 4, "msg": "False" },
+{ "line": 7, "msg": "return 120 should be 14400", "error": true }
+]

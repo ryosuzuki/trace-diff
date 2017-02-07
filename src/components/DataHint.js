@@ -8,10 +8,14 @@ class DataHint extends Component {
   constructor(props) {
     super(props)
     const id = `data-hint-${this.props.index}`
+    const message = this.props.message
     this.state = {
       code: '',
       id: id,
-      step: 0
+      step: 0,
+      stream: [],
+      stop: false,
+      message: message
     }
     window.dataHint = this
   }
@@ -22,8 +26,14 @@ class DataHint extends Component {
       url: `${window.location.pathname}data/${this.state.id}.py`,
     })
     .then((res) => {
-      this.setState({ code: res })
       this.setState({ code: res, origin: res })
+    })
+    $.ajax({
+      method: 'GET',
+      url: `${window.location.pathname}data/${this.state.id}.json`,
+    })
+    .then((res) => {
+      this.setState({ stream: res })
     })
   }
 
@@ -34,9 +44,11 @@ class DataHint extends Component {
 
   playStep() {
     let interval = 100
+    this.setState({ stop: false })
     let timer = setInterval(() => {
-      if (this.state.step >= 15) {
+      if (this.state.step >= this.state.stream.length || this.state.stop) {
         clearInterval(timer)
+        this.setState({ stop: false })
       } else {
         this.updateStep(this.state.step+1)
       }
@@ -46,14 +58,27 @@ class DataHint extends Component {
   updateStep(value) {
     let step = Math.floor(value)
     this.cm.setValue(this.state.origin)
-    for (let i = 0; i < step; i++) {
-      let line = i
+
+    let current = this.state.stream.slice(0, step)
+    let lastLine = 0
+    for (let hash of current) {
+      let line = hash.line - 1
+      this.cm.removeLineClass(lastLine, '', 'current-line')
+      this.cm.removeLineClass(lastLine, '', 'highlight')
+      if (hash.error) {
+        this.cm.addLineClass(line, '', 'highlight')
+        this.setState({ stop: true })
+      } else {
+        this.cm.addLineClass(line, '', 'current-line')
+      }
       let ch = this.state.origin.split('\n')[line].length
       let space = ' '
-      for (let i = ch; i < 35; i++) {
+      for (let i = ch; i < 30; i++) {
         space += ' '
       }
-      this.cm.replaceRange(space + '# test = 1, n = 0', { line: line, ch: ch }, { line: line, ch: Infinity })
+      let msg = `${space} #   ${hash.msg}`
+      this.cm.replaceRange(msg, { line: line, ch: ch }, { line: line, ch: Infinity })
+      lastLine = line
     }
     let code = this.cm.getValue()
     this.setState({ step: step, code: code })
@@ -69,7 +94,7 @@ class DataHint extends Component {
           <div className="header">
             Data Hint
           </div>
-          <p>There is an error in line {this.state.error_1}.</p>
+          <p>{ this.state.message }</p>
 
           <div className="play-area">
           <button className="ui basic button play-button" onClick={ this.playStep.bind(this) }>
@@ -78,7 +103,7 @@ class DataHint extends Component {
           <Slider
             dots
             min={ 0 }
-            max={ 15 }
+            max={ this.state.stream.length }
             value={ this.state.step }
             onChange={ this.updateStep.bind(this) }
           />

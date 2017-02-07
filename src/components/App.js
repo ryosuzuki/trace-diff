@@ -47,7 +47,10 @@ class App extends Component {
           <div id="data-hint" className="nine wide column">
             <h1>Data Hint</h1>
             <p className="ui text">{ description.data }</p>
-            <DataHint />
+            <DataHint
+              options={ options }
+              index={ 1 }
+            />
             <div className="ui divider"></div>
           </div>
           <div id="behavior-hint" className="nine wide column">

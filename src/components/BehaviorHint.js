@@ -50,21 +50,6 @@ class BehaviorHint extends Component {
     this.setState({ step: step })
   }
 
-  handle(props) {
-    const Handle = Slider.Handle
-    const { value, dragging, index } = props
-    return (
-      <Tooltip
-        overlay={ value }
-        visible={ dragging }
-        placement="top"
-        key={ index }
-      >
-        <Handle {...props} />
-      </Tooltip>
-    )
-  }
-
   render() {
     const options = {
       mode: 'python',
@@ -81,7 +66,6 @@ class BehaviorHint extends Component {
           min={ 0 }
           max={ 15 }
           value={ this.state.step }
-          handle={ this.handle }
           onChange={ this.updateStep.bind(this) }
         />
         <CodeMirror value={ this.state.code1 }

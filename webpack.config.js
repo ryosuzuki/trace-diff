@@ -49,7 +49,7 @@ module.exports = {
   devServer: {
     contentBase: '.',
     watchContentBase: true,
-    publicPath: '/dist',
+    publicPath: '/',
     compress: true,
     hot: true,
     inline: true,

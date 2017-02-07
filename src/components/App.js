@@ -95,9 +95,12 @@ class App extends Component {
             <div className="ui divider"></div>
           </div>
           <div id="behavior-hint" className="nine wide column">
+            <h1>Behavioral Hint Demo</h1>
+            <h2>Example 1</h2>
             <BehaviorHint
               options={ options }
               index={ 1 }
+              message={ 'Failed Test Result: accumulate(add, 11, 5, identity): Expected 26, but got 16' }
             />
             <h4 className="ui horizontal divider header">
               Description

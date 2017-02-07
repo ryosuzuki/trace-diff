@@ -15,7 +15,8 @@ class DataHint extends Component {
       step: 0,
       stream: [],
       stop: false,
-      message: message
+      message: message,
+      tick: 0
     }
     window.dataHint = this
   }

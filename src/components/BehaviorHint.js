@@ -10,11 +10,17 @@ class BehaviorHint extends Component {
     super(props)
     const gutters = ['CodeMirror-linenumbers', 'breakpoints']
     const id = `behavior-hint-${this.props.index}`
+    const message = this.props.message
     this.props.options.gutters = gutters
     this.state = {
       code: '',
       id: id,
-      step: 0
+      step: 0,
+      stream: [],
+      message: message,
+      expected: [],
+      result: [],
+      tick: 0
     }
     window.behaviorHint = this
   }
@@ -27,30 +33,43 @@ class BehaviorHint extends Component {
     .then((res) => {
       this.setState({ code: res, origin: res })
     })
+    $.ajax({
+      method: 'GET',
+      url: `${window.location.pathname}data/${this.state.id}.json`,
+    })
+    .then((res) => {
+      this.setState({ stream: res })
+    })
   }
 
   showHint() {
     this.cm = this.refs.editor.getCodeMirror()
     $(`#${this.state.id}`).slideToggle()
 
+    this.setState({
+      expected: [11, 12, 14, 17, 21, 26],
+      result: [1, 2, 4, 7, 11, 16],
+    })
+
     let msg = document.createElement('div')
     msg.className = 'inline-hint'
-    msg.append($('.arrow-border')[0])
-    msg.append($('.arrow-up')[0])
-    msg.append($('.dynamic-hint')[0])
+ // debugger
+    msg.append($('.arrow-border').clone()[0])
+    msg.append($('.arrow-up').clone()[0])
+    msg.append($('.dynamic-hint').clone()[0])
     this.cm.addLineWidget(4, msg, { coverGutter: true })
-
-    this.cm.markText({ line: 4, ch: 4 }, { line: 4, ch: 7 }, { className: 'highlight' })
-
+    this.cm.markText({ line: 4, ch: 4 }, { line: 4, ch: 9 }, { className: 'highlight' })
+    /*
     let marker = document.createElement('div')
     marker.append($('.label')[0])
     this.cm.setGutterMarker(3, 'breakpoints', marker)
+    */
   }
 
   playStep() {
     let interval = 100
     let timer = setInterval(() => {
-      if (this.state.step >= 15) {
+      if (this.state.step >= this.state.stream.length) {
         clearInterval(timer)
       } else {
         this.updateStep(this.state.step+1)
@@ -60,8 +79,50 @@ class BehaviorHint extends Component {
 
   updateStep(value) {
     let step = Math.floor(value)
-    this.setState({ step: step })
+    this.cm.setValue(this.state.origin)
+    if (step < 3) this.setState({ tick: 0 })
+    if (step >= 3) this.setState({ tick: 1 })
+    if (step >= 5) this.setState({ tick: 2 })
+    if (step >= 8) this.setState({ tick: 3 })
+    if (step >= 11) this.setState({ tick: 4 })
+    if (step >= 14) this.setState({ tick: 5 })
+    if (step >= 17) this.setState({ tick: 6 })
+
+    let msg = document.createElement('div')
+    msg.className = 'inline-hint'
+    msg.append($('.arrow-border').clone()[0])
+    msg.append($('.arrow-up').clone()[0])
+    msg.append($('.dynamic-hint').clone()[0])
+    this.cm.addLineWidget(4, msg, { coverGutter: true })
+    this.cm.markText({ line: 4, ch: 4 }, { line: 4, ch: 9 }, { className: 'highlight' })
+
+    let current = this.state.stream.slice(0, step)
+    let lastLine = 0
+    for (let hash of current) {
+      let line = hash.line - 1
+      this.cm.removeLineClass(lastLine, '', 'current-line')
+      this.cm.removeLineClass(lastLine, '', 'highlight')
+      if (hash.error) {
+        this.cm.addLineClass(line, '', 'highlight')
+        this.setState({ stop: true })
+      } else {
+        this.cm.addLineClass(line, '', 'current-line')
+      }
+      if (line === 0) {
+        let ch = this.state.origin.split('\n')[line].length
+        let space = ' '
+        for (let i = ch; i < 30; i++) {
+          space += ' '
+        }
+        let msg = `${space} #   ${hash.msg}`
+        this.cm.replaceRange(msg, { line: line, ch: ch }, { line: line, ch: Infinity })
+      }
+      lastLine = line
+    }
+    let code = this.cm.getValue()
+    this.setState({ step: step, code: code })
   }
+
 
   render() {
     return (
@@ -72,7 +133,7 @@ class BehaviorHint extends Component {
           <div className="header">
             Data Hint
           </div>
-          <p>There is an error in line {this.state.error_1}.</p>
+          <p>{ this.state.message }</p>
 
           <div className="play-area">
           <button className="ui basic button play-button" onClick={ this.playStep.bind(this) }>
@@ -81,7 +142,7 @@ class BehaviorHint extends Component {
           <Slider
             dots
             min={ 0 }
-            max={ 15 }
+            max={ this.state.stream.length }
             value={ this.state.step }
             onChange={ this.updateStep.bind(this) }
           />
@@ -100,9 +161,17 @@ class BehaviorHint extends Component {
         <div className="arrow-up"></div>
         <div className="arrow-border"></div>
         <pre className="dynamic-hint">
-          Expected |  { [...Array(this.state.step).keys()].join('  ') }
+          Expected |  { this.state.expected.slice(0, this.state.tick).map((i) => {
+            let num = `${i}`
+            let space = Array(2 - num.length).fill(' ').join('')
+            return `${space}${num}`
+          }).join('  |  ') }
           <br />
-          Result   |  { [...Array(this.state.step).fill(0)].join('  ') }
+          Result   |  { this.state.result.slice(0, this.state.tick).map((i) => {
+            let num = `${i}`
+            let space = Array(2 - num.length).fill(' ').join('')
+            return `${space}${num}`
+          }).join('  |  ') }
         </pre>
         { /*
         <table className="ui definition table">

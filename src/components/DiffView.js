@@ -15,7 +15,11 @@ class DiffView extends Component {
       before: '',
       after: '',
       added: [],
-      removed: []
+      removed: [],
+      test: '',
+      expected: '',
+      result: '',
+      log: '',
     }
     window.diffView = this
   }
@@ -39,24 +43,48 @@ class DiffView extends Component {
     let diffs = jsdiff.diffJson(before, after)
 
     let code = ''
-    let index = -1
+    let line = -1
     let added = []
     let removed = []
     for (let diff of diffs) {
       code += diff.value
       for (let i = 0; i < diff.count; i++) {
-        index += 1
-        if (diff.added) added.push(index)
-        if (diff.removed) removed.push(index)
+        line++
+        if (diff.added) added.push(line)
+        if (diff.removed) removed.push(line)
       }
     }
+
+    let i = 0
+    let testIndex = 0
+    let errorIndex = 0
+    for (let text of item.failed) {
+      if (text.includes('>>> ')) testIndex = i
+      if (text.includes('# Error: expected')) errorIndex = i
+      i++
+    }
+
+    let pass = parseInt(item.failed[item.failed.length-2])
+    let test = item.failed[testIndex]
+    test = test.substr(4)
+    test = test.split('   ')[0]
+    let expected = item.failed[errorIndex+1]
+    expected = parseInt(expected.substr(1))
+    let result = item.failed[errorIndex+3]
+    result = parseInt(result.substr(1))
+    let log = item.failed.slice(testIndex, errorIndex+4).join('\n')
+
     let state = {
       id: id,
       code: code,
       before: before,
       after: after,
       added: added,
-      removed: removed
+      removed: removed,
+      test: test,
+      expected: expected,
+      result: result,
+      log: log
     }
     this.setState(state)
 
@@ -79,7 +107,7 @@ class DiffView extends Component {
 
   render() {
     return (
-      <div style={{ minHeight: '400px' }}>
+      <div>
         <div className="ui form">
           <input
             type="text"
@@ -102,6 +130,11 @@ class DiffView extends Component {
           ref="editor"
           options={ this.props.options }
         />
+        <br />
+        <h2>Failed Test Result</h2>
+        <div className="markdown">
+          <pre><code>{ this.state.log }</code></pre>
+        </div>
       </div>
     )
   }

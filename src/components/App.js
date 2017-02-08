@@ -46,7 +46,7 @@ class App extends Component {
               Exploring the Design Space of Automated Hints
             </h1>
           </div>
-          <div id="diff-view" className="nine wide column">
+          <div id="diff-view" className="nine wide column" style={{ minHeight: '500px' }}>
             <h1 className="title">Diff View</h1>
             <DiffView
               options={ options }

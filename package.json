@@ -24,6 +24,7 @@
     "classnames": "^2.2.5",
     "consolidate": "^0.14.5",
     "d3": "^4.4.3",
+    "diff": "^3.2.0",
     "ejs": "^2.5.5",
     "express": "^4.14.0",
     "font-awesome": "^4.7.0",

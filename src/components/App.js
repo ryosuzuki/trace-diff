@@ -7,6 +7,8 @@ import BehaviorHint2 from './BehaviorHint2'
 import TransformationHint from './TransformationHint'
 import ExampleHint from './ExampleHint'
 
+import DiffView from './DiffView'
+
 class App extends Component {
   constructor(props) {
     super(props)
@@ -44,6 +46,13 @@ class App extends Component {
               Exploring the Design Space of Automated Hints
             </h1>
           </div>
+          <div id="diff-view" className="nine wide column">
+            <h1 className="title">Diff View</h1>
+            <DiffView
+              options={ options }
+            />
+          </div>
+
           <div id="location-hint" className="nine wide column">
             <h1 className="title">Location Hint</h1>
             <MarkdownPreview

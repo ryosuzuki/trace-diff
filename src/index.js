@@ -1,6 +1,5 @@
-import 'semantic-ui-css/semantic.css'
+// import 'semantic-ui-css/semantic.min.css'
 import 'semantic-ui-css/semantic.js'
-import 'font-awesome/css/font-awesome.css'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/zenburn.css'
 import 'codemirror/theme/solarized.css'

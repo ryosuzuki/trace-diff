@@ -37,12 +37,6 @@ module.exports = {
       }, {
         test: /\.html$/,
         loader: 'html-loader',
-      }, {
-        test: /\.(eot|png|svg|[ot]tf|woff2?)(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url-loader',
-        options: {
-          limit: 10000
-        }
       }
     ]
   },

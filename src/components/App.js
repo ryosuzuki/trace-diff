@@ -21,7 +21,7 @@ class App extends Component {
     for (let name of names) {
       $.ajax({
         method: 'GET',
-        url: `${window.location.pathname}data/${name}.md`,
+        url: `${window.location.pathname}example/${name}.md`,
       })
       .then((res) => {
         let hash = {}

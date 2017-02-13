@@ -28,14 +28,14 @@ class BehaviorHint extends Component {
   componentDidMount() {
     $.ajax({
       method: 'GET',
-      url: `${window.location.pathname}data/${this.state.id}.py`,
+      url: `${window.location.pathname}example/${this.state.id}.py`,
     })
     .then((res) => {
       this.setState({ code: res, origin: res })
     })
     $.ajax({
       method: 'GET',
-      url: `${window.location.pathname}data/${this.state.id}.json`,
+      url: `${window.location.pathname}example/${this.state.id}.json`,
     })
     .then((res) => {
       this.setState({ stream: res })

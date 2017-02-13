@@ -21,8 +21,9 @@ class Trace {
 
   generate(path) {
     let results = []
+    let id = 0
     for (let item of this.items) {
-      item = new Item(item)
+      item = new Item(item, id++)
       item.generate()
       this.results.push(item)
     }
@@ -37,11 +38,13 @@ class Trace {
 }
 
 class Item {
-  constructor(item) {
+  constructor(item, id) {
     this.item = item
+    this.id = id
     this.before = this.item.before.substr(2)
     this.after = this.item.SynthesizedAfter.substr(2)
-    this.diff = ''
+    this.code = ''
+    this.diffs = []
     this.added = []
     this.removed = []
   }
@@ -66,7 +69,8 @@ class Item {
         if (diff.removed) removed.push(line)
       }
     }
-    this.diff = code
+    this.code = code
+    this.diffs = diffs
     this.added = added
     this.removed = removed
   }
@@ -83,7 +87,7 @@ class Item {
     let pass = parseInt(this.item.failed[this.item.failed.length-2])
     let test = this.item.failed[testIndex]
     test = test.substr(4)
-    test = test.split('   ')[0]
+    test = test.substr(0, test.indexOf(')') + 1)
     let expected = this.item.failed[errorIndex+1]
     expected = parseInt(expected.substr(1))
     let result = this.item.failed[errorIndex+3]

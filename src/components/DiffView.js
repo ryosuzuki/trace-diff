@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 import CodeMirror from 'react-codemirror'
 import 'codemirror/mode/python/python'
-import * as jsdiff from 'diff'
 import Slider from 'rc-slider'
 import Tooltip from 'rc-tooltip'
+import Datastore from 'nedb'
+
+const db = new Datastore()
+window.db = db
 
 class DiffView extends Component {
   constructor(props) {
@@ -14,6 +17,7 @@ class DiffView extends Component {
       id: 0,
       before: '',
       after: '',
+      diffs: [],
       added: [],
       removed: [],
       test: '',
@@ -28,72 +32,37 @@ class DiffView extends Component {
     this.cm = this.refs.editor.getCodeMirror()
     $.ajax({
       method: 'GET',
-      url: `${window.location.pathname}data/accumulate_all_attempts.json`
+      url: `${window.location.pathname}data/accumulate.json`
     })
-    .then((res) => {
-      this.setState({ items: res })
+    .then((items) => {
+      console.log('start')
+      this.setState({ items: items })
       this.generateDiff(0)
+
+      items = items.map((item) => {
+        return {
+          id: item.id,
+          test: item.test,
+          expected: item.expected,
+          result: item.result
+        }
+      })
+      db.insert(items, (err) => {
+        console.log('finish')
+      })
     })
   }
 
   generateDiff(id) {
     let item = this.state.items[id]
-    let before = item.before.substr(2)
-    let after = item.SynthesizedAfter.substr(2)
-    let diffs = jsdiff.diffJson(before, after)
-
-    let code = ''
-    let line = -1
-    let added = []
-    let removed = []
-    for (let diff of diffs) {
-      code += diff.value
-      for (let i = 0; i < diff.count; i++) {
-        line++
-        if (diff.added) added.push(line)
-        if (diff.removed) removed.push(line)
-      }
-    }
-
-    let i = 0
-    let testIndex = 0
-    let errorIndex = 0
-    for (let text of item.failed) {
-      if (text.includes('>>> ')) testIndex = i
-      if (text.includes('# Error: expected')) errorIndex = i
-      i++
-    }
-
-    let pass = parseInt(item.failed[item.failed.length-2])
-    let test = item.failed[testIndex]
-    test = test.substr(4)
-    test = test.split('   ')[0]
-    let expected = item.failed[errorIndex+1]
-    expected = parseInt(expected.substr(1))
-    let result = item.failed[errorIndex+3]
-    result = parseInt(result.substr(1))
-    let log = item.failed.slice(testIndex, errorIndex+4).join('\n')
-
-    let state = {
-      id: id,
-      code: code,
-      before: before,
-      after: after,
-      added: added,
-      removed: removed,
-      test: test,
-      expected: expected,
-      result: result,
-      log: log
-    }
+    let state = Object.assign(item, { id: id })
     this.setState(state)
-
     setTimeout(() => {
       console.log('update')
-      for (let line of removed) {
+      for (let line of this.state.removed) {
         this.cm.addLineClass(line, '', 'removed')
       }
-      for (let line of added) {
+      for (let line of this.state.added) {
         this.cm.addLineClass(line, '', 'added')
       }
     }, 50)

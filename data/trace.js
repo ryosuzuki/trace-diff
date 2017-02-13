@@ -1,29 +1,39 @@
 const fs = require('fs')
 const jsdiff = require('diff')
+const PythonShell = require('python-shell')
+
+const main = () => {
+  const trace = new Trace()
+  trace.open('accumulate_all_attempts.json')
+  trace.generate('accumulate.json')
+}
 
 class Trace {
-  constructor(path) {
-    this.path = path
+  constructor() {
     this.items = []
     this.results = []
   }
 
-  open() {
-    const json = fs.readFileSync(this.path, 'utf8')
+  open(path) {
+    const json = fs.readFileSync(path, 'utf8')
     this.items = JSON.parse(json)
-    this.prepare()
   }
 
-  prepare() {
-    console.log(this.items.length)
+  generate(path) {
+    let results = []
     for (let item of this.items) {
       item = new Item(item)
-      console.log(JSON.stringify(item, null, 2))
-      break
+      item.generate()
+      this.results.push(item)
     }
-    // console.log(JSON.stringify(this.results, null, 2))
-  }
+    fs.writeFileSync(path, JSON.stringify(this.results, null, 2))
+    console.log('write finish')
 
+    PythonShell.run('get_trace.py', { args: [path] }, (err) => {
+      if (err) throw err
+      console.log('generate finish')
+    })
+  }
 }
 
 class Item {
@@ -34,14 +44,12 @@ class Item {
     this.diff = ''
     this.added = []
     this.removed = []
-    this.getDiff()
-    this.getTest()
-
-    delete this.item
   }
 
-  getTrace() {
-
+  generate() {
+    this.getDiff()
+    this.getTest()
+    delete this.item
   }
 
   getDiff() {
@@ -87,13 +95,6 @@ class Item {
     this.result = result
     this.log = log
   }
-
-
 }
 
-
-const trace = new Trace('./accumulate_all_attempts.json')
-trace.open()
-
-// export default Trace
-
+main()

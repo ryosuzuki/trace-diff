@@ -249,7 +249,6 @@ class PGLogger(bdb.Bdb):
         user_globals = {"__name__"    : "__main__",
                         "__builtins__" : user_builtins}
 
-        print('start')
         self.run(script_str, user_globals, user_globals)
 
         """
@@ -323,7 +322,6 @@ def exec_script_str(script_str, ignore_id=False):
     pg_logger._runscript(script_str)
     pg_logger.finalize()
   except:
-    print('fuga')
     trace_entry = dict(event='uncaught_exception')
 
     exc = sys.exc_info()[1]

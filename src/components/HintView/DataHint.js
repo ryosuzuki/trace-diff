@@ -88,7 +88,8 @@ class DataHint extends Component {
 
   render() {
     return (
-      <div id={ this.props.id }>
+      <div>
+        <h1>Data Hint</h1>
         <div className="ui message">
           <div className="header">
             Data Hint

@@ -9,6 +9,7 @@ import NoneHint from './HintView/NoneHint'
 import LocationHint from './HintView/LocationHint'
 import DataHint from './HintView/DataHint'
 import BehaviorHint from './HintView/BehaviorHint'
+import TransformationHint from './HintView/TransformationHint'
 
 class HintView extends Component {
   constructor(props) {
@@ -28,7 +29,7 @@ class HintView extends Component {
   }
 
   showSelectComponent() {
-    const types = ['None', 'Location', 'Data', 'Behavior', 'Transformation']
+    const types = ['None', 'Location', 'Data', 'Behavior', 'Transformation', 'Example']
     return types.map((type) => {
       return (
         <div className="field" key={ type }>
@@ -42,73 +43,103 @@ class HintView extends Component {
   }
 
   showHintComponent() {
-    switch (this.state.type) {
-      case 'None':
-        return (
-          <NoneHint
-            options={ this.props.options }
-            id={ this.props.id }
-            before={ this.props.before }
-          />
-        )
-        break
-      case 'Location':
-        return (
-          <LocationHint
-            options={ this.props.options }
-            id={ this.props.id }
-            before={ this.props.before }
-            after={ this.props.after }
-            diffs={ this.props.diffs }
-            removed={ this.props.removed }
-            added={ this.props.added }
-          />
-        )
-        break
-      case 'Data':
-        return (
-          <DataHint
-            options={ this.props.options }
-            id={ this.props.id }
-            before={ this.props.before }
-            after={ this.props.after }
-            traces={ this.props.traces }
-            currentCode={ this.props.currentCode }
-            step={ this.props.step }
-            stop={ this.props.stop }
-            beforeCode={ this.props.beforeCode }
-            afterCode={ this.props.afterCode }
-            beforeTraces={ this.props.beforeTraces }
-            afterTraces={ this.props.afterTraces }
-          />
-        )
-        break
-      case 'Behavior':
-        return (
-          <BehaviorHint
-            options={ this.props.options }
-            id={ this.props.id }
-            before={ this.props.before }
-            after={ this.props.after }
-            traces={ this.props.traces }
-            currentCode={ this.props.currentCode }
-            step={ this.props.step }
-            stop={ this.props.stop }
-            beforeCode={ this.props.beforeCode }
-            afterCode={ this.props.afterCode }
-            beforeTraces={ this.props.beforeTraces }
-            afterTraces={ this.props.afterTraces }
-            removed={ this.props.removed }
-            added={ this.props.added }
-          />
-        )
-        break
-      default:
-        return (
-          <h1>Under Construction</h1>
-        )
-        break
-    }
+    const types = ['None', 'Location', 'Data', 'Behavior', 'Transformation', 'Example']
+    return types.map((type) => {
+      switch (type) {
+        case 'None':
+          return (
+            <div id="none-hint" style={{ display: type === this.state.type ? 'block' : 'none' }} key={ type }>
+              <NoneHint
+                options={ this.props.options }
+                id={ this.props.id }
+                before={ this.props.before }
+              />
+            </div>
+          )
+          break
+        case 'Location':
+          return (
+            <div id="location-hint" style={{ display: type === this.state.type ? 'block' : 'none' }} key={ type }>
+              <LocationHint
+                options={ this.props.options }
+                id={ this.props.id }
+                before={ this.props.before }
+                after={ this.props.after }
+                diffs={ this.props.diffs }
+                removed={ this.props.removed }
+                added={ this.props.added }
+              />
+            </div>
+          )
+          break
+        case 'Data':
+          return (
+            <div id="data-hint" style={{ display: type === this.state.type ? 'block' : 'none' }} key={ type }>
+              <DataHint
+                options={ this.props.options }
+                id={ this.props.id }
+                before={ this.props.before }
+                after={ this.props.after }
+                traces={ this.props.traces }
+                currentCode={ this.props.currentCode }
+                step={ this.props.step }
+                stop={ this.props.stop }
+                beforeCode={ this.props.beforeCode }
+                afterCode={ this.props.afterCode }
+                beforeTraces={ this.props.beforeTraces }
+                afterTraces={ this.props.afterTraces }
+              />
+            </div>
+          )
+          break
+        case 'Behavior':
+          return (
+            <div id="behavior-hint" style={{ display: type === this.state.type ? 'block' : 'none' }} key={ type }>
+              <BehaviorHint
+                options={ this.props.options }
+                id={ this.props.id }
+                before={ this.props.before }
+                after={ this.props.after }
+                traces={ this.props.traces }
+                currentCode={ this.props.currentCode }
+                step={ this.props.step }
+                stop={ this.props.stop }
+                beforeCode={ this.props.beforeCode }
+                afterCode={ this.props.afterCode }
+                beforeTraces={ this.props.beforeTraces }
+                afterTraces={ this.props.afterTraces }
+                removed={ this.props.removed }
+                added={ this.props.added }
+              />
+            </div>
+          )
+          break
+        case 'Transformation':
+          return (
+            <div id="transformation-hint" style={{ display: type === this.state.type ? 'block' : 'none' }} key={ type }>
+              <TransformationHint
+                options={ this.props.options }
+                id={ this.props.id }
+                before={ this.props.before }
+                code={ this.props.code }
+                removed={ this.props.removed }
+                added={ this.props.added }
+              />
+            </div>
+          )
+          break
+        case 'Example':
+          return (
+            <div id="example-hint" style={{ display: type === this.state.type ? 'block' : 'none' }} key={ type }>
+              <h1>Under Construction</h1>
+            </div>
+          )
+          break
+        default:
+          return false
+          break
+      }
+    })
   }
 
   render() {

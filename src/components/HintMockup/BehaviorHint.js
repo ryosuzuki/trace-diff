@@ -22,7 +22,7 @@ class BehaviorHint extends Component {
       result: [],
       tick: 0
     }
-    window.behaviorHint = this
+    window.behaviorHintMockup = this
   }
 
   componentDidMount() {

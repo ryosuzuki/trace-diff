@@ -1,19 +1,17 @@
 import React, { Component } from 'react'
 import CodeMirror from 'react-codemirror'
 import 'codemirror/mode/python/python'
-import Slider from 'rc-slider'
-import Tooltip from 'rc-tooltip'
 import _ from 'lodash'
 import * as jsdiff from 'diff'
 
-
-class LocationHint extends Component {
+class TransformationHint extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      detail: ''
+      remove: '',
+      add: ''
     }
-    window.locationHint = this
+    window.transformationHint = this
   }
 
   componentDidMount() {
@@ -31,28 +29,35 @@ class LocationHint extends Component {
       this.cm.addLineClass(line, '', 'highlight')
     }
 
-    let diffs = jsdiff.diffWords(this.props.before, this.props.after)
-    let detail = ''
-    for (let diff of diffs) {
-      if (diff.removed) {
-        detail += diff.value
-        detail += ' '
-      }
+    if (!this.props.code) return false
+    let before
+    let after
+    if (this.props.removed[0]) {
+      before = this.props.code.split('\n')[this.props.removed[0]]
     }
-    this.setState({ detail: detail })
+    if (this.props.added[0]) {
+      after = this.props.code.split('\n')[this.props.added[0]]
+    }
+
+    let diffs = jsdiff.diffWords(before, after)
+    let common = diffs[0].value
+
+    let remove = before.replace(common, '')
+    let add = after.replace(common, '')
+
+    this.setState({ remove: remove, add: add })
 
   }
 
   render() {
     return (
       <div>
-        <h1>Location Hint</h1>
+        <h1>Under Construction (Current Status: Incomplete)</h1>
         <div className="ui message markdown">
           <div className="header">
-            Location Hint
+            Transformation Hint
           </div>
-          <p><b>Hint 1:</b> There is an error in <strong>line { this.props.removed.map(i => ++i).join(', ') }</strong></p>
-          <p><b>Hint 2:</b> Check <strong>{ this.state.detail }</strong> in <strong>line { this.props.removed.map(i => ++i).join(', ') }</strong></p>
+          <p>Replace <strong>{ this.state.remove }</strong> with <strong>{ this.state.add }</strong> in <strong>line { this.props.removed[0]+1 }</strong></p>
         </div>
         <h2>Code</h2>
         <CodeMirror
@@ -65,4 +70,4 @@ class LocationHint extends Component {
   }
 }
 
-export default LocationHint
+export default TransformationHint

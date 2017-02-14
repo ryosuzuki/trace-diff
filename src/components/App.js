@@ -77,6 +77,7 @@ class App extends Component {
     window.diffView.generateDiff(id)
     setTimeout(() => {
       window.locationHint.init()
+      window.transformationHint.init()
       window.behaviorHint.init()
     }, 500)
 
@@ -125,6 +126,7 @@ class App extends Component {
             <HintView
               options={ options }
               id={ this.props.id }
+              code={ this.props.code }
               before={ this.props.before }
               after={ this.props.after }
               traces={ this.props.traces }

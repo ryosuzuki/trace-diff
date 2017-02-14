@@ -61,13 +61,37 @@ class DataHint extends Component {
       this.cm.addLineClass(current.line-1, '', 'current-line')
     }
 
+    const getMsg = (output) => {
+      let msg = ''
+      for (let key of Object.keys(output)) {
+        if (output[key] instanceof Object) {
+          msg += key
+          msg += '('
+          msg += _.map(output[key]).join(', ')
+          msg += ')'
+        } else {
+          if (key === '__return__') {
+            msg += 'return'
+          } else {
+            msg += key
+          }
+          msg += ': '
+          if (output[key]) msg += output[key]
+        }
+      }
+      return msg
+    }
+
+    window.current = current
     for (let line of Object.keys(current.outputs)) {
       let output = current.outputs[line]
-      output = JSON.stringify(output)
+      // output = JSON.stringify(output)
+      let msg = getMsg(output)
+
       let fixedOutput = current.fixedOutputs ? current.fixedOutputs[line] : null
       if (fixedOutput && !_.isEqual(output, fixedOutput)) {
-        output += ' should be '
-        output += JSON.stringify(fixedOutput)
+        msg += ' should be '
+        msg += getMsg(fixedOutput)
       }
 
 
@@ -76,7 +100,7 @@ class DataHint extends Component {
       // for (let i = ch; i < 30; i++) {
       //   space += ' '
       // }
-      let msg = `${space} # ${JSON.stringify(output)}`
+      msg = `${space} # ${msg}`
       this.cm.replaceRange(msg, { line: line-1, ch: ch }, { line: line-1, ch: Infinity })
     }
     let code = this.cm.getValue()

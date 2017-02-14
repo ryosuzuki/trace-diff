@@ -111,9 +111,10 @@ class DataHint extends Component {
 
         </div>
 
-        <CodeMirror value={ this.state.code }
-                    ref="editor"
-                    options={ this.props.options }
+        <CodeMirror
+          value={ this.state.code }
+          ref="editor"
+          options={ this.props.options }
         />
       </div>
     )

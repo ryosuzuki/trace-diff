@@ -63,13 +63,15 @@ for item in items:
   after += '\n'
   after += test
 
-  before_traces = pg_logger.exec_script_str(before).trace
-  after_traces = pg_logger.exec_script_str(after).trace
-  item['before_traces'] = before_traces
-  item['after_traces'] = after_traces
+  beforeTraces = pg_logger.exec_script_str(before).trace
+  afterTraces = pg_logger.exec_script_str(after).trace
+  item['beforeCode'] = before
+  item['afterCode'] = after
+  item['beforeTraces'] = beforeTraces
+  item['afterTraces'] = afterTraces
 
 with open('example.json', 'w') as file:
-  json.dump(items[0], file, indent = 2)
+  json.dump([items[0]], file, indent = 2)
 
 with open(path, 'w') as file:
   json.dump(items, file)

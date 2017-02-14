@@ -13,6 +13,7 @@ import ExampleHint from './HintMockup/ExampleHint'
 import ControlPanel from './ControlPanel'
 import DiffView from './DiffView'
 import HintView from './HintView'
+import Stream from './Stream'
 
 import Datastore from 'nedb'
 const db = new Datastore()
@@ -41,7 +42,7 @@ class App extends Component {
 
     $.ajax({
       method: 'GET',
-      url: `${window.location.pathname}data/accumulate.json`
+      url: `${window.location.pathname}data/example.json`
     })
     .then((items) => {
       console.log('start')
@@ -64,9 +65,20 @@ class App extends Component {
 
   setCurrent(id) {
     let item = this.props.items[id]
-    let state = Object.assign(item, { id: id })
+    let stream = new Stream()
+    stream.generate(item.beforeTraces, item.beforeCode, 'before')
+    stream.generate(item.afterTraces, item.afterCode, 'after')
+    stream.check()
+
+    let state = Object.assign(item, {
+      id: id,
+      beforeTraces: stream.beforeTraces,
+      afterTraces: stream.afterTraces,
+      traces: stream.traces
+    })
     this.updateState(state)
     window.diffView.generateDiff(id)
+    window.hintView.initHint()
 
   }
 
@@ -97,8 +109,8 @@ class App extends Component {
           </div>
         </div>
         <div className="ui two column centered grid">
-          <div id="diff-view" className="eight wide column">
-            <h1 className="title">Diff View</h1>
+          <div id="diff-view" className="six wide column">
+            <h1 className="title">Teacher</h1>
             <DiffView
               options={ options }
               id={ this.props.id }
@@ -108,12 +120,18 @@ class App extends Component {
               log={ this.props.log }
             />
           </div>
-          <div id="hint-view" className="eight wide column">
-            <h1 className="title">Hint View</h1>
+          <div id="hint-view" className="ten wide column">
+            <h1 className="title">Student</h1>
             <HintView
               options={ options }
               id={ this.props.id }
               before={ this.props.before }
+              after={ this.props.after }
+              traces={ this.props.traces }
+              beforeCode={ this.props.beforeCode }
+              afterCode={ this.props.afterCode }
+              beforeTraces={ this.props.beforeTraces }
+              afterTraces={ this.props.afterTraces }
               log={ this.props.log }
             />
           </div>

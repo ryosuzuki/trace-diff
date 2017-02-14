@@ -92,7 +92,7 @@
 }
 
 .message {
-  display: none;
+  // display: none;
   font-size: 1.2em !important;
 }
 
@@ -152,6 +152,16 @@
 .rc-slider {
   float: left;
   margin-top: 12px;
+  width: 85%;
+  margin-left: 30px;
+}
+
+
+#control-panel .rc-slider {
+  float: left;
+  margin-top: 12px;
+  width: 100%;
+  margin-left: 0px;
 }
 
 .title {

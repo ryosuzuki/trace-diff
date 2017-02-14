@@ -98,7 +98,10 @@ class HintView extends Component {
             afterCode={ this.props.afterCode }
             beforeTraces={ this.props.beforeTraces }
             afterTraces={ this.props.afterTraces }
-          />        )
+            removed={ this.props.removed }
+            added={ this.props.added }
+          />
+        )
         break
       default:
         return (

@@ -9,15 +9,11 @@ class BehaviorHint extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      id: 0,
-      step: 0,
-      stop: false,
-      message: '',
-      code: '',
-      origin: '',
-      traces: [],
+      expected: [],
+      result: [],
+      tick: 0
     }
-    window.dataHint = this
+    window.behaviorHint = this
   }
 
   componentDidMount() {
@@ -25,41 +21,59 @@ class BehaviorHint extends Component {
   }
 
   init() {
-    this.setState({
-      id: this.props.id,
-      code: this.props.beforeCode,
-      origin: this.props.beforeCode,
-      traces: this.props.traces,
-    })
+    if (!this.refs.editor) return false
     this.cm = this.refs.editor.getCodeMirror()
+
+    // this.cm.markText({ line: 4, ch: 4 }, { line: 4, ch: 9 }, { className: 'highlight' })
+    /*
+    let marker = document.createElement('div')
+    marker.append($('.label')[0])
+    this.cm.setGutterMarker(3, 'breakpoints', marker)
+    */
   }
+
 
   playStep() {
     let interval = 100
-    this.setState({ stop: false })
+    window.app.updateState({ stop: false })
     let timer = setInterval(() => {
-      if (this.state.step >= this.state.traces.length || this.state.stop) {
+      if (this.props.step >= this.props.traces.length || this.props.stop) {
         clearInterval(timer)
-        this.setState({ stop: false })
+        window.app.updateState({ stop: false })
       } else {
-        this.updateStep(this.state.step+1)
+        try {
+          this.updateStep(this.props.step+1)
+        } catch (err) {
+          this.updateStep(this.props.step-1)
+          window.app.updateState({ stop: true })
+        }
       }
     }, interval)
   }
 
   updateStep(value) {
     let step = Math.floor(value)
-    this.cm.setValue(this.state.origin)
+    this.cm.setValue(this.props.beforeCode)
 
-    let current = this.state.traces[step]
+    let current = this.props.traces[step]
+    /*
     if (current.error) {
       this.cm.addLineClass(current.line-1, '', 'highlight')
-      this.setState({ stop: true })
+      window.app.updateState({ stop: true })
     } else {
       this.cm.addLineClass(current.line-1, '', 'current-line')
     }
+    */
+    this.cm.addLineClass(current.line-1, '', 'current-line')
 
-    const getMsg = (output) => {
+    let msg = document.createElement('div')
+    msg.className = 'inline-hint'
+    msg.append($('.arrow-border').clone()[0])
+    msg.append($('.arrow-up').clone()[0])
+    msg.append($('.dynamic-hint').clone()[0])
+    this.cm.addLineWidget(this.props.removed[0], msg, { coverGutter: true })
+
+    const getLog = (output) => {
       let msg = ''
       for (let key of Object.keys(output)) {
         if (output[key] instanceof Object) {
@@ -80,20 +94,30 @@ class BehaviorHint extends Component {
       return msg
     }
 
+    const getValue = (output) => {
+      let val = ''
+      for (let key of Object.keys(output)) {
+        if (output[key] instanceof Object) {
+        } else {
+          if (output[key]) val += output[key]
+        }
+      }
+      return val
+    }
+
     window.current = current
     for (let line of Object.keys(current.outputs)) {
       let output = current.outputs[line]
       // output = JSON.stringify(output)
-      let msg = getMsg(output)
+      let msg = getLog(output)
 
       let fixedOutput = current.fixedOutputs ? current.fixedOutputs[line] : null
       if (fixedOutput && !_.isEqual(output, fixedOutput)) {
         msg += ' should be '
-        msg += getMsg(fixedOutput)
+        msg += getLog(fixedOutput)
       }
 
-
-      let ch = this.state.origin.split('\n')[line-1].length
+      let ch = this.props.beforeCode.split('\n')[line-1].length
       let space = ' '
       // for (let i = ch; i < 30; i++) {
       //   space += ' '
@@ -101,8 +125,26 @@ class BehaviorHint extends Component {
       msg = `${space} # ${msg}`
       this.cm.replaceRange(msg, { line: line-1, ch: ch }, { line: line-1, ch: Infinity })
     }
+
+    if (current.line - 1 === this.props.removed[0]) {
+      let output = current.outputs[current.line]
+      let fixedOutput = current.fixedOutputs ? current.fixedOutputs[current.line] : null
+      let val = getValue(output)
+      let result = this.state.result.concat([val])
+      let expected = this.state.expected
+      if (fixedOutput) {
+        let fixedVal = getValue(fixedOutput)
+        expected = expected.concat([fixedVal])
+      }
+      this.setState({
+        expected: expected,
+        result: result,
+      })
+    }
+
+
     let code = this.cm.getValue()
-    this.setState({ step: step, code: code })
+    window.app.updateState({ step: step, currentCode: code })
   }
 
   render() {
@@ -112,7 +154,7 @@ class BehaviorHint extends Component {
           <div className="header">
             Behavior Hint
           </div>
-          <p>{ this.state.message }</p>
+          <p>{ '' }</p>
 
           <div className="play-area">
           <button className="ui basic button play-button" onClick={ this.playStep.bind(this) }>
@@ -121,18 +163,41 @@ class BehaviorHint extends Component {
           <Slider
             dots
             min={ 0 }
-            max={ this.state.traces.length-1 }
-            value={ this.state.step }
+            max={ this.props.traces.length-1 }
+            value={ this.props.step }
             onChange={ this.updateStep.bind(this) }
           />
           </div>
         </div>
         <h2>Code</h2>
         <CodeMirror
-          value={ this.state.code }
+          value={ this.props.currentCode }
           ref="editor"
           options={ this.props.options }
         />
+
+        <div style={{ display: 'none' }}>
+          <div className="ui blue label call-label">
+            10 calls
+          </div>
+          <div className="arrow-up"></div>
+          <div className="arrow-border"></div>
+          <pre className="dynamic-hint">
+            Expected |  { this.state.expected.map((i) => {
+              // let num = `${i}`
+              // let space = Array(2 - num.length).fill(' ').join('')
+              // return `${space}${num}`
+              return i
+            }).join('  |  ') }
+            <br />
+            Result   |  { this.state.result.map((i) => {
+              // let num = `${i}`
+              // let space = Array(2 - num.length).fill(' ').join('')
+              // return `${space}${num}`
+              return i
+            }).join('  |  ') }
+          </pre>
+        </div>
       </div>
     )
   }

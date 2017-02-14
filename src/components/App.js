@@ -77,6 +77,7 @@ class App extends Component {
     window.diffView.generateDiff(id)
     setTimeout(() => {
       window.locationHint.init()
+      window.behaviorHint.init()
     }, 500)
 
   }

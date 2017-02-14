@@ -96,8 +96,11 @@
 }
 
 .message {
-  // display: none;
   font-size: 1.2em !important;
+}
+
+#mockup-view .message {
+  display: none;
 }
 
 .label {

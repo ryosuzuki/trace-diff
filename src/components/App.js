@@ -78,6 +78,11 @@ class App extends Component {
     })
     this.updateState(state)
     window.diffView.generateDiff(id)
+    setTimeout(() => {
+      window.locationHint.init()
+      window.dataHint.init()
+    }, 500)
+
   }
 
   updateState(state) {
@@ -130,6 +135,9 @@ class App extends Component {
               afterCode={ this.props.afterCode }
               beforeTraces={ this.props.beforeTraces }
               afterTraces={ this.props.afterTraces }
+              added={ this.props.added }
+              removed={ this.props.removed }
+              diffs={ this.props.diffs }
               log={ this.props.log }
             />
           </div>

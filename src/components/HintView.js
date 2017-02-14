@@ -5,13 +5,15 @@ import Datastore from 'nedb'
 import Slider from 'rc-slider'
 import Tooltip from 'rc-tooltip'
 
+import NoneHint from './NoneHint'
+import LocationHint from './LocationHint'
 import DataHint from './DataHint'
 
 class HintView extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      type: 'Data',
+      type: 'Location',
     }
     window.hintView = this
   }
@@ -40,6 +42,28 @@ class HintView extends Component {
 
   showHintComponent() {
     switch (this.state.type) {
+      case 'None':
+        return (
+          <NoneHint
+            options={ this.props.options }
+            id={ this.props.id }
+            before={ this.props.before }
+          />
+        )
+        break
+      case 'Location':
+        return (
+          <LocationHint
+            options={ this.props.options }
+            id={ this.props.id }
+            before={ this.props.before }
+            after={ this.props.after }
+            diffs={ this.props.diffs }
+            removed={ this.props.removed }
+            added={ this.props.added }
+          />
+        )
+        break
       case 'Data':
         return (
           <DataHint
@@ -52,7 +76,6 @@ class HintView extends Component {
             afterCode={ this.props.afterCode }
             beforeTraces={ this.props.beforeTraces }
             afterTraces={ this.props.afterTraces }
-            log={ this.props.log }
           />
         )
         break
@@ -79,6 +102,11 @@ class HintView extends Component {
           </div>
         </div>
         { this.showHintComponent() }
+        <br />
+        <h2>Failed Test Result</h2>
+        <div className="markdown">
+          <pre><code>{ this.props.log }</code></pre>
+        </div>
       </div>
     )
   }

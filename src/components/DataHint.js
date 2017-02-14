@@ -21,9 +21,7 @@ class DataHint extends Component {
   }
 
   componentDidMount() {
-    setTimeout(() => {
-      this.init()
-    }, 500)
+    this.init()
   }
 
   init() {
@@ -129,6 +127,7 @@ class DataHint extends Component {
           />
           </div>
         </div>
+        <h2>Code</h2>
         <CodeMirror
           value={ this.state.code }
           ref="editor"

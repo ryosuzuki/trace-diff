@@ -1,19 +1,28 @@
 import React, { Component } from 'react'
-import {  MarkdownPreview  } from 'react-marked-markdown';
-import LocationHint from './LocationHint'
-import DataHint from './DataHint'
-import BehaviorHint from './BehaviorHint'
-import BehaviorHint2 from './BehaviorHint2'
-import TransformationHint from './TransformationHint'
-import ExampleHint from './ExampleHint'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import actions from '../redux/actions'
+import { MarkdownPreview  } from 'react-marked-markdown';
+import LocationHint from './HintMockup/LocationHint'
+import DataHint from './HintMockup/DataHint'
+import BehaviorHint from './HintMockup/BehaviorHint'
+import BehaviorHint2 from './HintMockup/BehaviorHint2'
+import TransformationHint from './HintMockup/TransformationHint'
+import ExampleHint from './HintMockup/ExampleHint'
 
+import ControlPanel from './ControlPanel'
 import DiffView from './DiffView'
+import HintView from './HintView'
+
+import Datastore from 'nedb'
+const db = new Datastore()
 
 class App extends Component {
   constructor(props) {
     super(props)
-    window.app = this
     this.state = {}
+    window.app = this
+    window.db = db
   }
 
   componentDidMount() {
@@ -29,6 +38,40 @@ class App extends Component {
         this.setState(hash)
       })
     }
+
+    $.ajax({
+      method: 'GET',
+      url: `${window.location.pathname}data/accumulate.json`
+    })
+    .then((items) => {
+      console.log('start')
+      this.updateState({ items: items })
+      this.setCurrent(0)
+
+      items = items.map((item) => {
+        return {
+          id: item.id,
+          test: item.test,
+          expected: item.expected,
+          result: item.result
+        }
+      })
+      db.insert(items, (err) => {
+        console.log('finish')
+      })
+    })
+  }
+
+  setCurrent(id) {
+    let item = this.props.items[id]
+    let state = Object.assign(item, { id: id })
+    this.updateState(state)
+    window.diffView.generateDiff(id)
+
+  }
+
+  updateState(state) {
+    this.props.store.dispatch(actions.updateState(state))
   }
 
   render() {
@@ -41,15 +84,37 @@ class App extends Component {
     return (
       <div>
         <div className="ui two column centered grid">
-          <div className="nine wide column">
+          <div className="sixteen wide column">
             <h1 id="top" className="ui center aligned huge header">
               Exploring the Design Space of Automated Hints
             </h1>
           </div>
-          <div id="diff-view" className="nine wide column" style={{ minHeight: '500px' }}>
+          <div id="control-panel" className="eight wide column">
+            <ControlPanel
+              id={ this.props.id }
+              items={ this.props.items }
+            />
+          </div>
+        </div>
+        <div className="ui two column centered grid">
+          <div id="diff-view" className="eight wide column">
             <h1 className="title">Diff View</h1>
             <DiffView
               options={ options }
+              id={ this.props.id }
+              code={ this.props.code }
+              added={ this.props.added }
+              removed={ this.props.removed }
+              log={ this.props.log }
+            />
+          </div>
+          <div id="hint-view" className="eight wide column">
+            <h1 className="title">Hint View</h1>
+            <HintView
+              options={ options }
+              id={ this.props.id }
+              before={ this.props.before }
+              log={ this.props.log }
             />
           </div>
 
@@ -165,5 +230,14 @@ class App extends Component {
   }
 }
 
-export default App
+function mapStateToProps(state) {
+  return state
+}
 
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(actions, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)

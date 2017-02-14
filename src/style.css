@@ -1,4 +1,17 @@
 
+#diff-view {
+  border-right: 3px dashed #bbb;
+}
+
+#diff-view, #hint-view {
+  padding: 10px 50px;
+  min-height: 1000px;
+}
+
+#control-panel {
+  margin-bottom: 40px;
+}
+
 .CodeMirror {
   font-family: Monaco, 'Andale Mono', 'Lucida Console', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace;
   font-size: 11pt;
@@ -139,8 +152,6 @@
 .rc-slider {
   float: left;
   margin-top: 12px;
-  margin-left: 30px;
-  width: 80%;
 }
 
 .title {

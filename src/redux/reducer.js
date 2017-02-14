@@ -1,6 +1,6 @@
 let reducer = function (state, action) {
   switch (action.type) {
-    case 'INIT_STATE':
+    case 'UPDATE_STATE':
       return Object.assign({}, state,
         action.state
       )

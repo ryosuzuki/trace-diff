@@ -1,7 +1,7 @@
 let actions = {
-  initState: function(state) {
+  updateState: function(state) {
     return {
-      type: 'INIT_STATE',
+      type: 'UPDATE_STATE',
       state: state
     }
   }

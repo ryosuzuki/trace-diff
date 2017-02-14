@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import actions from '../redux/actions'
+import Mousetrap from 'mousetrap'
 
 import ControlPanel from './ControlPanel'
 import DiffView from './DiffView'
@@ -23,12 +24,16 @@ class App extends Component {
   componentDidMount() {
     $.ajax({
       method: 'GET',
-      url: `${window.location.pathname}data/example.json`
+      url: `${window.location.pathname}data/accumulate.json`
     })
     .then((items) => {
       console.log('start')
       this.updateState({ items: items })
-      this.setCurrent(0)
+      let id = 0
+      if (window.location.search) {
+        id = Number(window.location.search.split('=')[1])
+      }
+      this.setCurrent(id)
 
       items = items.map((item) => {
         return {
@@ -41,6 +46,13 @@ class App extends Component {
       db.insert(items, (err) => {
         console.log('finish')
       })
+    })
+
+    Mousetrap.bind('left', () => {
+      this.setCurrent(this.props.id - 1)
+    })
+    Mousetrap.bind('right', () => {
+      this.setCurrent(this.props.id + 1)
     })
   }
 
@@ -55,13 +67,16 @@ class App extends Component {
       id: id,
       beforeTraces: stream.beforeTraces,
       afterTraces: stream.afterTraces,
-      traces: stream.traces
+      traces: stream.traces,
+      currentCode: item.beforeCode,
+      step: 0,
+      stop: false,
     })
     this.updateState(state)
+    window.history.pushState(null, null, `?id=${id}`)
     window.diffView.generateDiff(id)
     setTimeout(() => {
       window.locationHint.init()
-      // window.dataHint.init()
     }, 500)
 
   }
@@ -112,6 +127,9 @@ class App extends Component {
               before={ this.props.before }
               after={ this.props.after }
               traces={ this.props.traces }
+              currentCode={ this.props.currentCode }
+              step={ this.props.step }
+              stop={ this.props.stop }
               beforeCode={ this.props.beforeCode }
               afterCode={ this.props.afterCode }
               beforeTraces={ this.props.beforeTraces }

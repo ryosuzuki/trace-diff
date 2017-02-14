@@ -73,6 +73,9 @@ class HintView extends Component {
             before={ this.props.before }
             after={ this.props.after }
             traces={ this.props.traces }
+            currentCode={ this.props.currentCode }
+            step={ this.props.step }
+            stop={ this.props.stop }
             beforeCode={ this.props.beforeCode }
             afterCode={ this.props.afterCode }
             beforeTraces={ this.props.beforeTraces }
@@ -88,6 +91,9 @@ class HintView extends Component {
             before={ this.props.before }
             after={ this.props.after }
             traces={ this.props.traces }
+            currentCode={ this.props.currentCode }
+            step={ this.props.step }
+            stop={ this.props.stop }
             beforeCode={ this.props.beforeCode }
             afterCode={ this.props.afterCode }
             beforeTraces={ this.props.beforeTraces }

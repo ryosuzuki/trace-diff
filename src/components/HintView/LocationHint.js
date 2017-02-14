@@ -11,7 +11,6 @@ class LocationHint extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      message: '',
       detail: ''
     }
     window.locationHint = this
@@ -22,6 +21,7 @@ class LocationHint extends Component {
   }
 
   init() {
+    if (!this.refs.editor) return false
     this.cm = this.refs.editor.getCodeMirror()
     window.jsdiff = jsdiff
     window.before = this.props.before
@@ -31,28 +31,27 @@ class LocationHint extends Component {
       this.cm.addLineClass(line, '', 'highlight')
     }
 
-    let message = `There is an error in line ${this.props.removed.join(', ')}`
-    let detail = `Check `
-    let diffs = jsdiff.diffChars(this.props.before, this.props.after)
+    let diffs = jsdiff.diffWords(this.props.before, this.props.after)
+    let detail = ''
     for (let diff of diffs) {
-      if (!diff.removed) continue
-      detail += diff.value
-      detail += ' '
+      if (diff.removed) {
+        detail += diff.value
+        detail += ' '
+      }
     }
-    detail += `in line ${this.props.removed.join(', ')}`
-    this.setState({ message: message, detail: detail })
+    this.setState({ detail: detail })
 
   }
 
   render() {
     return (
       <div id={ this.state.id }>
-        <div className="ui message">
+        <div className="ui message markdown">
           <div className="header">
             Location Hint
           </div>
-          <p><b>Hint 1:</b> { this.state.message }</p>
-          <p><b>Hint 2:</b> { this.state.detail }</p>
+          <p><b>Hint 1:</b> There is an error in <strong>line { this.props.removed.map(i => ++i).join(', ') }</strong></p>
+          <p><b>Hint 2:</b> Check <strong>{ this.state.detail }</strong> in <strong>line { this.props.removed.map(i => ++i).join(', ') }</strong></p>
         </div>
         <h2>Code</h2>
         <CodeMirror

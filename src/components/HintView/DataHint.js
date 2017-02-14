@@ -8,53 +8,34 @@ import _ from 'lodash'
 class DataHint extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      id: 0,
-      step: 0,
-      stop: false,
-      message: '',
-      code: '',
-      origin: '',
-      traces: [],
-    }
     window.dataHint = this
   }
 
   componentDidMount() {
-    this.init()
-  }
-
-  init() {
-    this.setState({
-      id: this.props.id,
-      code: this.props.beforeCode,
-      origin: this.props.beforeCode,
-      traces: this.props.traces,
-    })
     this.cm = this.refs.editor.getCodeMirror()
   }
 
   playStep() {
     let interval = 100
-    this.setState({ stop: false })
+    window.app.updateState({ stop: false })
     let timer = setInterval(() => {
-      if (this.state.step >= this.state.traces.length || this.state.stop) {
+      if (this.props.step >= this.props.traces.length || this.props.stop) {
         clearInterval(timer)
-        this.setState({ stop: false })
+        window.app.updateState({ stop: false })
       } else {
-        this.updateStep(this.state.step+1)
+        this.updateStep(this.props.step+1)
       }
     }, interval)
   }
 
   updateStep(value) {
     let step = Math.floor(value)
-    this.cm.setValue(this.state.origin)
+    this.cm.setValue(this.props.beforeCode)
 
-    let current = this.state.traces[step]
+    let current = this.props.traces[step]
     if (current.error) {
       this.cm.addLineClass(current.line-1, '', 'highlight')
-      this.setState({ stop: true })
+      window.app.updateState({ stop: true })
     } else {
       this.cm.addLineClass(current.line-1, '', 'current-line')
     }
@@ -74,7 +55,7 @@ class DataHint extends Component {
             msg += key
           }
           msg += ': '
-          if (output[key]) msg += output[key]
+          if (output[key] !== undefined) msg += output[key]
         }
       }
       return msg
@@ -93,7 +74,7 @@ class DataHint extends Component {
       }
 
 
-      let ch = this.state.origin.split('\n')[line-1].length
+      let ch = this.props.beforeCode.split('\n')[line-1].length
       let space = ' '
       // for (let i = ch; i < 30; i++) {
       //   space += ' '
@@ -102,17 +83,17 @@ class DataHint extends Component {
       this.cm.replaceRange(msg, { line: line-1, ch: ch }, { line: line-1, ch: Infinity })
     }
     let code = this.cm.getValue()
-    this.setState({ step: step, code: code })
+    window.app.updateState({ step: step, currentCode: code })
   }
 
   render() {
     return (
-      <div id={ this.state.id }>
+      <div id={ this.props.id }>
         <div className="ui message">
           <div className="header">
             Data Hint
           </div>
-          <p>{ this.state.message }</p>
+          <p>{ '' }</p>
 
           <div className="play-area">
           <button className="ui basic button play-button" onClick={ this.playStep.bind(this) }>
@@ -121,15 +102,15 @@ class DataHint extends Component {
           <Slider
             dots
             min={ 0 }
-            max={ this.state.traces.length-1 }
-            value={ this.state.step }
+            max={ this.props.traces.length-1 }
+            value={ this.props.step }
             onChange={ this.updateStep.bind(this) }
           />
           </div>
         </div>
         <h2>Code</h2>
         <CodeMirror
-          value={ this.state.code }
+          value={ this.props.currentCode }
           ref="editor"
           options={ this.props.options }
         />

@@ -38,6 +38,9 @@ let initialStore = {
   result: '',
   rule: '',
   log: '',
+  currentCode: '',
+  step: 0,
+  stop: false,
 }
 
 let store = configureStore(initialStore)

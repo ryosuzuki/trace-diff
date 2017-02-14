@@ -41,6 +41,8 @@ class Item {
   constructor(item, id) {
     this.item = item
     this.id = id
+    this.studentId = this.item.studentId
+    this.rule = this.item.UsedFix
     this.before = this.item.before.substr(2)
     this.after = this.item.SynthesizedAfter.substr(2)
     this.code = ''

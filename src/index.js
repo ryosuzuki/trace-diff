@@ -21,6 +21,7 @@ import { Provider } from 'react-redux'
 let initialStore = {
   items: [],
   id: 0,
+  studentId: 0,
   code: '',
   before: '',
   after: '',
@@ -35,6 +36,7 @@ let initialStore = {
   test: '',
   expected: '',
   result: '',
+  rule: '',
   log: '',
 }
 

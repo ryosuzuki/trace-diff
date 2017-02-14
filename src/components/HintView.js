@@ -5,9 +5,10 @@ import Datastore from 'nedb'
 import Slider from 'rc-slider'
 import Tooltip from 'rc-tooltip'
 
-import NoneHint from './NoneHint'
-import LocationHint from './LocationHint'
-import DataHint from './DataHint'
+import NoneHint from './HintView/NoneHint'
+import LocationHint from './HintView/LocationHint'
+import DataHint from './HintView/DataHint'
+import BehaviorHint from './HintView/BehaviorHint'
 
 class HintView extends Component {
   constructor(props) {
@@ -81,8 +82,17 @@ class HintView extends Component {
         break
       case 'Behavior':
         return (
-          <h1>Behavior Hint</h1>
-        )
+          <BehaviorHint
+            options={ this.props.options }
+            id={ this.props.id }
+            before={ this.props.before }
+            after={ this.props.after }
+            traces={ this.props.traces }
+            beforeCode={ this.props.beforeCode }
+            afterCode={ this.props.afterCode }
+            beforeTraces={ this.props.beforeTraces }
+            afterTraces={ this.props.afterTraces }
+          />        )
         break
       default:
         return (

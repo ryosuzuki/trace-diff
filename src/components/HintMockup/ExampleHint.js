@@ -16,7 +16,7 @@ class ExampleHint extends Component {
       word: word,
       message: message,
     }
-    window.dataHint = this
+    window.exampleHintMockup = this
   }
 
   componentDidMount() {

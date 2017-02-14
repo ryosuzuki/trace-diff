@@ -37,13 +37,13 @@ class Stream {
         let after_output = afterTrace.outputs[afterTrace.line]
         if (!_.isEqual(before_output, after_output)) {
           this.traces[i-1].error = true
-          this.traces[i-1].fixed_outputs = afterTrace.outputs
+          this.traces[i-1].fixedOutputs = afterTrace.outputs
         }
       }
 
       if (!_.isEqual(beforeTrace.outputs, afterTrace.outputs)) {
         this.traces[i].error = true
-        this.traces[i].fixed_outputs = afterTrace.outputs
+        this.traces[i].fixedOutputs = afterTrace.outputs
       }
 
       // if (trace.line !== afterTrace.line) {

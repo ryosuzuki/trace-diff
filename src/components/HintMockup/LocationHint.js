@@ -18,7 +18,7 @@ class LocationHint extends Component {
       word: word,
       message: message
     }
-    window.locationHint = this
+    window.locationHintMockup = this
   }
 
   componentDidMount() {

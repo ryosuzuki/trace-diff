@@ -17,7 +17,7 @@ class DataHint extends Component {
       stop: false,
       message: message,
     }
-    window.dataHint = this
+    window.dataHintMockup = this
   }
 
   componentDidMount() {

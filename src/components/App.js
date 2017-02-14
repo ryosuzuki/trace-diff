@@ -78,8 +78,6 @@ class App extends Component {
     })
     this.updateState(state)
     window.diffView.generateDiff(id)
-    window.hintView.initHint()
-
   }
 
   updateState(state) {

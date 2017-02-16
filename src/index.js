@@ -41,6 +41,7 @@ let initialStore = {
   currentCode: '',
   step: 0,
   stop: false,
+  relatedItems: [],
 }
 
 let store = configureStore(initialStore)

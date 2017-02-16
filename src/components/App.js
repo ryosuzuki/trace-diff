@@ -33,6 +33,7 @@ class App extends Component {
       if (window.location.search) {
         id = Number(window.location.search.split('=')[1])
       }
+      this.setCurrent(id)
 
       items = items.map((item) => {
         return {
@@ -43,7 +44,6 @@ class App extends Component {
         }
       })
       db.insert(items, (err) => {
-        this.setCurrent(id)
         console.log('finish')
       })
     })
@@ -80,11 +80,13 @@ class App extends Component {
       window.locationHint.init()
       window.transformationHint.init()
       window.behaviorHint.init()
+
+      db.find({ test: item.test, result: item.result }, function(err, items) {
+        this.updateState({ relatedItems: items })
+      }.bind(this))
+
     }, 500)
 
-    db.find({ test: item.test, result: item.result }, function(err, items) {
-      console.log(items)
-    })
 
   }
 
@@ -117,6 +119,7 @@ class App extends Component {
               test={ this.props.test }
               expected={ this.props.expected }
               result={ this.props.result }
+              relatedItems={ this.props.relatedItems }
             />
           </div>
         </div>

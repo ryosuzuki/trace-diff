@@ -32,6 +32,18 @@ class ControlPanel extends Component {
           onChange={ this.onChange.bind(this) }
           handle={ handle }
         />
+
+        <div>
+          <h1>Clustering similar results</h1>
+          { this.props.relatedItems.map((item) => {
+            return (
+              <a className="ui basic label" onClick={ this.onChange.bind(this, item.id) } key={ item.id }>
+                { item.id }
+              </a>
+            )
+          }) }
+
+        </div>
       </div>
     )
   }

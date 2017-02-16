@@ -152,11 +152,6 @@ class HintView extends Component {
           </div>
         </div>
         { this.showHintComponent() }
-        <br />
-        <h2>Failed Test Result</h2>
-        <div className="markdown">
-          <pre><code>{ this.props.log }</code></pre>
-        </div>
       </div>
     )
   }

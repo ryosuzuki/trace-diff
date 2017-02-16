@@ -39,6 +39,11 @@ class DiffView extends Component {
           options={ this.props.options }
         />
         <br />
+        <h2>Failed Test Result</h2>
+        <div className="markdown">
+          <pre><code>{ this.props.log }</code></pre>
+        </div>
+        <br />
         <h2>Transformation Rule</h2>
         <div className="markdown">
           <pre style={{ whiteSpace: 'pre-wrap' }}><code>{ this.props.rule }</code></pre>

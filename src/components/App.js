@@ -33,7 +33,6 @@ class App extends Component {
       if (window.location.search) {
         id = Number(window.location.search.split('=')[1])
       }
-      this.setCurrent(id)
 
       items = items.map((item) => {
         return {
@@ -44,6 +43,7 @@ class App extends Component {
         }
       })
       db.insert(items, (err) => {
+        this.setCurrent(id)
         console.log('finish')
       })
     })
@@ -55,6 +55,7 @@ class App extends Component {
       this.setCurrent(this.props.id + 1)
     })
   }
+
 
   setCurrent(id) {
     let item = this.props.items[id]
@@ -81,6 +82,10 @@ class App extends Component {
       window.behaviorHint.init()
     }, 500)
 
+    db.find({ test: item.test, result: item.result }, function(err, items) {
+      console.log(items)
+    })
+
   }
 
   updateState(state) {
@@ -99,13 +104,19 @@ class App extends Component {
         <div className="ui two column centered grid">
           <div className="sixteen wide column">
             <h1 id="top" className="ui center aligned huge header">
-              Exploring the Design Space of Automated Hints
+              Exploring the Design Space of Automated Hints -
+              <a href="https://github.com/ryosuzuki/hint-mockup/" target="blank">
+                <i className="fa fa-fw fa-github-alt"></i> GitHub
+              </a>
             </h1>
           </div>
           <div id="control-panel" className="eight wide column">
             <ControlPanel
               id={ this.props.id }
               items={ this.props.items }
+              test={ this.props.test }
+              expected={ this.props.expected }
+              result={ this.props.result }
             />
           </div>
         </div>
@@ -118,6 +129,7 @@ class App extends Component {
               code={ this.props.code }
               added={ this.props.added }
               removed={ this.props.removed }
+              log={ this.props.log }
               rule={ this.props.rule }
             />
           </div>

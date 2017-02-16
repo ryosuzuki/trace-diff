@@ -26,7 +26,9 @@ module.exports = {
         loader: 'babel-loader',
         exclude: /node_modules/,
         options: {
-          presets: ['react', 'es2015', 'stage-3']
+          presets: ['react', 'es2015', 'stage-3', 'stage-0'],
+          plugins: ['transform-runtime']
+
         }
       }, {
         test: /\.css$/,

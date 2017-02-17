@@ -28,10 +28,21 @@ class DiffView extends Component {
     }, 50)
   }
 
+  onClick(id) {
+    window.app.setCurrent(id)
+  }
 
   render() {
     return (
       <div>
+        <h2>{ this.props.relatedItems.length } similar results (based on test)</h2>
+        { _.sortBy(this.props.relatedItems, 'id').map((item) => {
+          return (
+            <a className="ui label" onClick={ this.onClick.bind(this, item.id) } key={ item.id }>
+              { item.id }
+            </a>
+          )
+        }) }
         <h2>Code</h2>
         <CodeMirror
           value={ this.props.code }

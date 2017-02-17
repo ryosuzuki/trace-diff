@@ -16,6 +16,10 @@
   margin-top: 150px;
 }
 
+#diff-view .label {
+  margin: 2px;
+}
+
 .CodeMirror {
   font-family: Monaco, 'Andale Mono', 'Lucida Console', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace;
   font-size: 11pt;

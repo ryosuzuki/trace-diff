@@ -45,6 +45,11 @@ class App extends Component {
       })
       db.insert(items, (err) => {
         console.log('finish')
+        let item = items[id]
+        db.find({ test: item.test, result: item.result }, function(err, items) {
+          this.updateState({ relatedItems: items })
+        }.bind(this))
+
       })
     })
 
@@ -80,12 +85,11 @@ class App extends Component {
       window.locationHint.init()
       window.transformationHint.init()
       window.behaviorHint.init()
-
-      db.find({ test: item.test, result: item.result }, function(err, items) {
-        this.updateState({ relatedItems: items })
-      }.bind(this))
-
     }, 500)
+
+    db.find({ test: item.test, result: item.result }, function(err, items) {
+      this.updateState({ relatedItems: items })
+    }.bind(this))
 
 
   }
@@ -134,6 +138,7 @@ class App extends Component {
               removed={ this.props.removed }
               log={ this.props.log }
               rule={ this.props.rule }
+              relatedItems={ this.props.relatedItems }
             />
           </div>
           <div id="hint-view" className="ten wide column">

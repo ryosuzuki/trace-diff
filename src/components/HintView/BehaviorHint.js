@@ -9,11 +9,16 @@ class BehaviorHint extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      expected: [],
-      result: [],
       tick: 0,
+      expected: {},
+      result: {},
+      keys: [],
+      key: '',
+      line: 0,
       beforeHistory: {},
-      afterHistory: {}
+      afterHistory: {},
+      beforeTicks: {},
+      afterTicks: {},
     }
     window.behaviorHint = this
   }
@@ -33,8 +38,7 @@ class BehaviorHint extends Component {
     this.cm.setGutterMarker(3, 'breakpoints', marker)
     */
 
-   this.generate('before')
-   this.generate('after')
+   this.generate()
   }
 
 
@@ -56,6 +60,65 @@ class BehaviorHint extends Component {
     }, interval)
   }
 
+  generateHistory(traces) {
+    let history = {}
+    let ticks = {}
+    let lines = {}
+    for (let i = 0; i < traces.length; i++) {
+      let trace = traces[i]
+      for (let func of Object.keys(trace.locals)) {
+        if (func !== 'accumulate') continue
+
+        let variables = trace.locals[func]
+        for (let key of Object.keys(variables)) {
+          let value = variables[key]
+          if (value === undefined) continue
+
+          if (!history[key]) history[key] = []
+          if (!lines[key]) lines[key] = []
+          if (!ticks[key]) ticks[key] = {}
+
+          let line = trace.line
+          let last = _.last(history[key])
+          if (last === undefined || last !== value) {
+            history[key].push(value)
+            lines[key].push(line)
+          }
+          ticks[key][i] = history[key].length
+        }
+      }
+    }
+    return { history: history, lines: lines, ticks: ticks }
+  }
+
+  generate() {
+    let before = this.generateHistory(this.props.beforeTraces)
+    let after = this.generateHistory(this.props.afterTraces)
+    let keys = _.intersection(Object.keys(before.history), Object.keys(after.history))
+
+    let name
+    let line
+    for (let key of keys) {
+      if (!_.isEqual(before.history[key], after.history[key])) {
+        let obj = _.countBy(before.lines[key])
+        line = Number(Object.keys(obj).reduce(function(a, b){ return obj[a] > obj[b] ? a : b }))
+        name = key
+        break
+      }
+    }
+
+    this.setState({
+      beforeHistory: before.history,
+      beforeTicks: before.ticks,
+      afterHistory: after.history,
+      afterTicks: after.ticks,
+      keys: keys,
+      key: name,
+      line: line,
+    })
+  }
+
+
   updateStep(value) {
     let step = Math.floor(value)
     this.cm.setValue(this.props.beforeCode)
@@ -76,7 +139,7 @@ class BehaviorHint extends Component {
     msg.append($('.arrow-border').clone()[0])
     msg.append($('.arrow-up').clone()[0])
     msg.append($('.dynamic-hint').clone()[0])
-    this.cm.addLineWidget(this.props.removed[0], msg, { coverGutter: true })
+    this.cm.addLineWidget(this.state.line, msg, { coverGutter: true })
 
     const getLog = (output) => {
       let msg = ''
@@ -131,66 +194,28 @@ class BehaviorHint extends Component {
       this.cm.replaceRange(msg, { line: line-1, ch: ch }, { line: line-1, ch: Infinity })
     }
 
-    /*
-    if (current.line - 1 === this.props.removed[0]) {
-      let output = current.outputs[current.line]
-      let fixedOutput = current.fixedOutputs ? current.fixedOutputs[current.line] : null
-      let val = getValue(output)
-      let result = this.state.result.concat([val])
-      let expected = this.state.expected
-      if (fixedOutput) {
-        let fixedVal = getValue(fixedOutput)
-        expected = expected.concat([fixedVal])
-      }
-      this.setState({
-        expected: expected,
-        result: result,
-      })
+    let result = {}
+    let expected = {}
+    for (let key of Object.keys(this.state.beforeHistory)) {
+      let history = this.state.beforeHistory[key]
+      let tick = this.state.beforeTicks[key][step]
+      if (!tick) tick = 0
+      result[key] = history.slice(0, tick)
     }
-    */
+    for (let key of Object.keys(this.state.afterHistory)) {
+      let history = this.state.afterHistory[key]
+      // let tick = this.state.afterTicks[key][step]
+      let tick = this.state.beforeTicks[key][step]
+      if (!tick) tick = 0
+      expected[key] = history.slice(0, tick)
+    }
+
+    this.setState({ expected: expected, result: result })
 
     let code = this.cm.getValue()
     window.app.updateState({ step: step, currentCode: code })
   }
 
-
-  generate(type) {
-    let history = {}
-    let ticks = {}
-    let traces
-    if (type === 'before') {
-      traces = this.props.beforeTraces
-    } else {
-      traces = this.props.afterTraces
-    }
-    for (let i = 0; i < traces.length; i++) {
-      let trace = traces[i]
-      for (let func of Object.keys(trace.locals)) {
-        if (func !== 'accumulate') continue
-
-
-        let variables = trace.locals[func]
-        for (let key of Object.keys(variables)) {
-          let value = variables[key]
-          if (value === undefined) continue
-
-          if (!ticks[key]) ticks[key] = {}
-          if (!history[key]) history[key] = []
-          let last = _.last(history[key])
-          if (last === undefined || last !== value) {
-            history[key].push(value)
-          }
-          ticks[key][i] = history[key].length
-        }
-      }
-    }
-
-    if (type === 'before') {
-      this.setState({ beforeHistory: history, beforeTicks: ticks })
-    } else {
-      this.setState({ afterHistory: history, afterTicks: ticks })
-    }
-  }
 
 
 
@@ -218,25 +243,6 @@ class BehaviorHint extends Component {
           </div>
         </div>
 
-        <pre className="markdown">
-          { _.intersection(Object.keys(this.state.afterHistory), Object.keys(this.state.beforeHistory)).map((key) => {
-            return (
-              <div>
-                <code key={ key }>
-                  { key }
-                </code>
-                <br />
-                <code key={ `${key}-expected` }>
-                  Expected: { this.state.afterHistory[key].join(' | ') }
-                </code>
-                <br />
-                <code key={ `${key}-result` }>
-                  Result:   { this.state.beforeHistory[key].join(' | ') }
-                </code>
-              </div>
-            )
-          }) }
-        </pre>
 
         <h2>Code</h2>
         <CodeMirror
@@ -252,21 +258,36 @@ class BehaviorHint extends Component {
           <div className="arrow-up"></div>
           <div className="arrow-border"></div>
           <pre className="dynamic-hint">
-            Expected |  { this.state.expected.map((i) => {
-              // let num = `${i}`
-              // let space = Array(2 - num.length).fill(' ').join('')
-              // return `${space}${num}`
-              return i
-            }).join('  |  ') }
+            Expected: { this.state.expected[this.state.key] ? this.state.expected[this.state.key].join(' | ') : '' }
             <br />
-            Result   |  { this.state.result.map((i) => {
-              // let num = `${i}`
-              // let space = Array(2 - num.length).fill(' ').join('')
-              // return `${space}${num}`
-              return i
-            }).join('  |  ') }
+            Result:   { this.state.result[this.state.key] ? this.state.result[this.state.key].join(' | ') : '' }
           </pre>
         </div>
+
+        <div className="markdown">
+          <pre>
+            { this.state.keys.map((key) => {
+              return (
+                <div key={ key }>
+                  <code>
+                    { key }
+                  </code>
+                  <br />
+                  <code>
+                    - Expected: { this.state.expected[key] ? this.state.expected[key].join(' | ') : '' }
+                  </code>
+                  <br />
+                  <code>
+                    - Result:   { this.state.result[key] ? this.state.result[key].join(' | ') : '' }
+                  </code>
+                  <br />
+                  <br />
+                </div>
+              )
+            }) }
+          </pre>
+        </div>
+
       </div>
     )
   }

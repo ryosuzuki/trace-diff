@@ -15,7 +15,7 @@ class HintView extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      type: 'Location',
+      type: 'Behavior',
     }
     window.hintView = this
   }

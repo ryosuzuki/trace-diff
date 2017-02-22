@@ -32,6 +32,32 @@ class BehaviorHint extends Component {
     */
   }
 
+  generate() {
+    let history = {}
+
+    for (let i = 0; i < this.props.traces.length; i++) {
+      let trace = this.props.traces[i]
+      for (let func of Object.keys(trace.locals)) {
+        let variables = trace.locals[func]
+        for (let key of Object.keys(variables)) {
+          if (!history[key]) history[key] = {}
+          let value = variables[key]
+
+          let last = history[key]['last']
+          if (!last || last !== value) {
+            history[key][i] = {
+              value: value,
+              line: trace.line
+            }
+          }
+          history[key]['last'] = value
+        }
+      }
+    }
+    this.history = history
+
+  }
+
 
   playStep() {
     let interval = 100

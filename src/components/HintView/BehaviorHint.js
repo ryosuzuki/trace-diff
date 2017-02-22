@@ -166,6 +166,9 @@ class BehaviorHint extends Component {
     for (let i = 0; i < traces.length; i++) {
       let trace = traces[i]
       for (let func of Object.keys(trace.locals)) {
+        if (func !== 'accumulate') continue
+
+
         let variables = trace.locals[func]
         for (let key of Object.keys(variables)) {
           let value = variables[key]
@@ -216,18 +219,18 @@ class BehaviorHint extends Component {
         </div>
 
         <pre className="markdown">
-          { Object.keys(this.state.afterHistory).map((key) => {
+          { _.intersection(Object.keys(this.state.afterHistory), Object.keys(this.state.beforeHistory)).map((key) => {
             return (
               <div>
                 <code key={ key }>
                   { key }
                 </code>
                 <br />
-                <code>
+                <code key={ `${key}-expected` }>
                   Expected: { this.state.afterHistory[key].join(' | ') }
                 </code>
                 <br />
-                <code>
+                <code key={ `${key}-result` }>
                   Result:   { this.state.beforeHistory[key].join(' | ') }
                 </code>
               </div>

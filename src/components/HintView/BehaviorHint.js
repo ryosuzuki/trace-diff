@@ -11,7 +11,9 @@ class BehaviorHint extends Component {
     this.state = {
       expected: [],
       result: [],
-      tick: 0
+      tick: 0,
+      beforeHistory: {},
+      afterHistory: {}
     }
     window.behaviorHint = this
   }
@@ -30,32 +32,9 @@ class BehaviorHint extends Component {
     marker.append($('.label')[0])
     this.cm.setGutterMarker(3, 'breakpoints', marker)
     */
-  }
 
-  generate() {
-    let history = {}
-
-    for (let i = 0; i < this.props.traces.length; i++) {
-      let trace = this.props.traces[i]
-      for (let func of Object.keys(trace.locals)) {
-        let variables = trace.locals[func]
-        for (let key of Object.keys(variables)) {
-          if (!history[key]) history[key] = {}
-          let value = variables[key]
-
-          let last = history[key]['last']
-          if (!last || last !== value) {
-            history[key][i] = {
-              value: value,
-              line: trace.line
-            }
-          }
-          history[key]['last'] = value
-        }
-      }
-    }
-    this.history = history
-
+   this.generate('before')
+   this.generate('after')
   }
 
 
@@ -152,6 +131,7 @@ class BehaviorHint extends Component {
       this.cm.replaceRange(msg, { line: line-1, ch: ch }, { line: line-1, ch: Infinity })
     }
 
+    /*
     if (current.line - 1 === this.props.removed[0]) {
       let output = current.outputs[current.line]
       let fixedOutput = current.fixedOutputs ? current.fixedOutputs[current.line] : null
@@ -167,11 +147,49 @@ class BehaviorHint extends Component {
         result: result,
       })
     }
-
+    */
 
     let code = this.cm.getValue()
     window.app.updateState({ step: step, currentCode: code })
   }
+
+
+  generate(type) {
+    let history = {}
+    let ticks = {}
+    let traces
+    if (type === 'before') {
+      traces = this.props.beforeTraces
+    } else {
+      traces = this.props.afterTraces
+    }
+    for (let i = 0; i < traces.length; i++) {
+      let trace = traces[i]
+      for (let func of Object.keys(trace.locals)) {
+        let variables = trace.locals[func]
+        for (let key of Object.keys(variables)) {
+          let value = variables[key]
+          if (value === undefined) continue
+
+          if (!ticks[key]) ticks[key] = {}
+          if (!history[key]) history[key] = []
+          let last = _.last(history[key])
+          if (last === undefined || last !== value) {
+            history[key].push(value)
+          }
+          ticks[key][i] = history[key].length
+        }
+      }
+    }
+
+    if (type === 'before') {
+      this.setState({ beforeHistory: history, beforeTicks: ticks })
+    } else {
+      this.setState({ afterHistory: history, afterTicks: ticks })
+    }
+  }
+
+
 
   render() {
     return (
@@ -196,6 +214,27 @@ class BehaviorHint extends Component {
           />
           </div>
         </div>
+
+        <pre className="markdown">
+          { Object.keys(this.state.afterHistory).map((key) => {
+            return (
+              <div>
+                <code key={ key }>
+                  { key }
+                </code>
+                <br />
+                <code>
+                  Expected: { this.state.afterHistory[key].join(' | ') }
+                </code>
+                <br />
+                <code>
+                  Result:   { this.state.beforeHistory[key].join(' | ') }
+                </code>
+              </div>
+            )
+          }) }
+        </pre>
+
         <h2>Code</h2>
         <CodeMirror
           value={ this.props.currentCode }

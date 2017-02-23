@@ -6,16 +6,17 @@ import Slider from 'rc-slider'
 import Tooltip from 'rc-tooltip'
 
 import NoneHint from './HintView/NoneHint'
+import TransformationHint from './HintView/TransformationHint'
 import LocationHint from './HintView/LocationHint'
 import DataHint from './HintView/DataHint'
 import BehaviorHint from './HintView/BehaviorHint'
-import TransformationHint from './HintView/TransformationHint'
+import ExampleHint from './HintView/ExampleHint'
 
 class HintView extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      type: 'Behavior',
+      type: 'Example',
     }
     window.hintView = this
   }
@@ -29,7 +30,7 @@ class HintView extends Component {
   }
 
   showSelectComponent() {
-    const types = ['None', 'Location', 'Data', 'Behavior', 'Transformation', 'Example']
+    const types = ['None', 'Transformation', 'Location', 'Data', 'Behavior', 'Example']
     return types.map((type) => {
       return (
         <div className="field" key={ type }>
@@ -53,6 +54,20 @@ class HintView extends Component {
                 options={ this.props.options }
                 id={ this.props.id }
                 before={ this.props.before }
+              />
+            </div>
+          )
+          break
+        case 'Transformation':
+          return (
+            <div id="transformation-hint" style={{ display: type === this.state.type ? 'block' : 'none' }} key={ type }>
+              <TransformationHint
+                options={ this.props.options }
+                id={ this.props.id }
+                before={ this.props.before }
+                code={ this.props.code }
+                removed={ this.props.removed }
+                added={ this.props.added }
               />
             </div>
           )
@@ -114,24 +129,19 @@ class HintView extends Component {
             </div>
           )
           break
-        case 'Transformation':
-          return (
-            <div id="transformation-hint" style={{ display: type === this.state.type ? 'block' : 'none' }} key={ type }>
-              <TransformationHint
-                options={ this.props.options }
-                id={ this.props.id }
-                before={ this.props.before }
-                code={ this.props.code }
-                removed={ this.props.removed }
-                added={ this.props.added }
-              />
-            </div>
-          )
-          break
         case 'Example':
           return (
             <div id="example-hint" style={{ display: type === this.state.type ? 'block' : 'none' }} key={ type }>
-              <h1>Under Construction</h1>
+              <ExampleHint
+                options={ this.props.options }
+                id={ this.props.id }
+                before={ this.props.before }
+                after={ this.props.after }
+                diffs={ this.props.diffs }
+                removed={ this.props.removed }
+                added={ this.props.added }
+                log={ this.props.log }
+              />
             </div>
           )
           break

@@ -86,6 +86,7 @@ class App extends Component {
       window.locationHint.init()
       window.transformationHint.init()
       window.behaviorHint.init()
+      window.exampleHint.init()
     }, 500)
 
     db.find({ test: item.test, result: item.result }, function(err, items) {

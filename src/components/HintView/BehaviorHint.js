@@ -79,12 +79,18 @@ class BehaviorHint extends Component {
           if (!ticks[key]) ticks[key] = {}
 
           let line = trace.line
+          if (trace.event === 'step_line') {
+            line = traces[i-1].line
+          }
           let last = _.last(history[key])
           if (last === undefined || last !== value) {
             history[key].push(value)
             lines[key].push(line)
           }
           ticks[key][i] = history[key].length
+          if (trace.event === 'step_line') {
+            ticks[key][i-1] = history[key].length
+          }
         }
       }
     }
@@ -94,26 +100,24 @@ class BehaviorHint extends Component {
   generate() {
     let before = this.generateHistory(this.props.beforeTraces)
     let after = this.generateHistory(this.props.afterTraces)
-    let keys = _.intersection(Object.keys(before.history), Object.keys(after.history))
+    let commonKeys = _.intersection(Object.keys(before.history), Object.keys(after.history))
 
-    let name
     let line
-    for (let key of keys) {
+    let keys = []
+    for (let key of commonKeys) {
+      if (key === '__return__') continue
       if (!_.isEqual(before.history[key], after.history[key])) {
         let obj = _.countBy(before.lines[key])
         line = Number(Object.keys(obj).reduce(function(a, b){ return obj[a] > obj[b] ? a : b }))
-        name = key
-        break
+        keys.push(key)
       }
     }
-
     this.setState({
       beforeHistory: before.history,
       beforeTicks: before.ticks,
       afterHistory: after.history,
       afterTicks: after.ticks,
       keys: keys,
-      key: name,
       line: line,
     })
   }
@@ -132,14 +136,6 @@ class BehaviorHint extends Component {
       this.cm.addLineClass(current.line-1, '', 'current-line')
     }
     */
-    this.cm.addLineClass(current.line-1, '', 'current-line')
-
-    let msg = document.createElement('div')
-    msg.className = 'inline-hint'
-    msg.append($('.arrow-border').clone()[0])
-    msg.append($('.arrow-up').clone()[0])
-    msg.append($('.dynamic-hint').clone()[0])
-    this.cm.addLineWidget(this.state.line, msg, { coverGutter: true })
 
     const getLog = (output) => {
       let msg = ''
@@ -214,6 +210,16 @@ class BehaviorHint extends Component {
 
     let code = this.cm.getValue()
     window.app.updateState({ step: step, currentCode: code })
+
+    this.cm.addLineClass(current.line-1, '', 'current-line')
+    let msg = document.createElement('div')
+    msg.className = 'inline-hint'
+    msg.append($('.arrow-border').clone()[0])
+    msg.append($('.arrow-up').clone()[0])
+    msg.append($('.dynamic-hint').clone()[0])
+    this.cm.addLineWidget(this.state.line-1, msg, { coverGutter: true })
+
+
   }
 
 
@@ -258,15 +264,27 @@ class BehaviorHint extends Component {
           <div className="arrow-up"></div>
           <div className="arrow-border"></div>
           <pre className="dynamic-hint">
-            Expected: { this.state.expected[this.state.key] ? this.state.expected[this.state.key].join(' | ') : '' }
-            <br />
-            Result:   { this.state.result[this.state.key] ? this.state.result[this.state.key].join(' | ') : '' }
+            { this.state.keys.map((key, index) => {
+              return (
+                <div key={ key }>
+                  o { key }: { this.state.expected[key] ? this.state.expected[key].join(' | ') : '' }
+                  <br />
+                  x { key }: { this.state.result[key] ? this.state.result[key].join(' | ') : '' }
+
+                  { index !== this.state.keys.length-1 ? (
+                    <span><br /><br /></span>
+                  ) : (
+                    ''
+                  ) }
+                </div>
+              )
+            }) }
           </pre>
         </div>
 
         <div className="markdown">
           <pre>
-            { this.state.keys.map((key) => {
+            { _.intersection(Object.keys(this.state.beforeHistory), Object.keys(this.state.afterHistory)).map((key) => {
               return (
                 <div key={ key }>
                   <code>

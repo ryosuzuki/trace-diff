@@ -13,12 +13,70 @@ class ScaffoldingHint extends Component {
     this.state = {
       detail: '',
       step: 4,
+      nodes: []
     }
     window.scaffoldingHint = this
   }
 
   componentDidMount() {
     this.init()
+  }
+
+  test(data) {
+    // if (!data) data = 'previous = term(base)'
+
+    data = app.props.removedLine[0].code
+    data = data.replace(/\s/g, '')
+
+    $.ajax({
+      url: 'https://python-ast-explorer.com/api/_parse',
+      method: 'POST',
+      data: data,
+    })
+    .then((res) => {
+      console.log('get response')
+      window.res = res
+    })
+  }
+
+  analyze(res) {
+    let body = res.ast.Module.body[0]
+    let key = Object.keys(body)[0]
+
+    let nodes = []
+    for (let key of Object.keys(body)) {
+      let line = body[key]
+      if (key === 'Assign') {
+        let targets = line.targets
+        let value = line.value
+
+        if (!value.Call) continue
+
+        let args = []
+        let func = ''
+        for (let arg of value.Call.args) {
+          if (!arg.Name) continue
+          arg = arg.Name.id
+          args.push(arg)
+          console.log(`1: arg ${arg}`)
+          nodes.push(arg)
+        }
+        func = value.Call.func.Name.id
+        console.log(`2: func ${func}`)
+        value = `${func}(${args.join(', ')})`
+        console.log(`3: ${value}`)
+
+        nodes.push(func)
+        nodes.push(value)
+
+        for (let target of targets) {
+          target = target.Name.id
+          nodes.push(target)
+        }
+      }
+    }
+
+    this.setState({ nodes: nodes })
   }
 
   init() {
@@ -66,14 +124,11 @@ class ScaffoldingHint extends Component {
             <h1>Step 2</h1>
             <p>Let's look at line { this.props.removed[0] + 1 }</p>
             <pre><code>{ this.props.before.split('\n')[this.props.removed[0]] }</code></pre>
-
-            <p>Q. What is the value of <code>base</code></p>
-
-            <p>Q. What is the value of <code>term</code></p>
-
-            <p>Q. What is the value of <code>term(base)</code></p>
-
-            <p>Q. What is the value of <code>previous</code></p>
+            { this.state.nodes.map((node) => {
+              return (
+                <p key={ node }>Q. What is the value of <code>{ node }</code>?</p>
+              )
+            }) }
           </div>
           <div id="step-3" style={{ display: this.state.step >= 3 ? 'block' : 'none' }}>
             <h1>Step 3</h1>

@@ -23,6 +23,12 @@
     "code": "def accumulate(combiner, base, n, term):\r\n    previous = term(base)\r\n    previous = base\r\n    for i in range(1, n+1):\r\n        previous = combiner(previous, term(i))\r\n    return previous", 
     "afterCode": "def accumulate(combiner, base, n, term):\r\n    previous = base\r\n    for i in range(1, n+1):\r\n        previous = combiner(previous, term(i))\r\n    return previous\n\ndef add(a, b):\n  return a + b\n\n\ndef square(x):\n  return x * x\n\naccumulate(add, 11, 3, square)", 
     "log": ">>> accumulate(add, 11, 3, square)   # 11 + 1^2 + 2^2 + 3^2\n135\n\n# Error: expected\n#     25\n# but got\n#     135", 
+    "addedLine": [
+      {
+        "line": 2, 
+        "code": "    previous = base\r"
+      }
+    ], 
     "after": "def accumulate(combiner, base, n, term):\r\n    previous = base\r\n    for i in range(1, n+1):\r\n        previous = combiner(previous, term(i))\r\n    return previous", 
     "beforeCode": "def accumulate(combiner, base, n, term):\r\n    previous = term(base)\r\n    for i in range(1, n+1):\r\n        previous = combiner(previous, term(i))\r\n    return previous\n\ndef add(a, b):\n  return a + b\n\n\ndef square(x):\n  return x * x\n\naccumulate(add, 11, 3, square)", 
     "rule": "Apply(ast, CPatch(EditMap(\\node => Delete(node, ReferenceNode(node, StartsWithParent(Node(AssignmentStatementNode, TChildren(LeafWildcard(\"NameExpressionNode\"), TChild(Target(Node(CallExpressionNode, TChildren(LeafWildcard(\"NameExpressionNode\"), TChild(Node(ArgNode, TChild(LeafWildcard(\"NameExpressionNode\"))))))))))), Tutor.synthesis.MagicK)), Selected(\\x => Match(x, StartsWithTarget(Target(Node(AssignmentStatementNode, TChildren(LeafWildcard(\"NameExpressionNode\"), TChild(Node(CallExpressionNode, TChildren(LeafWildcard(\"NameExpressionNode\"), TChild(Node(ArgNode, TChild(LeafWildcard(\"NameExpressionNode\")))))))))))), InOrderSort(ast))), Patch(EditMap(\\node => Move(node, ReferenceNode(node, StartsWithParent(Node(ArgNode, TChild(Target(LeafWildcard(\"NameExpressionNode\"))))), Tutor.synthesis.MagicK), 1), Selected(\\x => Match(x, StartsWithTarget(Target(Node(AssignmentStatementNode, TChildren(LeafWildcard(\"NameExpressionNode\"), TChild(Node(CallExpressionNode, TChildren(LeafWildcard(\"NameExpressionNode\"), TChild(Node(ArgNode, TChild(LeafWildcard(\"NameExpressionNode\")))))))))))), InOrderSort(ast))))))", 
@@ -1454,6 +1460,12 @@
     "expected": 25, 
     "studentId": 384, 
     "result": 135, 
+    "removedLine": [
+      {
+        "line": 1, 
+        "code": "    previous = term(base)\r"
+      }
+    ], 
     "test": "accumulate(add, 11, 3, square)", 
     "afterTraces": [
       {

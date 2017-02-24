@@ -33,6 +33,8 @@ let initialStore = {
   diffs: [],
   added: [],
   removed: [],
+  addedLine: [],
+  removedLine: [],
   test: '',
   expected: '',
   result: '',

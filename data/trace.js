@@ -63,18 +63,29 @@ class Item {
     let code = ''
     let added = []
     let removed = []
+    let addedLine = []
+    let removedLine = []
     for (let diff of diffs) {
       code += diff.value
+      let lines = diff.value.split('\n')
       for (let i = 0; i < diff.count; i++) {
         line++
-        if (diff.added) added.push(line)
-        if (diff.removed) removed.push(line)
+        if (diff.added) {
+          added.push(line)
+          addedLine.push({ line: line, code: lines[i] })
+        }
+        if (diff.removed) {
+          removed.push(line)
+          removedLine.push({ line: line, code: lines[i] })
+        }
       }
     }
     this.code = code
     this.diffs = diffs
     this.added = added
     this.removed = removed
+    this.addedLine = addedLine
+    this.removedLine = removedLine
   }
 
   getTest() {

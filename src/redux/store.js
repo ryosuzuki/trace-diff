@@ -6,7 +6,8 @@ import thunk from 'redux-thunk'
 const logger = createLogger()
 
 let finalCreateStore = compose(
-  applyMiddleware(thunk, logger)
+  // applyMiddleware(thunk, logger)
+  applyMiddleware(thunk)
 )(createStore)
 
 export default function configureStore(initialState) {

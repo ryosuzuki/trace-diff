@@ -228,7 +228,7 @@ class BehaviorHint extends Component {
   render() {
     return (
       <div>
-        <h1>Under Construction (Current Status: Buggy)</h1>
+        <h1>Behavior Hint</h1>
         <div className="ui message">
           <div className="header">
             Behavior Hint

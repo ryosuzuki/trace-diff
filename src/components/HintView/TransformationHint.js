@@ -52,7 +52,7 @@ class TransformationHint extends Component {
   render() {
     return (
       <div>
-        <h1>Under Construction (Current Status: Incomplete)</h1>
+        <h1>Transformation Hint</h1>
         <div className="ui message markdown">
           <div className="header">
             Transformation Hint

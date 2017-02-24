@@ -130,6 +130,7 @@ class App extends Component {
           </div>
         </div>
         <div className="ui two column centered grid">
+          {/*
           <div id="diff-view" className="six wide column">
             <h1 className="title">Teacher</h1>
             <DiffView
@@ -143,6 +144,7 @@ class App extends Component {
               relatedItems={ this.props.relatedItems }
             />
           </div>
+          */}
           <div id="hint-view" className="ten wide column">
             <h1 className="title">Student</h1>
             <HintView
@@ -163,6 +165,7 @@ class App extends Component {
               removed={ this.props.removed }
               diffs={ this.props.diffs }
               log={ this.props.log }
+              test={ this.props.test }
             />
           </div>
         </div>

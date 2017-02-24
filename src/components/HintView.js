@@ -11,12 +11,14 @@ import LocationHint from './HintView/LocationHint'
 import DataHint from './HintView/DataHint'
 import BehaviorHint from './HintView/BehaviorHint'
 import ExampleHint from './HintView/ExampleHint'
+import ScaffoldingHint from './HintView/ScaffoldingHint'
+
 
 class HintView extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      type: 'Example',
+      type: 'Scaffolding',
     }
     window.hintView = this
   }
@@ -30,7 +32,7 @@ class HintView extends Component {
   }
 
   showSelectComponent() {
-    const types = ['None', 'Transformation', 'Location', 'Data', 'Behavior', 'Example']
+    const types = ['None', 'Transformation', 'Location', 'Data', 'Behavior', 'Example', 'Scaffolding']
     return types.map((type) => {
       return (
         <div className="field" key={ type }>
@@ -44,7 +46,7 @@ class HintView extends Component {
   }
 
   showHintComponent() {
-    const types = ['None', 'Location', 'Data', 'Behavior', 'Transformation', 'Example']
+    const types = ['None', 'Location', 'Data', 'Behavior', 'Transformation', 'Example', 'Scaffolding']
     return types.map((type) => {
       switch (type) {
         case 'None':
@@ -141,6 +143,23 @@ class HintView extends Component {
                 removed={ this.props.removed }
                 added={ this.props.added }
                 log={ this.props.log }
+              />
+            </div>
+          )
+          break
+        case 'Scaffolding':
+          return (
+            <div id="location-hint" style={{ display: type === this.state.type ? 'block' : 'none' }} key={ type }>
+              <ScaffoldingHint
+                options={ this.props.options }
+                id={ this.props.id }
+                before={ this.props.before }
+                after={ this.props.after }
+                diffs={ this.props.diffs }
+                removed={ this.props.removed }
+                added={ this.props.added }
+                log={ this.props.log }
+                test={ this.props.test }
               />
             </div>
           )

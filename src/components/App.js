@@ -83,10 +83,12 @@ class App extends Component {
     window.history.pushState(null, null, `?id=${id}`)
     window.diffView.generateDiff(id)
     setTimeout(() => {
+      console.log('call init')
       window.locationHint.init()
-      window.transformationHint.init()
+      // window.transformationHint.init()
       window.behaviorHint.init()
       window.exampleHint.init()
+      window.scaffoldingHint.init()
     }, 500)
 
     db.find({ test: item.test, result: item.result }, function(err, items) {
@@ -130,7 +132,6 @@ class App extends Component {
           </div>
         </div>
         <div className="ui two column centered grid">
-          {/*
           <div id="diff-view" className="six wide column">
             <h1 className="title">Teacher</h1>
             <DiffView
@@ -144,7 +145,6 @@ class App extends Component {
               relatedItems={ this.props.relatedItems }
             />
           </div>
-          */}
           <div id="hint-view" className="ten wide column">
             <h1 className="title">Student</h1>
             <HintView
@@ -163,6 +163,8 @@ class App extends Component {
               afterTraces={ this.props.afterTraces }
               added={ this.props.added }
               removed={ this.props.removed }
+              addedLine={ this.props.addedLine }
+              removedLine={ this.props.removedLine }
               diffs={ this.props.diffs }
               log={ this.props.log }
               test={ this.props.test }

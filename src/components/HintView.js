@@ -158,6 +158,8 @@ class HintView extends Component {
                 diffs={ this.props.diffs }
                 removed={ this.props.removed }
                 added={ this.props.added }
+                removedLine={ this.props.removedLine }
+                addedLine={ this.props.addedLine }
                 log={ this.props.log }
                 test={ this.props.test }
               />

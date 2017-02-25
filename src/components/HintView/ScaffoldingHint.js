@@ -5,7 +5,7 @@ import Slider from 'rc-slider'
 import Tooltip from 'rc-tooltip'
 import _ from 'lodash'
 import * as jsdiff from 'diff'
-
+import Tree from './Tree'
 
 class ScaffoldingHint extends Component {
   constructor(props) {
@@ -25,7 +25,8 @@ class ScaffoldingHint extends Component {
 
   getAST() {
     if (!this.props.removedLine.length) return false
-    let code = this.props.removedLine[0].code
+    // let code = this.props.removedLine[0].code
+    let code = 'previous = combiner(previous, term(i))'
     code = code.trim()
 
     $.ajax({
@@ -36,10 +37,20 @@ class ScaffoldingHint extends Component {
     .then((res) => {
       console.log('get response')
       window.res = res
-      this.analyze(res)
+      this.hoge()
     })
   }
 
+  hoge() {
+    let tree = new Tree()
+    tree.history = this.props.beforeHistory
+    let ast = tree.analyze(res)
+    let nodes = tree.nodes
+    this.setState({ nodes: tree.nodes })
+    debugger
+  }
+
+  /*
   analyze(res) {
     let body = res.ast.Module.body[0]
     let key = Object.keys(body)[0]
@@ -112,6 +123,7 @@ class ScaffoldingHint extends Component {
 
     this.setState({ nodes: nodes })
   }
+  */
 
   init() {
     if (!this.refs.editor) return false

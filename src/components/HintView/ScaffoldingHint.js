@@ -46,28 +46,51 @@ class ScaffoldingHint extends Component {
 
     window.body = body
     let nodes = []
+    let hash = {}
+    let id = 0
 
-    const addCall = (node) => {
-      let nodes = []
+    const getValue = (name) => {
+      let value
+      if (!Object.keys(this.props.beforeHistory).includes(name)) {
+        return name
+      }
+      if (this.props.beforeHistory[name].length > 1) {
+        let step = 9
+        let tick = this.props.beforeTicks[name][step]
+        value = this.props.beforeHistory[name][tick-1]
+      } else {
+        value = this.props.beforeHistory[name][0]
+      }
+      return value
+    }
+
+    const addName = (el) => {
+      let key = el.Name.id
+      let value = getValue(key)
+      let node = { key: key, value: value }
+      nodes.push(node)
+      return node
+    }
+
+    const addCall = (el) => {
       let args = []
-      for (let arg of node.args) {
+      let argVals = []
+      for (let arg of el.args) {
         if (arg.Name) {
-          arg = arg.Name.id
+          arg = addName(arg)
           args.push(arg)
-          console.log(`1: arg ${arg}`)
-          nodes.push(arg)
         }
         if (arg.Call) {
-          let children = addCall(arg.Call)
-          nodes.push(children)
+          // let children = addCall(arg.Call)
+          // nodes.push(children)
         }
       }
-      let func = node.func.Name.id
-      let value = `${func}(${args.join(', ')})`
-
-      nodes.push(func)
-      nodes.push(value)
-      return nodes
+      let func = addName(el.func)
+      let key = `${func.value}(${args.map(arg => arg.value).join(', ')})`
+      let value = getValue(key)
+      let node = { key: key, value: value}
+      nodes.push(node)
+      return node
     }
 
     for (let key of Object.keys(body)) {
@@ -77,12 +100,11 @@ class ScaffoldingHint extends Component {
         let value = line.value
 
         if (value.Call) {
-          nodes = addCall(value.Call)
+          addCall(value.Call)
         }
 
         for (let target of targets) {
-          target = target.Name.id
-          nodes.push(target)
+          addName(target)
         }
       }
     }
@@ -109,22 +131,14 @@ class ScaffoldingHint extends Component {
     this.setState({ step: this.state.step + 1 })
   }
 
-  onChange(name, event) {
+  onChange(node, index, event) {
     let value = event.target.value
-    let answer
-    if (this.props.beforeHistory[name].length > 1) {
-      let step = 9
-      let tick = this.props.beforeTicks[name][step]
-      answer = this.props.beforeHistory[name][tick-1]
+    if (value == node.value) {
+      $(`#q-${index} .inline-input`).addClass('correct')
+      $(`#q-${index} .inline-message`).addClass('correct')
     } else {
-      answer = this.props.beforeHistory[name][0]
-    }
-    if (value == answer) {
-      $(`#${name} .inline-input`).addClass('correct')
-      $(`#${name} .inline-message`).addClass('correct')
-    } else {
-      $(`#${name} .inline-input`).removeClass('correct')
-      $(`#${name} .inline-message`).removeClass('correct')
+      $(`#q-${index} .inline-input`).removeClass('correct')
+      $(`#q-${index} .inline-message`).removeClass('correct')
     }
   }
 
@@ -148,11 +162,11 @@ class ScaffoldingHint extends Component {
             <pre><code>{ this.props.removedLine[0] ? this.props.removedLine[0].code.trim() : '' }</code></pre>
             { this.state.nodes.map((node, index) => {
               return (
-                <div id={ node } key={ index }>
-                  <p>Q. What is the value of <code>{ node }</code>?</p>
+                <div id={ `q-${index}` } key={ index }>
+                  <p>Q. What is the value of <code>{ node.key }</code>?</p>
                   <p>
-                    <code>{ node }</code> =
-                    <input className={ 'inline-input' } type="text" placeholder="" onChange={ this.onChange.bind(this, node) } />
+                    <code>{ node.key }</code> =
+                    <input className={ 'inline-input'  } type="text" placeholder="" onChange={ this.onChange.bind(this, node, index) } />
                     <span className="inline-message">Correct!</span>
                   </p>
                 </div>

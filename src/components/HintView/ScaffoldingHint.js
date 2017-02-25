@@ -13,7 +13,7 @@ class ScaffoldingHint extends Component {
     this.state = {
       detail: '',
       step: 4,
-      nodes: [],
+      quizes: [],
       loops: [],
     }
     window.scaffoldingHint = this
@@ -23,24 +23,36 @@ class ScaffoldingHint extends Component {
     this.init()
   }
 
-  getAST() {
-    if (!this.props.removedLine.length) return false
-    // let code = this.props.removedLine[0].code
-    let code = 'previous = combiner(previous, term(i))'
-    let tree = new Tree()
-    tree.history = this.props.beforeHistory
-    tree.tick = 0
-    tree.init(code)
-    this.setState({ nodes: tree.nodes })
+  getAST(code, type) {
+    if (!code) return false
+    code = code.trim()
+    $.ajax({
+      url: 'https://python-ast-explorer.com/api/_parse',
+      method: 'POST',
+      data: code,
+    })
+    .then((res) => {
+      console.log('get response')
 
-    let loops = []
-    for (let i = 0; i < 3; i++) {
-      let code = this.props.before.split('\n')[3]
-      tree.tick = i
-      tree.init(code)
-      loops.push(tree)
-    }
-    this.setState({ loops: loops })
+      if (type === 'init') {
+        let tree = new Tree()
+        tree.history = this.props.beforeHistory
+        tree.tick = 0
+        tree.analyze(res)
+        this.setState({ quizes: tree.quizes })
+      } else if (type === 'loop') {
+        let loops = []
+        for (let i = 0; i < 3; i++) {
+          let tree = new Tree()
+          tree.history = this.props.beforeHistory
+          tree.tick = i
+          tree.analyze(res)
+          loops.push(tree.ast)
+        }
+        this.setState({ loops: loops })
+      }
+    })
+
   }
 
   init() {
@@ -54,16 +66,20 @@ class ScaffoldingHint extends Component {
       this.cm.addLineClass(line, '', 'highlight')
     }
 
-    this.getAST()
+    let code1 = this.props.before.split('\n')[4]
+    this.getAST(code1, 'init')
+
+    // let code2 = this.props.before.split('\n')[3]
+    // this.getAST(code2, 'loop')
   }
 
   onClick() {
     this.setState({ step: this.state.step + 1 })
   }
 
-  onChange(node, index, event) {
+  onChange(quiz, index, event) {
     let value = event.target.value
-    if (value == node.value) {
+    if (value == quiz.answer) {
       $(`#q-${index} .inline-input`).addClass('correct')
       $(`#q-${index} .inline-message`).addClass('correct')
     } else {
@@ -90,13 +106,13 @@ class ScaffoldingHint extends Component {
             <h1>Step 2</h1>
             <p>Let's look at line { this.props.removed[0] + 1 }</p>
             <pre><code>{ this.props.removedLine[0] ? this.props.removedLine[0].code.trim() : '' }</code></pre>
-            { this.state.nodes.map((node, index) => {
+            { this.state.quizes.map((quiz, index) => {
               return (
                 <div id={ `q-${index}` } key={ index }>
-                  <p>Q. What is the value of <code>{ node.key }</code>?</p>
+                  <p>Q. What is the value of <code>{ quiz.key }</code>?</p>
                   <p>
-                    <code>{ node.key }</code> =
-                    <input className={ 'inline-input'  } type="text" placeholder="" onChange={ this.onChange.bind(this, node, index) } />
+                    <code>{ quiz.key }</code> =
+                    <input className={ 'inline-input'  } type="text" placeholder="" onChange={ this.onChange.bind(this, quiz, index) } />
                     <span className="inline-message">Correct!</span>
                   </p>
                 </div>
@@ -105,8 +121,14 @@ class ScaffoldingHint extends Component {
           </div>
           <div id="step-3" style={{ display: this.state.step >= 3 ? 'block' : 'none' }}>
             <h1>Step 3</h1>
-            <p>Great, then let's think about the behavior of <code>previous</code></p>
+            <p>Great, then let's think about the behavior of <code>{ this.props.focusKeys[0] }</code></p>
             <pre><code>o previous: 11 | 12 | 16 | 25<br/>x previous: 121 | 122 | 126 | 135</code></pre>
+            <p>{ this.props.focusKeys[0] } starts at <strong>{ 121 }</strong></p>
+            { this.state.loops.map((loop) => {
+              return (
+                <p>{ loop.type } <code>{ loop.value }</code> and update <strong>{ loop.assign }</strong></p>
+              )
+            }) }
           </div>
           <div id="step-4" style={{ display: this.state.step >= 4 ? 'block' : 'none' }}>
             <h1>Step 4</h1>

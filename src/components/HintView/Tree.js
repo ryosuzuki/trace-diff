@@ -3,32 +3,19 @@ class Tree {
   constructor() {
     this.history = {}
     this.ast = {}
-    this.nodes = []
-    this.res = {}
-    this.code = ''
+    this.quizes = []
     this.tick = 2 // <- TODO: assign
     // let step = 9
     // let tick = this.props.beforeTicks[name][step]
-
   }
 
-  init(code) {
+  init() {
     this.ast = {}
-    this.nodes = []
-    this.code = code.trim()
-    $.ajax({
-      url: 'https://python-ast-explorer.com/api/_parse',
-      method: 'POST',
-      data: this.code,
-    })
-    .then((res) => {
-      console.log('get response')
-      this.res = res
-    })
+    this.quizes = []
   }
 
-  analyze() {
-    let body = this.res.ast.Module.body[0]
+  analyze(res) {
+    let body = res.ast.Module.body[0]
     let key = Object.keys(body)[0]
     window.body = body
 
@@ -76,7 +63,7 @@ class Tree {
       key: key,
       value: value
     }
-    this.nodes.push(node)
+    this.quizes.push({ key: key, answer: value })
     return node
   }
 
@@ -88,7 +75,7 @@ class Tree {
       }
       if (arg.Call) {
         arg = this.addCall(arg.Call)
-        // nodes.push(children)
+        // quizes push(children)
       }
       args.push(arg)
     }
@@ -104,7 +91,7 @@ class Tree {
       args: args,
       return: returnValue
     }
-    this.nodes.push(node)
+    this.quizes.push({ key: value, answer: returnValue })
     return node
   }
 

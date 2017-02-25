@@ -58,6 +58,18 @@ class Item {
   }
 
   getDiff() {
+    if (this.before.includes('from operator import')) {
+      let lines = []
+      for (let line of this.before.split('\r\n')) {
+        if (line.includes('from operator import')) continue
+        lines.push(line)
+      }
+      this.before = lines.join('\n')
+    }
+    this.before = this.before.replace(/\r\n/g, '\n');
+    this.after = this.after.replace(/\r\n/g, '\n');
+
+
     let diffs = jsdiff.diffJson(this.before, this.after)
     let line = -1
     let code = ''
@@ -66,9 +78,10 @@ class Item {
     let addedLine = []
     let removedLine = []
     for (let diff of diffs) {
-      code += diff.value
       let lines = diff.value.split('\n')
       for (let i = 0; i < diff.count; i++) {
+        code += lines[i]
+        code += '\n'
         line++
         if (diff.added) {
           added.push(line)

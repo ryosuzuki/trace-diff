@@ -92,6 +92,33 @@ class ScaffoldingHint extends Component {
     return (
       <div>
         <h1>Scaffolding Hint</h1>
+
+
+        <div className="markdown">
+          <pre>
+            { _.intersection(Object.keys(this.props.beforeHistory), Object.keys(this.props.afterHistory)).map((key) => {
+              return (
+                <div key={ key }>
+                  <code>
+                    { key }
+                  </code>
+                  <br />
+                  <code>
+                    - Expected: { this.props.beforeHistory[key].join(' | ') }
+                  </code>
+                  <br />
+                  <code>
+                    - Result:   { this.props.afterHistory[key].join(' | ') }
+                  </code>
+                  <br />
+                  <br />
+                </div>
+              )
+            }) }
+          </pre>
+        </div>
+
+
         <div className="ui message markdown">
           <div className="header">
             Scaffolding Hint

@@ -1,15 +1,34 @@
 
 class Tree {
   constructor() {
-    this.nodes = []
     this.history = {}
+    this.ast = {}
+    this.nodes = []
+    this.res = {}
+    this.code = ''
     this.tick = 2 // <- TODO: assign
     // let step = 9
     // let tick = this.props.beforeTicks[name][step]
+
   }
 
-  analyze(res) {
-    let body = res.ast.Module.body[0]
+  init(code) {
+    this.ast = {}
+    this.nodes = []
+    this.code = code.trim()
+    $.ajax({
+      url: 'https://python-ast-explorer.com/api/_parse',
+      method: 'POST',
+      data: this.code,
+    })
+    .then((res) => {
+      console.log('get response')
+      this.res = res
+    })
+  }
+
+  analyze() {
+    let body = this.res.ast.Module.body[0]
     let key = Object.keys(body)[0]
     window.body = body
 
@@ -20,7 +39,7 @@ class Tree {
         ast = this.addAssign(el)
       }
     }
-    return ast
+    this.ast = ast
   }
 
   addAssign(el) {

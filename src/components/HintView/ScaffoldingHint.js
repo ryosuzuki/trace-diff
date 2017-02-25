@@ -14,7 +14,7 @@ class ScaffoldingHint extends Component {
       detail: '',
       step: 4,
       nodes: [],
-
+      loops: [],
     }
     window.scaffoldingHint = this
   }
@@ -27,103 +27,21 @@ class ScaffoldingHint extends Component {
     if (!this.props.removedLine.length) return false
     // let code = this.props.removedLine[0].code
     let code = 'previous = combiner(previous, term(i))'
-    code = code.trim()
-
-    $.ajax({
-      url: 'https://python-ast-explorer.com/api/_parse',
-      method: 'POST',
-      data: code,
-    })
-    .then((res) => {
-      console.log('get response')
-      window.res = res
-      this.hoge()
-    })
-  }
-
-  hoge() {
     let tree = new Tree()
     tree.history = this.props.beforeHistory
-    let ast = tree.analyze(res)
-    let nodes = tree.nodes
+    tree.tick = 0
+    tree.init(code)
     this.setState({ nodes: tree.nodes })
-    debugger
+
+    let loops = []
+    for (let i = 0; i < 3; i++) {
+      let code = this.props.before.split('\n')[3]
+      tree.tick = i
+      tree.init(code)
+      loops.push(tree)
+    }
+    this.setState({ loops: loops })
   }
-
-  /*
-  analyze(res) {
-    let body = res.ast.Module.body[0]
-    let key = Object.keys(body)[0]
-
-    window.body = body
-    let nodes = []
-    let hash = {}
-    let id = 0
-
-    const getValue = (name) => {
-      let value
-      if (!Object.keys(this.props.beforeHistory).includes(name)) {
-        return name
-      }
-      if (this.props.beforeHistory[name].length > 1) {
-        let step = 9
-        let tick = this.props.beforeTicks[name][step]
-        value = this.props.beforeHistory[name][tick-1]
-      } else {
-        value = this.props.beforeHistory[name][0]
-      }
-      return value
-    }
-
-    const addName = (el) => {
-      let key = el.Name.id
-      let value = getValue(key)
-      let node = { key: key, value: value }
-      nodes.push(node)
-      return node
-    }
-
-    const addCall = (el) => {
-      let args = []
-      let argVals = []
-      for (let arg of el.args) {
-        if (arg.Name) {
-          arg = addName(arg)
-          args.push(arg)
-        }
-        if (arg.Call) {
-          // let children = addCall(arg.Call)
-          // nodes.push(children)
-        }
-      }
-      let func = addName(el.func)
-      let key = `${func.value}(${args.map(arg => arg.value).join(', ')})`
-      let value = getValue(key)
-      let node = { key: key, value: value}
-      nodes.push(node)
-      return node
-    }
-
-    for (let key of Object.keys(body)) {
-      let line = body[key]
-      if (key === 'Assign') {
-        let targets = line.targets
-        let value = line.value
-
-        if (value.Call) {
-          addCall(value.Call)
-        }
-
-        for (let target of targets) {
-          addName(target)
-        }
-      }
-    }
-    nodes = _.flatten(nodes)
-
-    this.setState({ nodes: nodes })
-  }
-  */
 
   init() {
     if (!this.refs.editor) return false

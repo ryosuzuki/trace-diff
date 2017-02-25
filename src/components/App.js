@@ -9,6 +9,7 @@ import DiffView from './DiffView'
 import HintView from './HintView'
 import MockupView from './MockupView'
 import Stream from './Stream'
+import Record from './Record'
 
 import Datastore from 'nedb'
 const db = new Datastore()
@@ -70,6 +71,11 @@ class App extends Component {
     stream.generate(item.afterTraces, item.afterCode, 'after')
     stream.check()
 
+    let record = new Record()
+    record.generate(stream.beforeTraces, 'before')
+    record.generate(stream.afterTraces, 'after')
+    record.check()
+
     let state = Object.assign(item, {
       id: id,
       beforeTraces: stream.beforeTraces,
@@ -78,6 +84,12 @@ class App extends Component {
       currentCode: item.beforeCode,
       step: 0,
       stop: false,
+      beforeHistory: record.beforeHistory,
+      afterHistory: record.afterHistory,
+      beforeTicks: record.beforeTicks,
+      afterTicks: record.afterTicks,
+      commonKeys: record.commonKeys,
+      focusKeys: record.focusKeys,
     })
     this.updateState(state)
     window.history.pushState(null, null, `?id=${id}`)
@@ -168,6 +180,12 @@ class App extends Component {
               diffs={ this.props.diffs }
               log={ this.props.log }
               test={ this.props.test }
+              beforeHistory={ this.props.beforeHistory}
+              afterHistory={ this.props.afterHistory}
+              beforeTicks={ this.props.beforeTicks}
+              afterTicks={ this.props.afterTicks}
+              commonKeys={ this.props.commonKeys}
+              focusKeys={ this.props.focusKeys}
             />
           </div>
         </div>

@@ -127,6 +127,12 @@ class HintView extends Component {
                 afterTraces={ this.props.afterTraces }
                 removed={ this.props.removed }
                 added={ this.props.added }
+                beforeHistory={ this.props.beforeHistory}
+                afterHistory={ this.props.afterHistory}
+                beforeTicks={ this.props.beforeTicks}
+                afterTicks={ this.props.afterTicks}
+                commonKeys={ this.props.commonKeys}
+                focusKeys={ this.props.focusKeys}
               />
             </div>
           )
@@ -162,6 +168,12 @@ class HintView extends Component {
                 addedLine={ this.props.addedLine }
                 log={ this.props.log }
                 test={ this.props.test }
+                beforeHistory={ this.props.beforeHistory}
+                afterHistory={ this.props.afterHistory}
+                beforeTicks={ this.props.beforeTicks}
+                afterTicks={ this.props.afterTicks}
+                commonKeys={ this.props.commonKeys}
+                focusKeys={ this.props.focusKeys}
               />
             </div>
           )

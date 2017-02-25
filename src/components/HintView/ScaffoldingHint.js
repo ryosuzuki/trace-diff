@@ -13,7 +13,8 @@ class ScaffoldingHint extends Component {
     this.state = {
       detail: '',
       step: 4,
-      nodes: []
+      nodes: [],
+
     }
     window.scaffoldingHint = this
   }
@@ -108,6 +109,20 @@ class ScaffoldingHint extends Component {
     this.setState({ step: this.state.step + 1 })
   }
 
+  onChange(name, event) {
+    let value = event.target.value
+    let step = 9
+    let tick = this.props.beforeTicks[name][step]
+    let answer = this.props.beforeHistory[name][tick-1]
+    if (value == answer) {
+      $(`#${name} .inline-input`).addClass('correct')
+      $(`#${name} .inline-message`).addClass('correct')
+    } else {
+      $(`#${name} .inline-input`).removeClass('correct')
+      $(`#${name} .inline-message`).removeClass('correct')
+    }
+  }
+
   render() {
     return (
       <div>
@@ -128,7 +143,14 @@ class ScaffoldingHint extends Component {
             <pre><code>{ this.props.removedLine[0] ? this.props.removedLine[0].code.trim() : '' }</code></pre>
             { this.state.nodes.map((node, index) => {
               return (
-                <p key={ index }>Q. What is the value of <code>{ node }</code>?</p>
+                <div id={ node } key={ index }>
+                  <p>Q. What is the value of <code>{ node }</code>?</p>
+                  <p>
+                    <code>{ node }</code> =
+                    <input className={ 'inline-input' } type="text" placeholder="" onChange={ this.onChange.bind(this, node) } />
+                    <span className="inline-message">Correct!</span>
+                  </p>
+                </div>
               )
             }) }
           </div>

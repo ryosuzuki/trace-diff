@@ -12,13 +12,7 @@ class BehaviorHint extends Component {
       tick: 0,
       expected: {},
       result: {},
-      keys: [],
       key: '',
-      line: 0,
-      beforeHistory: {},
-      afterHistory: {},
-      beforeTicks: {},
-      afterTicks: {},
     }
     window.behaviorHint = this
   }
@@ -37,8 +31,6 @@ class BehaviorHint extends Component {
     marker.append($('.label')[0])
     this.cm.setGutterMarker(3, 'breakpoints', marker)
     */
-
-   this.generate()
   }
 
 
@@ -59,69 +51,6 @@ class BehaviorHint extends Component {
       }
     }, interval)
   }
-
-  generateHistory(traces) {
-    let history = {}
-    let ticks = {}
-    let lines = {}
-    for (let i = 0; i < traces.length; i++) {
-      let trace = traces[i]
-      for (let func of Object.keys(trace.locals)) {
-        if (func !== 'accumulate') continue
-
-        let variables = trace.locals[func]
-        for (let key of Object.keys(variables)) {
-          let value = variables[key]
-          if (value === undefined) continue
-
-          if (!history[key]) history[key] = []
-          if (!lines[key]) lines[key] = []
-          if (!ticks[key]) ticks[key] = {}
-
-          let line = trace.line
-          if (trace.event === 'step_line') {
-            line = traces[i-1].line
-          }
-          let last = _.last(history[key])
-          if (last === undefined || last !== value) {
-            history[key].push(value)
-            lines[key].push(line)
-          }
-          ticks[key][i] = history[key].length
-          if (trace.event === 'step_line') {
-            ticks[key][i-1] = history[key].length
-          }
-        }
-      }
-    }
-    return { history: history, lines: lines, ticks: ticks }
-  }
-
-  generate() {
-    let before = this.generateHistory(this.props.beforeTraces)
-    let after = this.generateHistory(this.props.afterTraces)
-    let commonKeys = _.intersection(Object.keys(before.history), Object.keys(after.history))
-
-    let line
-    let keys = []
-    for (let key of commonKeys) {
-      if (key === '__return__') continue
-      if (!_.isEqual(before.history[key], after.history[key])) {
-        let obj = _.countBy(before.lines[key])
-        line = Number(Object.keys(obj).reduce(function(a, b){ return obj[a] > obj[b] ? a : b }))
-        keys.push(key)
-      }
-    }
-    this.setState({
-      beforeHistory: before.history,
-      beforeTicks: before.ticks,
-      afterHistory: after.history,
-      afterTicks: after.ticks,
-      keys: keys,
-      line: line,
-    })
-  }
-
 
   updateStep(value) {
     let step = Math.floor(value)
@@ -192,16 +121,16 @@ class BehaviorHint extends Component {
 
     let result = {}
     let expected = {}
-    for (let key of Object.keys(this.state.beforeHistory)) {
-      let history = this.state.beforeHistory[key]
-      let tick = this.state.beforeTicks[key][step]
+    for (let key of Object.keys(this.props.beforeHistory)) {
+      let history = this.props.beforeHistory[key]
+      let tick = this.props.beforeTicks[key][step]
       if (!tick) tick = 0
       result[key] = history.slice(0, tick)
     }
-    for (let key of Object.keys(this.state.afterHistory)) {
-      let history = this.state.afterHistory[key]
-      // let tick = this.state.afterTicks[key][step]
-      let tick = this.state.beforeTicks[key][step]
+    for (let key of Object.keys(this.props.afterHistory)) {
+      let history = this.props.afterHistory[key]
+      // let tick = this.props.afterTicks[key][step]
+      let tick = this.props.beforeTicks[key][step]
       if (!tick) tick = 0
       expected[key] = history.slice(0, tick)
     }
@@ -211,13 +140,13 @@ class BehaviorHint extends Component {
     let code = this.cm.getValue()
     window.app.updateState({ step: step, currentCode: code })
 
-    this.cm.addLineClass(current.line-1, '', 'current-line')
-    let msg = document.createElement('div')
-    msg.className = 'inline-hint'
-    msg.append($('.arrow-border').clone()[0])
-    msg.append($('.arrow-up').clone()[0])
-    msg.append($('.dynamic-hint').clone()[0])
-    this.cm.addLineWidget(this.state.line-1, msg, { coverGutter: true })
+    // this.cm.addLineClass(current.line-1, '', 'current-line')
+    // let msg = document.createElement('div')
+    // msg.className = 'inline-hint'
+    // msg.append($('.arrow-border').clone()[0])
+    // msg.append($('.arrow-up').clone()[0])
+    // msg.append($('.dynamic-hint').clone()[0])
+    // this.cm.addLineWidget(this.state.line-1, msg, { coverGutter: true })
 
 
   }
@@ -249,6 +178,27 @@ class BehaviorHint extends Component {
           </div>
         </div>
 
+        <div className="markdown">
+          <pre className="dynamic-hint">
+            { this.props.focusKeys.map((key, index) => {
+              return (
+                <div key={ key }>
+                  <code>
+                  o { key }: { this.state.expected[key] ? this.state.expected[key].join(' | ') : '' }
+                  <br />
+                  x { key }: { this.state.result[key] ? this.state.result[key].join(' | ') : '' }
+
+                  { index !== this.props.focusKeys.length-1 ? (
+                    <span><br /><br /></span>
+                  ) : (
+                    ''
+                  ) }
+                  </code>
+                </div>
+              )
+            }) }
+          </pre>
+        </div>
 
         <h2>Code</h2>
         <CodeMirror
@@ -264,27 +214,12 @@ class BehaviorHint extends Component {
           <div className="arrow-up"></div>
           <div className="arrow-border"></div>
           <pre className="dynamic-hint">
-            { this.state.keys.map((key, index) => {
-              return (
-                <div key={ key }>
-                  o { key }: { this.state.expected[key] ? this.state.expected[key].join(' | ') : '' }
-                  <br />
-                  x { key }: { this.state.result[key] ? this.state.result[key].join(' | ') : '' }
-
-                  { index !== this.state.keys.length-1 ? (
-                    <span><br /><br /></span>
-                  ) : (
-                    ''
-                  ) }
-                </div>
-              )
-            }) }
           </pre>
         </div>
 
         <div className="markdown">
           <pre>
-            { _.intersection(Object.keys(this.state.beforeHistory), Object.keys(this.state.afterHistory)).map((key) => {
+            { _.intersection(Object.keys(this.props.beforeHistory), Object.keys(this.props.afterHistory)).map((key) => {
               return (
                 <div key={ key }>
                   <code>

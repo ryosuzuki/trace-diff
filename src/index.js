@@ -44,6 +44,12 @@ let initialStore = {
   step: 0,
   stop: false,
   relatedItems: [],
+  beforeHistory: {},
+  afterHistory: {},
+  beforeTicks: {},
+  afterTicks: {},
+  commonKeys: [],
+  focusKeys: [],
 }
 
 let store = configureStore(initialStore)

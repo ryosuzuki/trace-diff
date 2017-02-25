@@ -111,9 +111,14 @@ class ScaffoldingHint extends Component {
 
   onChange(name, event) {
     let value = event.target.value
-    let step = 9
-    let tick = this.props.beforeTicks[name][step]
-    let answer = this.props.beforeHistory[name][tick-1]
+    let answer
+    if (this.props.beforeHistory[name].length > 1) {
+      let step = 9
+      let tick = this.props.beforeTicks[name][step]
+      answer = this.props.beforeHistory[name][tick-1]
+    } else {
+      answer = this.props.beforeHistory[name][0]
+    }
     if (value == answer) {
       $(`#${name} .inline-input`).addClass('correct')
       $(`#${name} .inline-message`).addClass('correct')

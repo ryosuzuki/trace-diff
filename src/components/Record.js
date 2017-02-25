@@ -17,7 +17,23 @@ class Record {
     for (let i = 0; i < traces.length; i++) {
       let trace = traces[i]
       for (let func of Object.keys(trace.locals)) {
-        if (func !== 'accumulate') continue
+
+        if (func !== 'accumulate') {
+          if (trace.event === 'return') {
+            let value = ''
+            let args = []
+            for (let key of Object.keys(trace.locals[func])) {
+              if (key === '__return__') {
+                value = trace.locals[func][key]
+              } else {
+                args.push({ key: key, val: trace.locals[func][key] })
+              }
+            }
+            let key = `${func}(${args.map(arg => arg.val).join(', ')})`
+            history[key] = [value]
+          }
+          continue
+        }
 
         let variables = trace.locals[func]
         for (let key of Object.keys(variables)) {

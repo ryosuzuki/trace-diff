@@ -51,7 +51,7 @@ class Tree {
       right: right,
       assign: assignValue
     }
-    this.quizes.push({ type: 'assign', key: key, answer: value })
+    this.quizes.push(node)
     return node
   }
 
@@ -65,7 +65,7 @@ class Tree {
       value: value,
       right: right
     }
-    this.quizes.push({ type: 'return', key: key, answer: value })
+    this.quizes.push(node)
     return node
   }
 
@@ -121,7 +121,7 @@ class Tree {
       key: key,
       value: value
     }
-    this.quizes.push({ type: 'value', key: key, answer: value })
+    this.quizes.push(node)
     return node
   }
 
@@ -187,19 +187,26 @@ class Tree {
       args.push(arg)
     }
     let func = this.addNode(el.func)
-    let key = `${func.key}(${args.map(arg => arg.key).join(', ')})`
-    let value = `${func.value}(${args.map(arg => arg.value).join(', ')})`
-    let returnValue = this.getValue(value)
+    let origin = `${func.value}(${args.map(arg => arg.key).join(', ')})`
+    let key = `${func.value}(${args.map(arg => arg.value).join(', ')})`
+    let value = this.getValue(key)
+    let calls = this.getCalls(key)
     let node = {
       type: 'call',
       key: key,
       value: value,
       func: func,
       args: args,
-      return: returnValue
+      origin: origin,
+      calls: calls,
     }
-    this.quizes.push({ type: 'value', key: value, answer: returnValue })
+    this.quizes.push(node)
     return node
+  }
+
+  getCalls(key) {
+    if (!this.history[key]) return []
+    return this.history[key]['calls']
   }
 
   getValue(key) {
@@ -208,9 +215,9 @@ class Tree {
       return key
     }
     if (this.history[key].length > 1) {
-      value = this.history[key][this.tick]
+      value = this.history[key]['history'][this.tick]
     } else {
-      value = this.history[key][0]
+      value = this.history[key]['history'][0]
     }
     return value
   }

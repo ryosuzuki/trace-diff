@@ -66,6 +66,7 @@ class Record {
     let key = this.getKey(func, args)
     let value = trace.locals[func]['__return__']
     this.history[key]['value'] = value
+    this.history[key]['history'] = [value]
 
     this.stacks.pop(key)
   }
@@ -88,22 +89,21 @@ class Record {
       if (value === undefined) continue
 
       let node = {
-        type: 'name',
-        values: [value],
-        value: value
+        type: 'assign',
+        value: value,
+        history: [value],
       }
       if (!this.history[key]) this.history[key] = node
       if (!this.ticks[key]) this.ticks[key] = {}
       if (this.history[key]['value'] !== value) {
         this.history[key]['value'] = value
-        this.history[key]['values'].push(value)
+        this.history[key]['history'].push(value)
       }
       this.ticks[key][i] = this.history[key].length
       if (trace.event === 'step_line') {
         this.ticks[key][i-1] = this.history[key].length
       }
     }
-
   }
 
   check() {

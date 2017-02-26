@@ -41,6 +41,7 @@ class ScaffoldingHint extends Component {
         tree.tick = 0
         tree.analyze(res)
         this.setState({ quizes: tree.quizes })
+        window.tree = tree
       } else if (type === 'loop') {
         let loops = []
         for (let i = 0; i < 3; i++) {
@@ -85,17 +86,13 @@ class ScaffoldingHint extends Component {
   onChange(quiz, index, event) {
     let value = event.target.value
     if (value === undefined) return
-    if (value == quiz.answer) {
+    if (value == quiz.value) {
       $(`#q-${index} .inline-input`).addClass('correct')
       $(`#q-${index} .inline-message`).addClass('correct')
     } else {
       $(`#q-${index} .inline-input`).removeClass('correct')
       $(`#q-${index} .inline-message`).removeClass('correct')
     }
-  }
-
-  generateQuiz() {
-
   }
 
   render() {
@@ -123,9 +120,14 @@ class ScaffoldingHint extends Component {
                   <p>Q. What is the value of <code>{ quiz.key }</code>?</p>
                   <p>
                     <code>{ quiz.key }</code> =
-                    <input className={ 'inline-input'  } type="text" placeholder={ quiz.answer } onChange={ this.onChange.bind(this, quiz, index) } />
+                    <input className={ 'inline-input'  } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
                     <span className="inline-message">Correct!</span>
                   </p>
+                  { quiz.calls ? quiz.calls.map((call) => {
+                    return (
+                      <p>{ call }</p>
+                    )
+                  }) : '' }
                 </div>
               )
             }) }
@@ -165,11 +167,15 @@ class ScaffoldingHint extends Component {
                   </code>
                   <br />
                   <code>
-                    - Expected: { this.props.beforeHistory[key].join(' | ') }
+                    - Expected: { this.props.beforeHistory[key].history.join(' | ') }
                   </code>
                   <br />
                   <code>
-                    - Result:   { this.props.afterHistory[key] ? this.props.afterHistory[key].join(' | ') : '' }
+                    - Result:   { this.props.afterHistory[key] ? this.props.afterHistory[key].history.join(' | ') : '' }
+                  </code>
+                  <br />
+                  <code>
+                    - Calls:    { this.props.beforeHistory[key].calls ? this.props.beforeHistory[key].calls.join(' | ') : '' }
                   </code>
                   <br />
                   <br />

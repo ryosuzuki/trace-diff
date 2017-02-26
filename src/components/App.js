@@ -5,11 +5,13 @@ import actions from '../redux/actions'
 import Mousetrap from 'mousetrap'
 
 import ControlPanel from './ControlPanel'
-import DiffView from './DiffView'
-import HintView from './HintView'
-import MockupView from './MockupView'
-import Stream from './Stream'
-import Record from './Record'
+import DiffView from './HintView/DiffView'
+import HintView from './HintView/Index'
+import MockupView from './HintMockup/Index'
+import MixedHint from './MixedHint'
+import Stream from './Data/Stream'
+import Record from './Data/Record'
+import Tree from './Data/Tree'
 
 import Datastore from 'nedb'
 const db = new Datastore()
@@ -140,6 +142,38 @@ class App extends Component {
               expected={ this.props.expected }
               result={ this.props.result }
               relatedItems={ this.props.relatedItems }
+            />
+          </div>
+        </div>
+        <div className="ui two column centered grid">
+          <div id="mixed-hint" className="nine wide column">
+            <MixedHint
+              options={ options }
+              id={ this.props.id }
+              code={ this.props.code }
+              before={ this.props.before }
+              after={ this.props.after }
+              traces={ this.props.traces }
+              currentCode={ this.props.currentCode }
+              step={ this.props.step }
+              stop={ this.props.stop }
+              beforeCode={ this.props.beforeCode }
+              afterCode={ this.props.afterCode }
+              beforeTraces={ this.props.beforeTraces }
+              afterTraces={ this.props.afterTraces }
+              added={ this.props.added }
+              removed={ this.props.removed }
+              addedLine={ this.props.addedLine }
+              removedLine={ this.props.removedLine }
+              diffs={ this.props.diffs }
+              log={ this.props.log }
+              test={ this.props.test }
+              beforeHistory={ this.props.beforeHistory}
+              afterHistory={ this.props.afterHistory}
+              beforeTicks={ this.props.beforeTicks}
+              afterTicks={ this.props.afterTicks}
+              commonKeys={ this.props.commonKeys}
+              focusKeys={ this.props.focusKeys}
             />
           </div>
         </div>

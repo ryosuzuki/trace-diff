@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 import CodeMirror from 'react-codemirror'
 import { MarkdownPreview } from 'react-marked-markdown';
 
-import LocationHint from './HintMockup/LocationHint'
-import DataHint from './HintMockup/DataHint'
-import BehaviorHint from './HintMockup/BehaviorHint'
-import BehaviorHint2 from './HintMockup/BehaviorHint2'
-import TransformationHint from './HintMockup/TransformationHint'
-import ExampleHint from './HintMockup/ExampleHint'
+import LocationHint from './LocationHint'
+import DataHint from './DataHint'
+import BehaviorHint from './BehaviorHint'
+import BehaviorHint2 from './BehaviorHint2'
+import TransformationHint from './TransformationHint'
+import ExampleHint from './ExampleHint'
 
 class MockupView extends Component {
   constructor(props) {

@@ -5,15 +5,13 @@ import Datastore from 'nedb'
 import Slider from 'rc-slider'
 import Tooltip from 'rc-tooltip'
 
-import NoneHint from './HintView/NoneHint'
-import TransformationHint from './HintView/TransformationHint'
-import LocationHint from './HintView/LocationHint'
-import DataHint from './HintView/DataHint'
-import BehaviorHint from './HintView/BehaviorHint'
-import ExampleHint from './HintView/ExampleHint'
-import ScaffoldingHint from './HintView/ScaffoldingHint'
-import MixedHint from './HintView/MixedHint'
-
+import NoneHint from './NoneHint'
+import TransformationHint from './TransformationHint'
+import LocationHint from './LocationHint'
+import DataHint from './DataHint'
+import BehaviorHint from './BehaviorHint'
+import ExampleHint from './ExampleHint'
+import ScaffoldingHint from './ScaffoldingHint'
 
 class HintView extends Component {
   constructor(props) {
@@ -158,31 +156,6 @@ class HintView extends Component {
           return (
             <div id="location-hint" style={{ display: type === this.state.type ? 'block' : 'none' }} key={ type }>
               <ScaffoldingHint
-                options={ this.props.options }
-                id={ this.props.id }
-                before={ this.props.before }
-                after={ this.props.after }
-                diffs={ this.props.diffs }
-                removed={ this.props.removed }
-                added={ this.props.added }
-                removedLine={ this.props.removedLine }
-                addedLine={ this.props.addedLine }
-                log={ this.props.log }
-                test={ this.props.test }
-                beforeHistory={ this.props.beforeHistory}
-                afterHistory={ this.props.afterHistory}
-                beforeTicks={ this.props.beforeTicks}
-                afterTicks={ this.props.afterTicks}
-                commonKeys={ this.props.commonKeys}
-                focusKeys={ this.props.focusKeys}
-              />
-            </div>
-          )
-          break
-        case 'Mixed':
-          return (
-            <div id="mixed-hint" style={{ display: type === this.state.type ? 'block' : 'none' }} key={ type }>
-              <MixedHint
                 options={ this.props.options }
                 id={ this.props.id }
                 before={ this.props.before }

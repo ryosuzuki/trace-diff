@@ -5,7 +5,7 @@ import Slider from 'rc-slider'
 import Tooltip from 'rc-tooltip'
 import _ from 'lodash'
 import * as jsdiff from 'diff'
-import Tree from './Tree'
+import Tree from '../Data/Tree'
 
 class ScaffoldingHint extends Component {
   constructor(props) {

@@ -132,20 +132,6 @@ class ScaffoldingHint extends Component {
               )
             }) }
           </div>
-          <div id="step-3" style={{ display: this.state.step >= 3 ? 'block' : 'none' }}>
-            <h1>Step 3</h1>
-            <p>Great, then let's think about the behavior of <code>{ this.props.focusKeys[0] }</code></p>
-            <pre><code>o previous: 11 | 12 | 16 | 25<br/>x previous: 121 | 122 | 126 | 135</code></pre>
-            <p>{ this.props.focusKeys[0] } starts at <strong>{ 121 }</strong></p>
-            { this.state.loops.map((loop) => {
-              return (
-                <p>{ loop.type } <code>{ loop.value }</code> and update <strong>{ loop.assign }</strong></p>
-              )
-            }) }
-          </div>
-          <div id="step-4" style={{ display: this.state.step >= 4 ? 'block' : 'none' }}>
-            <h1>Step 4</h1>
-          </div>
           <button className="ui basic button" onClick={ this.onClick.bind(this) }>Next</button>
 
         </div>

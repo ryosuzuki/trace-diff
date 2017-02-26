@@ -138,10 +138,6 @@ class App extends Component {
             <ControlPanel
               id={ this.props.id }
               items={ this.props.items }
-              test={ this.props.test }
-              expected={ this.props.expected }
-              result={ this.props.result }
-              relatedItems={ this.props.relatedItems }
             />
           </div>
         </div>
@@ -154,6 +150,12 @@ class App extends Component {
               code={ this.props.code }
               before={ this.props.before }
               after={ this.props.after }
+
+              test={ this.props.test }
+              expected={ this.props.expected }
+              result={ this.props.result }
+              log={ this.props.log }
+
               traces={ this.props.traces }
               currentCode={ this.props.currentCode }
               step={ this.props.step }
@@ -167,8 +169,6 @@ class App extends Component {
               addedLine={ this.props.addedLine }
               removedLine={ this.props.removedLine }
               diffs={ this.props.diffs }
-              log={ this.props.log }
-              test={ this.props.test }
               beforeHistory={ this.props.beforeHistory}
               afterHistory={ this.props.afterHistory}
               beforeTicks={ this.props.beforeTicks}

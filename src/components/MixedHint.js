@@ -4,6 +4,9 @@ import 'codemirror/mode/python/python'
 import _ from 'lodash'
 import Tree from './Data/Tree'
 
+import FirstStep from './MixedHint/FirstStep'
+import SecondStep from './MixedHint/SecondStep'
+
 class MixedHint extends Component {
   constructor(props) {
     super(props)
@@ -97,15 +100,21 @@ class MixedHint extends Component {
         <h1>Mixed Hint</h1>
 
         <div className="ui message markdown">
-          <div className="header">
-            Mixed Hint
-          </div>
-          <div id="step-1" style={{ display: this.state.step >= 1 ? 'block' : 'none' }}>
-            <h1>Step 1</h1>
-            <p>Your accumulate function has an 1 mistake</p>
-            <p>Let's think with this example:</p>
-            <pre><code>{ this.props.test }</code></pre>
-          </div>
+          <FirstStep
+            test={ this.props.test }
+            expected={ this.props.expected }
+            result={ this.props.result }
+            log={ this.props.log }
+          />
+
+          <SecondStep
+            test={ this.props.test }
+            expected={ this.props.expected }
+            result={ this.props.result }
+            log={ this.props.log }
+          />
+
+
           <div id="step-2" style={{ display: this.state.step >= 2 ? 'block' : 'none' }}>
             <h1>Step 2</h1>
             <p>Let's look at line { this.props.removed[0] + 1 }</p>

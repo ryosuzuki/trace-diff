@@ -1,6 +1,7 @@
 
 #diff-view {
   border-right: 3px dashed #bbb;
+  display: none;
 }
 
 #diff-view, #hint-view {

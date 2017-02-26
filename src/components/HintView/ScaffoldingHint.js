@@ -33,6 +33,7 @@ class ScaffoldingHint extends Component {
     })
     .then((res) => {
       console.log('get response')
+      window.res = res
 
       if (type === 'init') {
         let tree = new Tree()
@@ -66,8 +67,11 @@ class ScaffoldingHint extends Component {
       this.cm.addLineClass(line, '', 'highlight')
     }
 
-    let code1 = this.props.before.split('\n')[4]
-    this.getAST(code1, 'init')
+    // let code1 = this.props.before.split('\n')[4]
+    if (this.props.removedLine[0]) {
+      let code = this.props.removedLine[0].code
+      this.getAST(code, 'init')
+    }
 
     // let code2 = this.props.before.split('\n')[3]
     // this.getAST(code2, 'loop')

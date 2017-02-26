@@ -27,8 +27,8 @@ class App extends Component {
   componentDidMount() {
     $.ajax({
       method: 'GET',
-      url: `${window.location.pathname}data/accumulate.json`
-      // url: `${window.location.pathname}data/example.json`
+      // url: `${window.location.pathname}data/accumulate.json`
+      url: `${window.location.pathname}data/example.json`
     })
     .then((items) => {
       console.log('start')
@@ -127,7 +127,7 @@ class App extends Component {
       <div>
         <div className="ui two column centered grid">
           <div className="sixteen wide column">
-            <h1 id="top" className="ui center aligned huge header">
+            <h1 id="top-title" className="ui center aligned huge header">
               Exploring the Design Space of Automated Hints -
               <a href="https://github.com/ryosuzuki/hint-mockup/" target="blank">
                 <i className="fa fa-fw fa-github-alt"></i> GitHub

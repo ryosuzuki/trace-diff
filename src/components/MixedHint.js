@@ -2,10 +2,13 @@ import React, { Component } from 'react'
 import CodeMirror from 'react-codemirror'
 import 'codemirror/mode/python/python'
 import _ from 'lodash'
-import Tree from './Data/Tree'
 
 import FirstStep from './MixedHint/FirstStep'
 import SecondStep from './MixedHint/SecondStep'
+
+import Highlight from 'react-highlight'
+import Quiz from './MixedHint/Quiz'
+
 
 class MixedHint extends Component {
   constructor(props) {
@@ -13,7 +16,6 @@ class MixedHint extends Component {
     this.state = {
       detail: '',
       step: 4,
-      quizes: [],
       loops: [],
     }
     window.mixedHint = this
@@ -23,75 +25,40 @@ class MixedHint extends Component {
     this.init()
   }
 
-  getAST(code, type) {
-    if (!code) return false
-    code = code.trim()
-    $.ajax({
-      url: 'https://python-ast-explorer.com/api/_parse',
-      method: 'POST',
-      data: code,
-    })
-    .then((res) => {
-      console.log('get response')
-      window.res = res
-
-      if (type === 'init') {
-        let tree = new Tree()
-        tree.history = this.props.beforeHistory
-        tree.tick = 0
-        tree.analyze(res)
-        this.setState({ quizes: tree.quizes })
-        window.tree = tree
-      } else if (type === 'loop') {
-        let loops = []
-        for (let i = 0; i < 3; i++) {
-          let tree = new Tree()
-          tree.history = this.props.beforeHistory
-          tree.tick = i
-          tree.analyze(res)
-          loops.push(tree.ast)
-        }
-        this.setState({ loops: loops })
-      }
-    })
-
-  }
-
   init() {
     if (!this.refs.editor) return false
     this.cm = this.refs.editor.getCodeMirror()
     window.before = this.props.before
     window.after = this.props.after
-
     for (let line of this.props.removed) {
       this.cm.addLineClass(line, '', 'highlight')
     }
 
     // let code1 = this.props.before.split('\n')[4]
-    if (this.props.removedLine[0]) {
-      let i = this.props.removedLine.length
-      let code = this.props.removedLine[i-1].code
-      this.getAST(code, 'init')
-    }
+    // if (this.props.removedLine[0]) {
+    //   let i = this.props.removedLine.length
+    //   let code = this.props.removedLine[i-1].code
+    // }
 
+    this.generateDiff()
     // let code2 = this.props.before.split('\n')[3]
     // this.getAST(code2, 'loop')
   }
 
-  onClick() {
-    this.setState({ step: this.state.step + 1 })
+  generateDiff() {
+    setTimeout(() => {
+      console.log('update')
+      for (let line of this.props.removed) {
+        this.cm.addLineClass(line, '', 'removed')
+      }
+      for (let line of this.props.added) {
+        this.cm.addLineClass(line, '', 'added')
+      }
+    }, 5000)
   }
 
-  onChange(quiz, index, event) {
-    let value = event.target.value
-    if (value === undefined) return
-    if (value == quiz.value) {
-      $(`#q-${index} .inline-input`).addClass('correct')
-      $(`#q-${index} .inline-message`).addClass('correct')
-    } else {
-      $(`#q-${index} .inline-input`).removeClass('correct')
-      $(`#q-${index} .inline-message`).removeClass('correct')
-    }
+  onClick() {
+    this.setState({ step: this.state.step + 1 })
   }
 
   render() {
@@ -99,50 +66,34 @@ class MixedHint extends Component {
       <div>
         <h1>Mixed Hint</h1>
 
-        <div className="ui message markdown">
-          <FirstStep
-            test={ this.props.test }
-            expected={ this.props.expected }
-            result={ this.props.result }
-            log={ this.props.log }
-          />
-
-          <SecondStep
-            test={ this.props.test }
-            expected={ this.props.expected }
-            result={ this.props.result }
-            log={ this.props.log }
-          />
-
-
-          <div id="step-2" style={{ display: this.state.step >= 2 ? 'block' : 'none' }}>
-            <h1>Step 2</h1>
-            <p>Let's look at line { this.props.removed[0] + 1 }</p>
-            <pre><code>{ this.props.removedLine[0] ? _.last(this.props.removedLine).code.trim() : '' }</code></pre>
-            { this.state.quizes.map((quiz, index) => {
-              return (
-                <div id={ `q-${index}` } key={ index }>
-                  <p>Q. What is the value of <code>{ quiz.key }</code>?</p>
-                  <p>
-                    <code>{ quiz.key }</code> =
-                    <input className={ 'inline-input'  } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
-                    <span className="inline-message">Correct!</span>
-                  </p>
-                  { quiz.calls ? quiz.calls.map((call) => {
-                    return (
-                      <p>{ call }</p>
-                    )
-                  }) : '' }
-                </div>
-              )
-            }) }
+        <div className="ui message hint-message">
+          <div id="step-1">
+            <h1>Step 1</h1>
+            <p>Your <code>accumulate</code> function failed 1 test case</p>
+            <Highlight className="python">
+              { this.props.log }
+            </Highlight>
           </div>
-          <button className="ui basic button" onClick={ this.onClick.bind(this) }>Next</button>
+
+          <div id="step-2">
+            <h1>Step 2</h1>
+            <p>Let's think with the following example.</p>
+            <Highlight className="python">
+              { this.props.test }
+            </Highlight>
+            <p>Look at line { 2 }</p>
+            <Quiz
+              options={ this.props.options }
+              line={ 2 }
+              before={ this.props.before }
+            />
+          </div>
+
 
         </div>
         <h2>Code</h2>
         <CodeMirror
-          value={ this.props.before }
+          value={ this.props.code }
           ref="editor"
           options={ this.props.options }
         />
@@ -187,3 +138,32 @@ class MixedHint extends Component {
 }
 
 export default MixedHint
+
+
+/*
+
+          <div id="step-2" style={{ display: this.state.step >= 2 ? 'block' : 'none' }}>
+            <h1>Step 2</h1>
+            <p>Let's look at line { this.props.removed[0] + 1 }</p>
+            <pre><code>{ this.props.removedLine[0] ? _.last(this.props.removedLine).code.trim() : '' }</code></pre>
+            { this.state.quizes.map((quiz, index) => {
+              return (
+                <div id={ `q-${index}` } key={ index }>
+                  <p>Q. What is the value of <code>{ quiz.key }</code>?</p>
+                  <p>
+                    <code>{ quiz.key }</code> =
+                    <input className={ 'inline-input'  } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
+                    <span className="inline-message">Correct!</span>
+                  </p>
+                  { quiz.calls ? quiz.calls.map((call) => {
+                    return (
+                      <p>{ call }</p>
+                    )
+                  }) : '' }
+                </div>
+              )
+            }) }
+          </div>
+          <button className="ui basic button" onClick={ this.onClick.bind(this) }>Next</button>
+
+ */

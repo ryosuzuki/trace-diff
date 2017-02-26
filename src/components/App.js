@@ -147,6 +147,7 @@ class App extends Component {
         </div>
         <div className="ui two column centered grid">
           <div id="mixed-hint" className="nine wide column">
+            <h1 className="title">Student</h1>
             <MixedHint
               options={ options }
               id={ this.props.id }

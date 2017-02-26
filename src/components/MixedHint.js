@@ -1,11 +1,8 @@
 import React, { Component } from 'react'
 import CodeMirror from 'react-codemirror'
 import 'codemirror/mode/python/python'
-import Slider from 'rc-slider'
-import Tooltip from 'rc-tooltip'
 import _ from 'lodash'
-import * as jsdiff from 'diff'
-import Tree from './Tree'
+import Tree from './Data/Tree'
 
 class MixedHint extends Component {
   constructor(props) {
@@ -60,7 +57,6 @@ class MixedHint extends Component {
   init() {
     if (!this.refs.editor) return false
     this.cm = this.refs.editor.getCodeMirror()
-    window.jsdiff = jsdiff
     window.before = this.props.before
     window.after = this.props.after
 

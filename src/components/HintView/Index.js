@@ -17,7 +17,7 @@ class HintView extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      type: 'Mixed',
+      type: 'Location',
     }
     window.hintView = this
   }
@@ -31,7 +31,7 @@ class HintView extends Component {
   }
 
   showSelectComponent() {
-    const types = ['None', 'Mixed', 'Transformation', 'Location', 'Data', 'Behavior', 'Example', 'Scaffolding']
+    const types = ['None', 'Transformation', 'Location', 'Data', 'Behavior', 'Example', 'Scaffolding']
     return types.map((type) => {
       return (
         <div className="field" key={ type }>
@@ -45,7 +45,7 @@ class HintView extends Component {
   }
 
   showHintComponent() {
-    const types = ['None', 'Mixed', 'Location', 'Data', 'Behavior', 'Transformation', 'Example', 'Scaffolding']
+    const types = ['None', 'Location', 'Data', 'Behavior', 'Transformation', 'Example', 'Scaffolding']
     return types.map((type) => {
       switch (type) {
         case 'None':

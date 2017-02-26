@@ -159,7 +159,7 @@ class ScaffoldingHint extends Component {
 
         <div className="markdown">
           <pre>
-            { Object.keys(this.props.beforeHistory).map((key) => {
+            { _.union(Object.keys(this.props.beforeHistory), Object.keys(this.props.afterHistory)).map((key) => {
               return (
                 <div key={ key }>
                   <code>
@@ -167,7 +167,7 @@ class ScaffoldingHint extends Component {
                   </code>
                   <br />
                   <code>
-                    - Expected: { this.props.beforeHistory[key].history.join(' | ') }
+                    - Expected: { this.props.beforeHistory[key] ? this.props.beforeHistory[key].history.join(' | ') : '' }
                   </code>
                   <br />
                   <code>
@@ -175,7 +175,11 @@ class ScaffoldingHint extends Component {
                   </code>
                   <br />
                   <code>
-                    - Calls:    { this.props.beforeHistory[key].calls ? this.props.beforeHistory[key].calls.join(' | ') : '' }
+                    - Calls:    { this.props.beforeHistory[key] ? this.props.beforeHistory[key].calls ? this.props.beforeHistory[key].calls.join(' | ') : '' : '' }
+                  </code>
+                  <br />
+                  <code>
+                    - Calls Exp:{ this.props.afterHistory[key] ? this.props.afterHistory[key].calls ? this.props.afterHistory[key].calls.join(' | ') : '' : '' }
                   </code>
                   <br />
                   <br />

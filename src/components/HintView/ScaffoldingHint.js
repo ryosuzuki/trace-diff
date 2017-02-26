@@ -69,7 +69,8 @@ class ScaffoldingHint extends Component {
 
     // let code1 = this.props.before.split('\n')[4]
     if (this.props.removedLine[0]) {
-      let code = this.props.removedLine[0].code
+      let i = this.props.removedLine.length
+      let code = this.props.removedLine[i-1].code
       this.getAST(code, 'init')
     }
 
@@ -83,6 +84,7 @@ class ScaffoldingHint extends Component {
 
   onChange(quiz, index, event) {
     let value = event.target.value
+    if (value === undefined) return
     if (value == quiz.answer) {
       $(`#q-${index} .inline-input`).addClass('correct')
       $(`#q-${index} .inline-message`).addClass('correct')
@@ -92,36 +94,14 @@ class ScaffoldingHint extends Component {
     }
   }
 
+  generateQuiz() {
+
+  }
+
   render() {
     return (
       <div>
         <h1>Scaffolding Hint</h1>
-
-
-        <div className="markdown">
-          <pre>
-            { _.intersection(Object.keys(this.props.beforeHistory), Object.keys(this.props.afterHistory)).map((key) => {
-              return (
-                <div key={ key }>
-                  <code>
-                    { key }
-                  </code>
-                  <br />
-                  <code>
-                    - Expected: { this.props.beforeHistory[key].join(' | ') }
-                  </code>
-                  <br />
-                  <code>
-                    - Result:   { this.props.afterHistory[key].join(' | ') }
-                  </code>
-                  <br />
-                  <br />
-                </div>
-              )
-            }) }
-          </pre>
-        </div>
-
 
         <div className="ui message markdown">
           <div className="header">
@@ -136,14 +116,14 @@ class ScaffoldingHint extends Component {
           <div id="step-2" style={{ display: this.state.step >= 2 ? 'block' : 'none' }}>
             <h1>Step 2</h1>
             <p>Let's look at line { this.props.removed[0] + 1 }</p>
-            <pre><code>{ this.props.removedLine[0] ? this.props.removedLine[0].code.trim() : '' }</code></pre>
+            <pre><code>{ this.props.removedLine[0] ? _.last(this.props.removedLine).code.trim() : '' }</code></pre>
             { this.state.quizes.map((quiz, index) => {
               return (
                 <div id={ `q-${index}` } key={ index }>
                   <p>Q. What is the value of <code>{ quiz.key }</code>?</p>
                   <p>
                     <code>{ quiz.key }</code> =
-                    <input className={ 'inline-input'  } type="text" placeholder="" onChange={ this.onChange.bind(this, quiz, index) } />
+                    <input className={ 'inline-input'  } type="text" placeholder={ quiz.answer } onChange={ this.onChange.bind(this, quiz, index) } />
                     <span className="inline-message">Correct!</span>
                   </p>
                 </div>
@@ -173,6 +153,33 @@ class ScaffoldingHint extends Component {
           ref="editor"
           options={ this.props.options }
         />
+
+
+        <div className="markdown">
+          <pre>
+            { Object.keys(this.props.beforeHistory).map((key) => {
+              return (
+                <div key={ key }>
+                  <code>
+                    { key }
+                  </code>
+                  <br />
+                  <code>
+                    - Expected: { this.props.beforeHistory[key].join(' | ') }
+                  </code>
+                  <br />
+                  <code>
+                    - Result:   { this.props.afterHistory[key] ? this.props.afterHistory[key].join(' | ') : '' }
+                  </code>
+                  <br />
+                  <br />
+                </div>
+              )
+            }) }
+          </pre>
+        </div>
+
+
       </div>
     )
   }

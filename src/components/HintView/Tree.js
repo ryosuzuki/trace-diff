@@ -51,6 +51,7 @@ class Tree {
       right: right,
       assign: assignValue
     }
+    this.quizes.push({ type: 'assign', key: key, answer: value })
     return node
   }
 
@@ -63,6 +64,24 @@ class Tree {
       key: key,
       value: value,
       right: right
+    }
+    this.quizes.push({ type: 'return', key: key, answer: value })
+    return node
+  }
+
+  addAugAssign(el) {
+    const operator = { Add: '+', Sub: '-', Mult: '*', Div: '/' }
+    let left = this.addNode(el.target)
+    let right = this.addNode(el.value)
+    let op = le.op
+    let key = `${left.key} ${operator[op]}= ${right.key}`
+    let value = eval(`${left.value} ${operator[op]} ${right.value}`)
+    let node = {
+      type: 'return',
+      key: key,
+      value: value,
+      left: left,
+      right: right,
     }
     return node
   }
@@ -86,6 +105,9 @@ class Tree {
       case 'Str':
         return this.addStr(node)
         break
+      case 'Compare':
+        return this.addCompare(node)
+        break
       default:
         return
     }
@@ -99,7 +121,7 @@ class Tree {
       key: key,
       value: value
     }
-    this.quizes.push({ key: key, answer: value })
+    this.quizes.push({ type: 'value', key: key, answer: value })
     return node
   }
 
@@ -119,6 +141,20 @@ class Tree {
       value: el.s
     }
     return node
+  }
+
+  addCompare(el) {
+    let comparator = this.addNode(el.comparator)
+    let left = this.addNode(el.left)
+    let ops = el.ops
+    let node = {
+      type: 'compare',
+      key: '',
+      value: '',
+      comparator: comparator,
+      left: left,
+      ops: ops,
+    }
   }
 
   addBinOp(el) {
@@ -162,7 +198,7 @@ class Tree {
       args: args,
       return: returnValue
     }
-    this.quizes.push({ key: value, answer: returnValue })
+    this.quizes.push({ type: 'value', key: value, answer: returnValue })
     return node
   }
 

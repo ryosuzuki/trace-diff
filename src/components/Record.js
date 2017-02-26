@@ -18,46 +18,60 @@ class Record {
       let trace = traces[i]
       for (let func of Object.keys(trace.locals)) {
 
-        if (func !== 'accumulate') {
-          if (trace.event === 'return') {
-            let value = ''
-            let args = []
-            for (let key of Object.keys(trace.locals[func])) {
-              if (key === '__return__') {
-                value = trace.locals[func][key]
-              } else {
-                args.push({ key: key, val: trace.locals[func][key] })
-              }
+        if (func === 'accumulate') {
+          let variables = trace.locals[func]
+          for (let key of Object.keys(variables)) {
+            if (key === '__return__') continue
+
+            let value = variables[key]
+            if (value === undefined) continue
+
+            if (!history[key]) history[key] = []
+            if (!lines[key]) lines[key] = []
+            if (!ticks[key]) ticks[key] = {}
+
+            let line = trace.line
+            if (trace.event === 'step_line') {
+              line = traces[i-1].line
             }
-            let key = `${func}(${args.map(arg => arg.val).join(', ')})`
-            history[key] = [value]
-          }
-          continue
-        }
-
-        let variables = trace.locals[func]
-        for (let key of Object.keys(variables)) {
-          let value = variables[key]
-          if (value === undefined) continue
-
-          if (!history[key]) history[key] = []
-          if (!lines[key]) lines[key] = []
-          if (!ticks[key]) ticks[key] = {}
-
-          let line = trace.line
-          if (trace.event === 'step_line') {
-            line = traces[i-1].line
-          }
-          let last = _.last(history[key])
-          if (last === undefined || last !== value) {
-            history[key].push(value)
-            lines[key].push(line)
-          }
-          ticks[key][i] = history[key].length
-          if (trace.event === 'step_line') {
-            ticks[key][i-1] = history[key].length
+            let last = _.last(history[key])
+            if (last === undefined || last !== value) {
+              history[key].push(value)
+              lines[key].push(line)
+            }
+            ticks[key][i] = history[key].length
+            if (trace.event === 'step_line') {
+              ticks[key][i-1] = history[key].length
+            }
           }
         }
+
+        if (trace.event === 'return') {
+          let value = ''
+          let args = {}
+          for (let key of Object.keys(trace.locals[func])) {
+            if (key === '__return__') {
+              value = trace.locals[func][key]
+            } else {
+              args[key] = trace.locals[func][key]
+            }
+          }
+          let key = `${func}(${Object.values(args).join(', ')})`
+          if (func === 'accumulate') {
+            key = func
+            key += '('
+            key += args['combiner']
+            key += ', '
+            key += args['base']
+            key += ', '
+            key += args['n']
+            key += ', '
+            key += args['term']
+            key += ')'
+          }
+          history[key] = [value]
+        }
+
       }
     }
 

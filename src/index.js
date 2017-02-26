@@ -10,6 +10,7 @@ import 'codemirror/theme/3024-day.css'
 import 'codemirror/theme/vibrant-ink.css'
 import 'rc-slider/dist/rc-slider.css'
 import 'rc-tooltip/assets/bootstrap.css'
+import 'highlight.js/styles/github.css'
 import './style.css'
 
 import React from 'react'

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Highlight from 'react-highlight'
 
 class FirstStep extends Component {
   constructor(props) {
@@ -10,9 +11,9 @@ class FirstStep extends Component {
       <div id="step-1">
         <h1>Step 1</h1>
         <p>Your <code>accumulate</code> function failed 1 test case</p>
-        <pre>
-          <code>{ this.props.log }</code>
-        </pre>
+        <Highlight className="python">
+          { this.props.log }
+        </Highlight>
       </div>
     )
   }

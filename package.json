@@ -44,6 +44,7 @@
     "rc-tooltip": "^3.4.2",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
+    "react-highlight": "^0.9.0",
     "react-hot-loader": "^1.3.1",
     "react-marked-markdown": "^1.4.2",
     "react-redux": "^5.0.1",

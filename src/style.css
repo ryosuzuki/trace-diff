@@ -203,3 +203,7 @@
   display: inline;
 
 }
+
+.hljs-comment, .hljs-quote {
+  font-style: normal !important;
+}

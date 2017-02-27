@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import Highlight from 'react-highlight'
-
 import Quiz from './Quiz'
 
 class SecondStep extends Component {

@@ -34,7 +34,9 @@ class Quiz extends Component {
       tree.history = window.app.props.beforeHistory // TODO
       tree.tick = 0
       tree.analyze(res)
-      this.setState({ quizes: tree.quizes, ast: tree.ast })
+      debugger
+      this.setState({ quizes: tree.quizes })
+      // this.createQuiz(tree.quizes)
     })
 
     this.setState({
@@ -60,26 +62,62 @@ class Quiz extends Component {
     if (value == quiz.value) {
       $(`#q-${index} .inline-input`).addClass('correct')
       $(`#q-${index} .inline-message`).addClass('correct')
-      this.addValue()
+      this.addValue(quiz)
     } else {
       $(`#q-${index} .inline-input`).removeClass('correct')
       $(`#q-${index} .inline-message`).removeClass('correct')
     }
   }
 
-  addValue() {
+  createQuiz(quizes) {
+    // let stack
+    // for (let quiz of quizes.reverse()) {
+    //   if (quiz.type === 'assign') {
+    //     quiz.update = quiz.value
+    //   }
+    //   if (quiz.type === 'call') {
+    //     quiz.update = `${quiz.key} returns ${quiz.value}`
+    //     stack.push(quiz)
+    //   }
+    //   if (quiz.type === 'name') {
+    //     if (stack.length > 0) {
+    //       let node = stack.pop()
+    //       if (node === 'call') {
 
-    let update = 'term(11)'
-    if (i === 1) {
-      update = 'square(11)'
-    }
-    if (i === 2) {
-      update = 'square(11) returns 121'
-    }
-    if (i === 3) {
-      update = '121'
-    }
-    let code = `${this.state.origin}  # ${update}`
+    //       }
+
+    //     } else {
+    //       quiz.update = quiz.value
+    //     }
+    //   }
+
+
+    // }
+
+
+    // let quizes = []
+    // if (ast.type === 'assign') {
+    //   let target = ast.right
+
+    //   if (target.type === 'call') {
+    //     for (let arg of target.args) {
+    //       let node = arg
+    //       let update = `${target.func.key}(${arg.value})`
+    //       node.update = update
+    //       quizes.push(node)
+    //     }
+
+    //     let node = target.func
+    //     let update = `${target.func.value}(${target.args.map(arg => arg.value).join(', ')})`
+    //     node.update = update
+    //     quizes.push(node)
+    //   }
+    // }
+    // this.setState({ ast: ast, quizes: quizes })
+  }
+
+  addValue(quiz) {
+    let code = `${this.state.origin}  # ${quiz.update}`
     this.setState({ code: code })
     i++
   }

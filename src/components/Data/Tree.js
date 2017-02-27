@@ -3,15 +3,17 @@ class Tree {
   constructor() {
     this.history = {}
     this.ast = {}
-    this.quizes = []
+    this.quizes = {}
     this.tick = 2 // <- TODO: assign
     // let step = 9
     // let tick = this.props.beforeTicks[name][step]
+
+    this.index = 0
   }
 
   init() {
     this.ast = {}
-    this.quizes = []
+    this.quizes = {}
   }
 
   analyze(res) {
@@ -49,9 +51,20 @@ class Tree {
       value: value,
       left: left,
       right: right,
-      assign: assignValue
+      assign: assignValue,
+      index: this.index++
     }
-    this.quizes.push(node)
+    Object.assign(this.quizes[right.key], {
+      parent: key,
+      role: 'right'
+    })
+    for (let node of left) {
+      Object.assign(this.quizes[node.key], {
+        parent: key,
+        role: 'right'
+      })
+    }
+    this.quizes[key] = node
     return node
   }
 
@@ -63,9 +76,14 @@ class Tree {
       type: 'return',
       key: key,
       value: value,
-      right: right
+      right: right,
+      index: this.index++
     }
-    this.quizes.push(node)
+    Object.assign(this.quizes[right.key], {
+      parent: key,
+      role: 'func'
+    })
+    this.quizes[key] = node
     return node
   }
 
@@ -119,9 +137,10 @@ class Tree {
     let node = {
       type: 'name',
       key: key,
-      value: value
+      value: value,
+      index: this.index++
     }
-    this.quizes.push(node)
+    this.quizes[key] = node
     return node
   }
 
@@ -129,7 +148,7 @@ class Tree {
     let node = {
       type: 'num',
       key: el.n,
-      value: el.n
+      value: el.n,
     }
     return node
   }
@@ -138,7 +157,9 @@ class Tree {
     let node = {
       type: 'str',
       key: el.s,
-      value: el.s
+      value: el.s,
+      info: el.info
+
     }
     return node
   }
@@ -154,6 +175,7 @@ class Tree {
       comparator: comparator,
       left: left,
       ops: ops,
+      info: el.info,
     }
   }
 
@@ -199,8 +221,21 @@ class Tree {
       args: args,
       origin: origin,
       calls: calls,
+      index: this.index++
     }
-    this.quizes.push(node)
+    let index = 0
+    for (let arg of args) {
+      Object.assign(this.quizes[arg.key], {
+        parent: key,
+        role: 'args',
+        index: index++
+      })
+    }
+    Object.assign(this.quizes[func.key], {
+      parent: key,
+      role: 'func'
+    })
+    this.quizes[key] = node
     return node
   }
 

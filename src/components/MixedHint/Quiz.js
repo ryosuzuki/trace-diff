@@ -83,20 +83,6 @@ class Quiz extends Component {
 
   renderQuiz(quiz, index) {
     switch (quiz.type) {
-      case 'name':
-        return (
-          <div className="mini-quiz">
-            <p>
-            <b className="question">
-              Q. What is the value of <code>{ quiz.key }</code>?
-            </b>
-              <code>{ quiz.key }</code> =
-              <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
-              <i className="inline-message fa fa-check fa-fw" />
-            </p>
-          </div>
-        )
-        break
       case 'call':
         return (
           <div className="mini-quiz">
@@ -114,9 +100,8 @@ class Quiz extends Component {
       case 'assign':
         return (
           <div className="mini-quiz">
-            <p>
-              Therefore,
-             <code>{ quiz.key }</code> =
+            <p><b>Therefore,</b>
+              <code>{ quiz.key }</code> =
               <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
               <i className="inline-message fa fa-check fa-fw" />
             </p>
@@ -126,15 +111,27 @@ class Quiz extends Component {
       case 'return':
         return (
           <div className="mini-quiz">
-            <p>Therefore,
-              <code>{ quiz.key }</code> returns
-              <code>{ quiz.value }</code>
-            </p>
+            <p><b>Therefore,</b>
+            <code>{ quiz.key }</code> returns
+              <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
+              <i className="inline-message fa fa-check fa-fw" />
+              </p>
           </div>
         )
         break
       default:
-        return null
+        return (
+          <div className="mini-quiz">
+            <p>
+            <b className="question">
+              Q. What is the value of <code>{ quiz.key }</code>?
+            </b>
+              <code>{ quiz.key }</code> =
+              <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
+              <i className="inline-message fa fa-check fa-fw" />
+            </p>
+          </div>
+        )
         break
     }
   }
@@ -148,18 +145,18 @@ class Quiz extends Component {
       firstLineNumber: this.state.startLine
     }
 
-    $('.button')
+    $(`#${this.props.id} .button`)
       .popup({
         position: 'bottom center',
-        target: '.CodeMirror',
+        target: `#${this.props.id} .CodeMirror`,
         lastResort: 'bottom right',
-        popup : $('.inline-hint'),
+        popup : $(`#${this.props.id} .inline-hint`),
         on: 'click'
       })
     ;
 
     return (
-      <div className="quiz">
+      <div id={ this.props.id } className="quiz">
 
         <CodeMirror
           value={ this.state.code }
@@ -171,21 +168,18 @@ class Quiz extends Component {
           Next
         </button>
         <div className="ui fluid popup bottom left transition inline-hint">
-          <div className="dynamic-hint">
-            { this.state.quizes.map((quiz, index) => {
-              return (
-                <div id={ `q-${index}` } key={ index } style={{ display: index > this.state.index ? 'none' : 'block' }}>
-                  { this.renderQuiz(quiz, index) }
-                  { quiz.calls ? quiz.calls.map((call) => {
-                    return (
-                      <p>{ call }</p>
-                    )
-                  }) : '' }
-                </div>
-              )
-            }) }
-
-          </div>
+          { this.state.quizes.map((quiz, index) => {
+            return (
+              <div id={ `q-${index}` } key={ index } style={{ display: index > this.state.index ? 'none' : 'block' }}>
+                { this.renderQuiz(quiz, index) }
+                { quiz.calls ? quiz.calls.map((call) => {
+                  return (
+                    <p>{ call }</p>
+                  )
+                }) : '' }
+              </div>
+            )
+          }) }
         </div>
 
 

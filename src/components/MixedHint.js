@@ -76,13 +76,14 @@ class MixedHint extends Component {
           </div>
 
           <div id="step-2">
-            <h1 data-tooltip="Add users to your feed">Step 2</h1>
+            <h1>Step 2</h1>
             <p>Let's think with the following example.</p>
             <Highlight className="python">
               { this.props.test }
             </Highlight>
             <p>Look at line { 2 }</p>
             <Quiz
+              id={ 'quiz-1' }
               options={ this.props.options }
               line={ this.props.removed[0] }
               code={ this.props.before }
@@ -94,6 +95,7 @@ class MixedHint extends Component {
             <p>Let's think about the behavior of <code>{ 'previous' }</code>.</p>
             <p>When <code>{ 'i = 1' }</code>, </p>
             <Quiz
+              id={ 'quiz-2' }
               options={ this.props.options }
               code={ this.props.before }
               line={ 3 }

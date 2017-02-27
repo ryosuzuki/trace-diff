@@ -38,24 +38,6 @@ class Tree {
     }
     this.ast = ast
     window.ast = ast
-
-
-    debugger
-    let quizes = []
-    for (let quiz of this.quizes) {
-      if (quiz.type !== 'call') quizes.push(quiz)
-      let children = []
-      for (let key of quiz.calls) {
-        let child = this.history[key]
-        if (child.calls.length > 0) children.push(key)
-      }
-      quiz.children = children
-      quizes.push(quiz)
-    }
-    this.quizes = quizes
-    debugger
-
-
   }
 
   addAssign(el) {

@@ -25,6 +25,20 @@ class Record {
       if (trace.event === 'return') this.addReturn(trace)
     }
 
+    for (let key of Object.keys(this.history)) {
+      let item = this.history[key]
+      if (item.type !== 'call') continue
+      let children = []
+      for (let funcKey of item.calls) {
+        let child = this.history[funcKey]
+        if (!child.builtin) {
+          children.push(funcKey)
+        }
+      }
+      item.children = children
+      this.history[key] = item
+    }
+
     if (type === 'before') {
       this.beforeHistory = this.history
       this.beforeTicks = this.ticks
@@ -43,10 +57,12 @@ class Record {
       args[key] = trace.locals[func][key]
     }
     let key = this.getKey(func, args)
+    let builtin = ['add', 'mul', 'identity', 'square', 'increment', 'triple'].includes(func)
     let node = {
       type: 'call',
       calls: [],
-      value: ''
+      value: '',
+      builtin: builtin
     }
     this.history[key] = node
 

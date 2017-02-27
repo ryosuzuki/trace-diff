@@ -190,7 +190,7 @@ class Quiz extends Component {
     return (
       <div id={ this.props.id } className="quiz">
         <p>
-          <button className="ui primary button">{ this.props.description }</button>
+          <button className="ui primary button">Why ?</button>
         </p>
 
         <p>Look at line { this.props.line }</p>

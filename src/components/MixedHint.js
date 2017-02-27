@@ -8,6 +8,7 @@ import SecondStep from './MixedHint/SecondStep'
 
 import Highlight from 'react-highlight'
 import Quiz from './MixedHint/Quiz'
+import HistoryLog from './MixedHint/HistoryLog'
 
 
 class MixedHint extends Component {
@@ -65,98 +66,6 @@ class MixedHint extends Component {
 
   render() {
 
-    // $('#step-3 .button')
-    // .popup({
-    //   position: 'bottom center',
-    //   target: '#table-1',
-    //   lastResort: 'bottom right',
-    //   title: 'HOGEHO',
-    //   content  : 'My favorite dog would like other dogs as much as themselves',
-    //   on: 'click'
-    // })
-
-    $('#step-3 #table-0')
-    .popup({
-      position: 'bottom center',
-      title: 'square(11)',
-    })
-    $('#step-3 #table-1')
-    .popup({
-      position: 'bottom center',
-      title: 'add(121, 1)',
-    })
-    $('#step-3 #table-2')
-    .popup({
-      position: 'bottom center',
-      title: 'add(122, 4)',
-    })
-    $('#step-3 #table-3')
-    .popup({
-      position: 'bottom center',
-      title: 'add(126, 9)',
-    })
-
-    $('#step-3 .button').click(() => {
-      $('#table-0').popup('show')
-      $('#table-1').popup('show')
-      $('#table-2').popup('show')
-      $('#table-3').popup('show')
-    })
-
-    $('#step-4 #result-0')
-    .popup({
-      position: 'top center',
-      title: 'square(11)',
-    })
-    $('#step-4 #result-1')
-    .popup({
-      position: 'top center',
-      title: 'add(121, 1)',
-    })
-    $('#step-4 #result-2')
-    .popup({
-      position: 'top center',
-      title: 'add(122, 4)',
-    })
-    $('#step-4 #result-3')
-    .popup({
-      position: 'top center',
-      title: 'add(126, 9)',
-    })
-
-    $('#step-4 #expected-0')
-    .popup({
-      position: 'bottom center',
-      title: 'square(1)',
-    })
-    $('#step-4 #expected-1')
-    .popup({
-      position: 'bottom center',
-      title: 'add(1, 1)',
-    })
-    $('#step-4 #expected-2')
-    .popup({
-      position: 'bottom center',
-      title: 'add(2, 4)',
-    })
-    $('#step-4 #expected-3')
-    .popup({
-      position: 'bottom center',
-      title: 'add(6, 9)',
-    })
-
-
-    $('#step-4 .button').click(() => {
-      $('#result-0').popup('show')
-      $('#result-1').popup('show')
-      $('#result-2').popup('show')
-      $('#result-3').popup('show')
-      $('#expected-0').popup('show')
-      $('#expected-1').popup('show')
-      $('#expected-2').popup('show')
-      $('#expected-3').popup('show')
-    })
-
     const translate = (key, compare = false) => {
       if (!this.props.beforeHistory[key]) return null
       let after = this.props.afterHistory[key].history
@@ -183,30 +92,34 @@ class MixedHint extends Component {
         <h1>Mixed Hint</h1>
 
         <div className="ui message hint-message">
-          <div id="step-1">
-            <h1>Step 1</h1>
+          <div id="step-1" className="step">
+            <h1 className="title">Step 1</h1>
             <p>Your <code>accumulate</code> function failed 1 test case</p>
             <Highlight className="python">
               { this.props.log }
             </Highlight>
           </div>
 
-          <div id="step-2">
-            <h1>Step 2</h1>
+          <div id="step-2" className="step">
+            <h1 className="title">Step 2</h1>
             <p>Let's think with the following example. With your <code>accumulate</code> function,</p>
             <Highlight className="python">
               { `${this.props.test} returns ${this.props.result}` }
             </Highlight>
 
+            <h2>Step 2-1</h2>
+            <p>Q. Why { this.props.test } returns { this.props.result } ?</p>
             <p>
-              <button className="ui primary button">Q. Why { this.props.test } returns { this.props.result } ?</button>
+              <button className="ui primary button">Why ?</button>
             </p>
-
 
             <Highlight className="python">
               { translate('previous') }
             </Highlight>
 
+
+            <h2>Step 2-2</h2>
+            <p>Q. Why previous is initialized with 121?</p>
             <Quiz
               description={ `Q. Why previous is initialized with 121?` }
               id={ 'quiz-1' }
@@ -216,6 +129,8 @@ class MixedHint extends Component {
               history={ this.props.beforeHistory }
             />
 
+            <h2>Step 2-3</h2>
+            <p>Q. Why previous is updated to 122 ?</p>
             <Quiz
               description={ `Q. Why previous is updated to 122?` }
               id={ 'quiz-2' }
@@ -225,77 +140,23 @@ class MixedHint extends Component {
               history={ this.props.beforeHistory }
             />
 
+            <h2>Step 2-4</h2>
             <p>However, the behavior of <code>{ 'previous' }</code> should be somethin like this</p>
             <Highlight className="python">
               { translate('previous', true) }
             </Highlight>
 
+            <p>Q. Why the behavior of previous is different ?</p>
+            <p>
+              <button className="ui primary button">Why ?</button>
+            </p>
+
+
 
           </div>
 
-          <div id="step-3">
-            <h1>Step 3</h1>
-            <p>Let's think about the behavior of <code>{ 'previous' }</code>.</p>
-
-            <table className="ui celled table">
-              <thead>
-                <tr>
-                <th><code>i</code></th>
-                <th>-</th>
-                <th>1</th>
-                <th>2</th>
-                <th>3</th>
-              </tr></thead>
-              <tbody>
-                <tr>
-                  <td>previous</td>
-                  { this.props.beforeHistory['previous'] ? this.props.beforeHistory['previous'].history.map((i, index) => {
-                    return <td id={ `table-${index}` }>{ i }</td>
-                  }) : '' }
-                </tr>
-              </tbody>
-            </table>
-
-            <p><code>{ 'previous' }</code> updates at line { 3 }</p>
-
-            <p>In a similar way, the behavior of <code>prevous</code> looks like this</p>
-            <button className="ui basic button">Next</button>
-
-          </div>
-
-          <div id="step-4">
-            <h1>Step 4</h1>
-            <p>However, the behavior of <code>{ 'previous' }</code> should be somethin like this</p>
-            <button className="ui basic button">Next</button>
-
-            <table className="ui celled table">
-              <thead>
-                <tr>
-                <th><code>previous</code></th>
-                <th>-</th>
-                <th>1</th>
-                <th>2</th>
-                <th>3</th>
-              </tr></thead>
-              <tbody>
-                <tr>
-                  <td>Result</td>
-                  { this.props.beforeHistory['previous'] ? this.props.beforeHistory['previous'].history.map((i, index) => {
-                    return <td id={ `result-${index}` }>{ i }</td>
-                  }) : '' }
-                </tr>
-                <tr>
-                  <td>Expected</td>
-                  { this.props.afterHistory['previous'] ? this.props.afterHistory['previous'].history.map((i, index) => {
-                    return <td id={ `expected-${index}` }>{ i }</td>
-                  }) : '' }
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div id="step-5">
-            <h1>Step 5</h1>
+          <div id="step-3" className="step">
+            <h1 className="title">Step 3</h1>
             <p>So, it seems like your 2nd argument of initialization is wrong.</p>
             <p>How can you fix that?</p>
 
@@ -317,71 +178,13 @@ class MixedHint extends Component {
         />
 
 
-        <div className="markdown">
-          <pre>
-            { _.union(Object.keys(this.props.beforeHistory), Object.keys(this.props.afterHistory)).map((key) => {
-              return (
-                <div key={ key }>
-                  <code>
-                    { key }
-                  </code>
-                  <br />
-                  <code>
-                    - Expected: { this.props.beforeHistory[key] ? this.props.beforeHistory[key].history.join(' | ') : '' }
-                  </code>
-                  <br />
-                  <code>
-                    - Result:   { this.props.afterHistory[key] ? this.props.afterHistory[key].history.join(' | ') : '' }
-                  </code>
-                  <br />
-                  <code>
-                    - Calls:    { this.props.beforeHistory[key] ? this.props.beforeHistory[key].calls ? this.props.beforeHistory[key].calls.join(' | ') : '' : '' }
-                  </code>
-                  <br />
-                  <code>
-                    - Calls Exp:{ this.props.afterHistory[key] ? this.props.afterHistory[key].calls ? this.props.afterHistory[key].calls.join(' | ') : '' : '' }
-                  </code>
-                  <br />
-                  <br />
-                </div>
-              )
-            }) }
-          </pre>
-        </div>
-
-
+        <HistoryLog
+          beforeHistory={ this.props.beforeHistory }
+          afterHistory={ this.props.afterHistory }
+        />
       </div>
     )
   }
 }
 
 export default MixedHint
-
-
-/*
-
-          <div id="step-2" style={{ display: this.state.step >= 2 ? 'block' : 'none' }}>
-            <h1>Step 2</h1>
-            <p>Let's look at line { this.props.removed[0] + 1 }</p>
-            <pre><code>{ this.props.removedLine[0] ? _.last(this.props.removedLine).code.trim() : '' }</code></pre>
-            { this.state.quizes.map((quiz, index) => {
-              return (
-                <div id={ `q-${index}` } key={ index }>
-                  <p>Q. What is the value of <code>{ quiz.key }</code>?</p>
-                  <p>
-                    <code>{ quiz.key }</code> =
-                    <input className={ 'inline-input'  } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
-                    <span className="inline-message">Correct!</span>
-                  </p>
-                  { quiz.calls ? quiz.calls.map((call) => {
-                    return (
-                      <p>{ call }</p>
-                    )
-                  }) : '' }
-                </div>
-              )
-            }) }
-          </div>
-          <button className="ui basic button" onClick={ this.onClick.bind(this) }>Next</button>
-
- */

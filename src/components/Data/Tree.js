@@ -236,11 +236,14 @@ class Tree {
       value = eval(`${left.value} ${operator[op]} ${right.value}`)
     }
     let updates = []
-    for (let update of left.updates) {
-      updates.push(`${update} ${operator[op]} ${right.origin}`)
+    for (let lu of left.updates) {
+      updates.push(`${lu} ${operator[op]} ${right.origin}`)
     }
-    for (let update of right.updates) {
-      updates.push(`${left.value} ${operator[op]} ${update}`)
+    for (let rh of right.updates) {
+      let update = `${left.value} ${operator[op]} ${ru}`
+      if (!updates.includes(update)) {
+        updates.push(update)
+      }
     }
     updates.push(value)
     let node = {
@@ -278,7 +281,10 @@ class Tree {
         a = a.concat(a0.map(i => i.value))
         a.push(arg.updates[j])
         a = a.concat(a1.map(i => i.origin))
-        updates.push(`${func.origin}(${a.join(', ')})`)
+        let update = `${func.origin}(${a.join(', ')})`
+        if (!updates.includes(update)) {
+          updates.push(update)
+        }
       }
     }
     updates.push(`${func.value}(${args.map(a => a.value).join(', ')})`)

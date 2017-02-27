@@ -45,6 +45,9 @@ class Quiz extends Component {
         updates: tree.updates,
         ast: tree.ast
       })
+      if (tree.quizes.length + 1 !== tree.updates.length) {
+        alert(`Error in updates number updates = ${tree.updates.length} quizes = ${tree.quizes.length}`)
+      }
       // this.createQuiz(tree.quizes)
     })
 
@@ -79,27 +82,54 @@ class Quiz extends Component {
   }
 
   addValue(quiz) {
-    let index = this.state.index
-    let update = ''
-    for (let i = 1; i < this.state.updates.length; i++) {
-      let a = this.state.updates[index]
-      let b = this.state.updates[index+i]
-      if (!a || !b) return false
-      let add, remove
-      let diffs = jsdiff.diffWords(a.toString(), b.toString())
-      for (let diff of diffs) {
-        if (diff.removed) remove = diff.value
-        if (diff.added) add = diff.value
-      }
-      if (remove === quiz.key.toString() && add === quiz.value.toString()) {
-        index = index + i
-        update = this.state.updates[index]
-        break
-      }
+    let index = this.state.index + 1
+    if (index >= this.state.updates.length) {
+      index = this.state.updates.length - 1
     }
+    let update = this.state.updates[index]
     let code = `${this.state.origin} \n# ${update}`
     this.setState({ code: code, index: index })
   }
+
+  renderQuiz(quiz, index) {
+    switch (quiz.type) {
+      case 'name':
+        return (
+          <p>Q. What is the value of <code>{ quiz.key }</code>?
+            <code>{ quiz.key }</code> =
+            <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
+            <span className="inline-message">Correct!</span>
+          </p>
+        )
+        break
+      case 'call':
+        return (
+          <p>Q. What is the return value of <code>{ quiz.key }</code>?
+            <code>{ quiz.key }</code> returns
+            <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
+            <span className="inline-message">Correct!</span>
+          </p>
+        )
+        break
+      case 'assign':
+        return (
+          <p>Therefore, <code>{ quiz.key }</code> =
+            <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
+            <span className="inline-message">Correct!</span>
+          </p>
+        )
+        break
+      case 'return':
+        return (
+          <p>Therefore, <code>{ quiz.key }</code> returns
+            <code>{ quiz.value }</code>
+          </p>
+        )
+        break
+
+    }
+  }
+
 
   render() {
     const options = {
@@ -125,12 +155,7 @@ class Quiz extends Component {
             { this.state.quizes.map((quiz, index) => {
               return (
                 <div id={ `q-${index}` } key={ index }>
-                  <p>Q. What is the value of <code>{ quiz.key }</code>?</p>
-                  <p>
-                    <code>{ quiz.key }</code> =
-                    <input className={ 'inline-input'  } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
-                    <span className="inline-message">Correct!</span>
-                  </p>
+                  { this.renderQuiz(quiz, index) }
                   { quiz.calls ? quiz.calls.map((call) => {
                     return (
                       <p>{ call }</p>

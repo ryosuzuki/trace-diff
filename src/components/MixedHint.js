@@ -84,7 +84,7 @@ class MixedHint extends Component {
             <p>Look at line { 2 }</p>
             <Quiz
               options={ this.props.options }
-              line={ 2 }
+              removed={ this.props.removed }
               before={ this.props.before }
             />
           </div>

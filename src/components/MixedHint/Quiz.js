@@ -10,17 +10,23 @@ class Quiz extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      quizes: [],
-      ast: {},
       code: '',
       origin: '',
-      startLine: 0
+      startLine: 0,
+      quizes: [],
+      updates: [],
+      ast: {},
+      index: 0,
     }
     window.quiz = this
   }
 
   componentDidMount() {
-    let code = 'previous = term(base)' // this.props.before.split('\n')[this.props.line-1].trim()
+  }
+
+  init() {
+    // let code = 'previous = term(base)'
+    let code = this.props.before.split('\n')[this.props.removed[0]].trim()
     $.ajax({
       url: 'https://python-ast-explorer.com/api/_parse',
       method: 'POST',
@@ -34,15 +40,18 @@ class Quiz extends Component {
       tree.history = window.app.props.beforeHistory // TODO
       tree.tick = 0
       tree.analyze(res)
-      debugger
-      this.setState({ quizes: tree.quizes })
+      this.setState({
+        quizes: tree.quizes,
+        updates: tree.updates,
+        ast: tree.ast
+      })
       // this.createQuiz(tree.quizes)
     })
 
     this.setState({
-      code: 'previous = term(base)',
-      origin: 'previous = term(base)',
-      startLine: 2
+      code: code,
+      origin: code,
+      startLine: this.props.removed[0]
     })
   }
 
@@ -69,59 +78,28 @@ class Quiz extends Component {
     }
   }
 
-  createQuiz(quizes) {
-    // let stack
-    // for (let quiz of quizes.reverse()) {
-    //   if (quiz.type === 'assign') {
-    //     quiz.update = quiz.value
-    //   }
-    //   if (quiz.type === 'call') {
-    //     quiz.update = `${quiz.key} returns ${quiz.value}`
-    //     stack.push(quiz)
-    //   }
-    //   if (quiz.type === 'name') {
-    //     if (stack.length > 0) {
-    //       let node = stack.pop()
-    //       if (node === 'call') {
-
-    //       }
-
-    //     } else {
-    //       quiz.update = quiz.value
-    //     }
-    //   }
-
-
-    // }
-
-
-    // let quizes = []
-    // if (ast.type === 'assign') {
-    //   let target = ast.right
-
-    //   if (target.type === 'call') {
-    //     for (let arg of target.args) {
-    //       let node = arg
-    //       let update = `${target.func.key}(${arg.value})`
-    //       node.update = update
-    //       quizes.push(node)
-    //     }
-
-    //     let node = target.func
-    //     let update = `${target.func.value}(${target.args.map(arg => arg.value).join(', ')})`
-    //     node.update = update
-    //     quizes.push(node)
-    //   }
-    // }
-    // this.setState({ ast: ast, quizes: quizes })
-  }
-
   addValue(quiz) {
-    let code = `${this.state.origin}  # ${quiz.update}`
-    this.setState({ code: code })
-    i++
+    let index = this.state.index
+    let update = ''
+    for (let i = 1; i < this.state.updates.length; i++) {
+      let a = this.state.updates[index]
+      let b = this.state.updates[index+i]
+      if (!a || !b) return false
+      let add, remove
+      let diffs = jsdiff.diffWords(a.toString(), b.toString())
+      for (let diff of diffs) {
+        if (diff.removed) remove = diff.value
+        if (diff.added) add = diff.value
+      }
+      if (remove === quiz.key.toString() && add === quiz.value.toString()) {
+        index = index + i
+        update = this.state.updates[index]
+        break
+      }
+    }
+    let code = `${this.state.origin} \n# ${update}`
+    this.setState({ code: code, index: index })
   }
-
 
   render() {
     const options = {

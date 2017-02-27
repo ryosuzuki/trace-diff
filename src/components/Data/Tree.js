@@ -3,17 +3,18 @@ class Tree {
   constructor() {
     this.history = {}
     this.ast = {}
-    this.quizes = {}
     this.tick = 2 // <- TODO: assign
     // let step = 9
     // let tick = this.props.beforeTicks[name][step]
 
-    this.index = 0
+    this.quizes = []
+    this.updates = []
   }
 
   init() {
     this.ast = {}
-    this.quizes = {}
+    this.quizes = []
+    this.updates = []
   }
 
   analyze(res) {
@@ -30,6 +31,9 @@ class Tree {
       if (key === 'Return') {
         ast = this.addReturn(el)
       }
+      if (key === 'Expr') {
+        ast = this.addExpr(el)
+      }
     }
     this.ast = ast
     window.ast = ast
@@ -41,10 +45,15 @@ class Tree {
     for (let target of el.targets) {
       let tn = this.addNode(target)
       left.push(tn)
+      this.quizes.pop()
     }
     let key = left.map(target => target.key).join(', ')
     let value = right.value
     let assignValue = left[0].value
+
+    let updates = []
+    updates = updates.concat(right.updates)
+    updates.push(value)
     let node = {
       type: 'assign',
       key: key,
@@ -52,19 +61,28 @@ class Tree {
       left: left,
       right: right,
       assign: assignValue,
-      index: this.index++
+      updates: updates,
     }
-    Object.assign(this.quizes[right.key], {
-      parent: key,
-      role: 'right'
-    })
-    for (let node of left) {
-      Object.assign(this.quizes[node.key], {
-        parent: key,
-        role: 'right'
-      })
+    this.updates = updates
+    this.quizes.push(node)
+    return node
+  }
+
+  addExpr(el) {
+    let expr = this.addNode(el.value)
+    let key = expr.key
+    let value = expr.value
+    let updates = expr.updates
+    updates.push(value)
+    let node = {
+      type: 'expr',
+      key: key,
+      value: value,
+      expr: expr,
+      updates: updates,
     }
-    this.quizes[key] = node
+    this.updates = updates
+    this.quizes.push(node)
     return node
   }
 
@@ -72,18 +90,17 @@ class Tree {
     let right = this.addNode(el.value)
     let key = right.key
     let value = right.value
+    let updates = right.updates
+    updates.push(value)
     let node = {
       type: 'return',
       key: key,
       value: value,
       right: right,
-      index: this.index++
+      updates: updates,
     }
-    Object.assign(this.quizes[right.key], {
-      parent: key,
-      role: 'func'
-    })
-    this.quizes[key] = node
+    this.updates = updates
+    this.quizes.push(node)
     return node
   }
 
@@ -123,6 +140,9 @@ class Tree {
       case 'Str':
         return this.addStr(node)
         break
+      case 'Tuple':
+        return this.addTuple(node)
+        break
       case 'Compare':
         return this.addCompare(node)
         break
@@ -136,19 +156,22 @@ class Tree {
     let value = this.getValue(key)
     let node = {
       type: 'name',
+      origin: key,
       key: key,
       value: value,
-      index: this.index++
+      updates: [key, value],
     }
-    this.quizes[key] = node
+    this.quizes.push(node)
     return node
   }
 
   addNum(el) {
     let node = {
       type: 'num',
+      origin: el.n,
       key: el.n,
       value: el.n,
+      updates: [],
     }
     return node
   }
@@ -156,10 +179,29 @@ class Tree {
   addStr(el) {
     let node = {
       type: 'str',
+      origin: el.s,
       key: el.s,
       value: el.s,
-      info: el.info
+      updates: [],
+    }
+    return node
+  }
 
+  addTuple(el) {
+    let items = []
+    for (let elt of el.elts) {
+      let item = this.addNode(elt)
+      items.push(item)
+    }
+    let origin = items.map(item => item.origin).join(', ')
+    let key = items.map(item => item.key).join(', ')
+    let value = items.map(item => item.value).join(', ')
+    let node = {
+      type: 'tuple',
+      origin: origin,
+      key: key,
+      value: value,
+      updates: [],
     }
     return node
   }
@@ -170,12 +212,13 @@ class Tree {
     let ops = el.ops
     let node = {
       type: 'compare',
+      origin: '',
       key: '',
       value: '',
       comparator: comparator,
       left: left,
       ops: ops,
-      info: el.info,
+      updates: [],
     }
   }
 
@@ -184,21 +227,33 @@ class Tree {
     let left = this.addNode(el.left)
     let right = this.addNode(el.right)
     let op = el.op
-    let key = `${left.key} ${operator[op]} ${right.key}`
+    let origin = `${left.origin} ${operator[op]} ${right.origin}`
+    let key = `${left.value} ${operator[op]} ${right.value}`
     let value
     if (isNaN(left.value) || isNaN(right.value)) {
       value = `${left.value} ${operator[op]} ${right.value}`
     } else {
       value = eval(`${left.value} ${operator[op]} ${right.value}`)
     }
+    let updates = []
+    for (let update of left.updates) {
+      updates.push(`${update} ${operator[op]} ${right.origin}`)
+    }
+    for (let update of right.updates) {
+      updates.push(`${left.value} ${operator[op]} ${update}`)
+    }
+    updates.push(value)
     let node = {
       type: 'binop',
+      origin: origin,
       key: key,
       value: value,
       left: left,
       right: right,
       op: op,
+      updates: updates,
     }
+    this.quizes.push(node)
     return node
   }
 
@@ -209,10 +264,25 @@ class Tree {
       args.push(arg)
     }
     let func = this.addNode(el.func)
-    let origin = `${func.value}(${args.map(arg => arg.key).join(', ')})`
+    let origin = `${func.origin}(${args.map(arg => arg.origin).join(', ')})`
     let key = `${func.value}(${args.map(arg => arg.value).join(', ')})`
     let value = this.getValue(key)
     let calls = this.getCalls(key)
+    let updates = []
+    for (let i = 0; i < args.length; i++) {
+      let arg = args[i]
+      let a0 = args.slice(0, i)
+      let a1 = args.slice(i+1)
+      for (let j = 0; j < arg.updates.length; j++) {
+        let a = []
+        a = a.concat(a0.map(i => i.value))
+        a.push(arg.updates[j])
+        a = a.concat(a1.map(i => i.origin))
+        updates.push(`${func.origin}(${a.join(', ')})`)
+      }
+    }
+    updates.push(`${func.value}(${args.map(a => a.value).join(', ')})`)
+    updates.push(value)
     let node = {
       type: 'call',
       key: key,
@@ -221,21 +291,9 @@ class Tree {
       args: args,
       origin: origin,
       calls: calls,
-      index: this.index++
+      updates: updates,
     }
-    let index = 0
-    for (let arg of args) {
-      Object.assign(this.quizes[arg.key], {
-        parent: key,
-        role: 'args',
-        index: index++
-      })
-    }
-    Object.assign(this.quizes[func.key], {
-      parent: key,
-      role: 'func'
-    })
-    this.quizes[key] = node
+    this.quizes.push(node)
     return node
   }
 

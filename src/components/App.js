@@ -27,8 +27,8 @@ class App extends Component {
   componentDidMount() {
     $.ajax({
       method: 'GET',
-      // url: `${window.location.pathname}data/accumulate.json`
-      url: `${window.location.pathname}data/example.json`
+      url: `${window.location.pathname}data/accumulate.json`
+      // url: `${window.location.pathname}data/example.json`
     })
     .then((items) => {
       console.log('start')
@@ -103,6 +103,7 @@ class App extends Component {
       window.behaviorHint.init()
       window.exampleHint.init()
       window.scaffoldingHint.init()
+      window.quiz.init()
     }, 500)
 
     db.find({ test: item.test, result: item.result }, function(err, items) {
@@ -142,7 +143,7 @@ class App extends Component {
           </div>
         </div>
         <div className="ui two column centered grid">
-          <div id="mixed-hint" className="nine wide column">
+          <div id="mixed-hint" className="fourteen wide column">
             <h1 className="title">Student</h1>
             <MixedHint
               options={ options }

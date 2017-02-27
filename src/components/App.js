@@ -22,6 +22,8 @@ class App extends Component {
     this.state = {}
     window.app = this
     window.db = db
+
+    window.quizes = []
   }
 
   componentDidMount() {
@@ -67,6 +69,7 @@ class App extends Component {
 
 
   setCurrent(id) {
+    console.log('set current')
     let item = this.props.items[id]
     let stream = new Stream()
     stream.generate(item.beforeTraces, item.beforeCode, 'before')
@@ -95,15 +98,17 @@ class App extends Component {
     })
     this.updateState(state)
     window.history.pushState(null, null, `?id=${id}`)
-    window.diffView.generateDiff(id)
+    // window.diffView.generateDiff(id)
     setTimeout(() => {
       console.log('call init')
-      window.locationHint.init()
+      window.quizes.map((quiz) => { quiz.init() })
+
+      // window.locationHint.init()
       // window.transformationHint.init()
-      window.behaviorHint.init()
-      window.exampleHint.init()
-      window.scaffoldingHint.init()
-      window.quiz.init()
+      // window.behaviorHint.init()
+      // window.exampleHint.init()
+      // window.scaffoldingHint.init()
+
     }, 500)
 
     db.find({ test: item.test, result: item.result }, function(err, items) {
@@ -179,6 +184,7 @@ class App extends Component {
             />
           </div>
         </div>
+        {/*
         <div className="ui two column centered grid">
           <div id="diff-view" className="six wide column">
             <h1 className="title">Teacher</h1>
@@ -232,6 +238,7 @@ class App extends Component {
             />
           </div>
         </div>
+        */}
       </div>
     )
   }

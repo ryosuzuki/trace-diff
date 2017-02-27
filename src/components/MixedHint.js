@@ -76,7 +76,7 @@ class MixedHint extends Component {
           </div>
 
           <div id="step-2">
-            <h1>Step 2</h1>
+            <h1 data-tooltip="Add users to your feed">Step 2</h1>
             <p>Let's think with the following example.</p>
             <Highlight className="python">
               { this.props.test }
@@ -84,11 +84,49 @@ class MixedHint extends Component {
             <p>Look at line { 2 }</p>
             <Quiz
               options={ this.props.options }
-              removed={ this.props.removed }
-              before={ this.props.before }
+              line={ this.props.removed[0] }
+              code={ this.props.before }
             />
           </div>
 
+          <div id="step-3">
+            <h1>Step 3</h1>
+            <p>Let's think about the behavior of <code>{ 'previous' }</code>.</p>
+            <p>When <code>{ 'i = 1' }</code>, </p>
+            <Quiz
+              options={ this.props.options }
+              code={ this.props.before }
+              line={ 3 }
+            />
+
+            <p>In a similar way, the behavior of <code>prevous</code> looks like this</p>
+
+
+            <table className="ui celled table">
+              <thead>
+                <tr>
+                <th><code>previous</code></th>
+                <th>-</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+              </tr></thead>
+              <tbody>
+                <tr>
+                  <td>Result</td>
+                  { this.props.beforeHistory['previous'] ? this.props.beforeHistory['previous'].history.map((i) => {
+                    return <td>{ i }</td>
+                  }) : '' }
+                </tr>
+                <tr>
+                  <td>Expected</td>
+                  { this.props.afterHistory['previous'] ? this.props.afterHistory['previous'].history.map((i) => {
+                    return <td>{ i }</td>
+                  }) : '' }
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
         </div>
         <h2>Code</h2>

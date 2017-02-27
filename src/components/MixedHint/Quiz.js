@@ -4,8 +4,6 @@ import CodeMirror from 'react-codemirror'
 import 'codemirror/mode/python/python'
 import Tree from '../Data/Tree'
 
-let i = 0
-
 class Quiz extends Component {
   constructor(props) {
     super(props)
@@ -18,7 +16,7 @@ class Quiz extends Component {
       ast: {},
       index: 0,
     }
-    window.quiz = this
+    window.quizes.push(this)
   }
 
   componentDidMount() {
@@ -26,7 +24,9 @@ class Quiz extends Component {
 
   init() {
     // let code = 'previous = term(base)'
-    let code = this.props.before.split('\n')[this.props.removed[0]].trim()
+    let line = this.props.line
+
+    let code = this.props.code.split('\n')[line].trim()
     $.ajax({
       url: 'https://python-ast-explorer.com/api/_parse',
       method: 'POST',
@@ -54,19 +54,9 @@ class Quiz extends Component {
     this.setState({
       code: code,
       origin: code,
-      startLine: this.props.removed[0]
+      startLine: line
     })
   }
-
-  showWidget() {
-    if (!this.refs.editor) return false
-    this.cm = this.refs.editor.getCodeMirror()
-    this.cm.addLineClass(2-1, '', 'current-line')
-    let msg = document.createElement('div')
-    msg.append($('.inline-hint')[0])
-    this.cm.addLineWidget(1, msg, { coverGutter: true })
-  }
-
 
   onChange(quiz, index, event) {
     let value = event.target.value
@@ -87,7 +77,7 @@ class Quiz extends Component {
       index = this.state.updates.length - 1
     }
     let update = this.state.updates[index]
-    let code = `${this.state.origin} \n# ${update}`
+    let code = `${this.state.origin}  # ${update}`
     this.setState({ code: code, index: index })
   }
 
@@ -95,38 +85,57 @@ class Quiz extends Component {
     switch (quiz.type) {
       case 'name':
         return (
-          <p>Q. What is the value of <code>{ quiz.key }</code>?
-            <code>{ quiz.key }</code> =
-            <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
-            <span className="inline-message">Correct!</span>
-          </p>
+          <div className="mini-quiz">
+            <p>
+            <b className="question">
+              Q. What is the value of <code>{ quiz.key }</code>?
+            </b>
+              <code>{ quiz.key }</code> =
+              <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
+              <i className="inline-message fa fa-check fa-fw" />
+            </p>
+          </div>
         )
         break
       case 'call':
         return (
-          <p>Q. What is the return value of <code>{ quiz.key }</code>?
-            <code>{ quiz.key }</code> returns
-            <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
-            <span className="inline-message">Correct!</span>
-          </p>
+          <div className="mini-quiz">
+            <p>
+              <b className="question">
+              Q. What is the return value of <code>{ quiz.key }</code>?
+              </b>
+              <code>{ quiz.key }</code> returns
+              <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
+              <i className="inline-message fa fa-check fa-fw" />
+            </p>
+          </div>
         )
         break
       case 'assign':
         return (
-          <p>Therefore, <code>{ quiz.key }</code> =
-            <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
-            <span className="inline-message">Correct!</span>
-          </p>
+          <div className="mini-quiz">
+            <p>
+              Therefore,
+             <code>{ quiz.key }</code> =
+              <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
+              <i className="inline-message fa fa-check fa-fw" />
+            </p>
+          </div>
         )
         break
       case 'return':
         return (
-          <p>Therefore, <code>{ quiz.key }</code> returns
-            <code>{ quiz.value }</code>
-          </p>
+          <div className="mini-quiz">
+            <p>Therefore,
+              <code>{ quiz.key }</code> returns
+              <code>{ quiz.value }</code>
+            </p>
+          </div>
         )
         break
-
+      default:
+        return null
+        break
     }
   }
 
@@ -139,6 +148,16 @@ class Quiz extends Component {
       firstLineNumber: this.state.startLine
     }
 
+    $('.button')
+      .popup({
+        position: 'bottom center',
+        target: '.CodeMirror',
+        lastResort: 'bottom right',
+        popup : $('.inline-hint'),
+        on: 'click'
+      })
+    ;
+
     return (
       <div className="quiz">
 
@@ -148,13 +167,14 @@ class Quiz extends Component {
           options={ options }
         />
 
-        <div className="inline-hint">
-          <div className="arrow-up"></div>
-          <div className="arrow-border"></div>
+        <button className="ui button">
+          Next
+        </button>
+        <div className="ui fluid popup bottom left transition inline-hint">
           <div className="dynamic-hint">
             { this.state.quizes.map((quiz, index) => {
               return (
-                <div id={ `q-${index}` } key={ index }>
+                <div id={ `q-${index}` } key={ index } style={{ display: index > this.state.index ? 'none' : 'block' }}>
                   { this.renderQuiz(quiz, index) }
                   { quiz.calls ? quiz.calls.map((call) => {
                     return (
@@ -167,6 +187,7 @@ class Quiz extends Component {
 
           </div>
         </div>
+
 
       </div>
     )

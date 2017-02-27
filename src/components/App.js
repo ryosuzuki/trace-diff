@@ -101,6 +101,7 @@ class App extends Component {
     // window.diffView.generateDiff(id)
     setTimeout(() => {
       console.log('call init')
+      window.mixedHint.init()
       window.quizes.map((quiz) => { quiz.init() })
 
       // window.locationHint.init()

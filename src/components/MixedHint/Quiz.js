@@ -164,10 +164,12 @@ class Quiz extends Component {
           options={ options }
         />
 
-        <button className="ui button">
+        <button className="ui basic button">
           Next
         </button>
         <div className="ui fluid popup bottom left transition inline-hint">
+          <p><b>{ this.props.description }</b></p>
+
           { this.state.quizes.map((quiz, index) => {
             return (
               <div id={ `q-${index}` } key={ index } style={{ display: index > this.state.index ? 'none' : 'block' }}>

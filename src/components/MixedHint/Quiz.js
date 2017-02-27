@@ -14,7 +14,7 @@ class Quiz extends Component {
       quizes: [],
       updates: [],
       ast: {},
-      index: 10,
+      index: 0,
     }
     window.quizes.push(this)
   }
@@ -83,6 +83,30 @@ class Quiz extends Component {
     this.setState({ code: code, index: index })
   }
 
+  renderChildren(key) {
+    let item = this.props.history[key]
+    if (item.children.length > 0) {
+      return (
+        item.children.map((childKey) => {
+          return (
+            <div className="recursive">
+              <p><code>{ key }</code> calls <code>{ childKey }</code></p>
+              <div style={{ marginLeft: '10px' }}>
+              { this.renderChildren(childKey) }
+              </div>
+              <p><code>{ key }</code> returns <code>{ item.value }</code></p>
+            </div>
+          )
+        })
+      )
+    } else {
+      return (
+        <div className="recursive">
+          <p><code>{ key }</code> returns <code>{ item.value }</code></p>
+        </div>
+      )
+    }
+  }
 
   renderQuiz(quiz, index) {
     switch (quiz.type) {
@@ -93,14 +117,9 @@ class Quiz extends Component {
               <b className="question">
               Q. What is the return value of <code>{ quiz.key }</code>?
               </b>
-              { quiz.calls.map((key) => {
-                let child = this.props.history[key]
-                if (child.calls.length > 0) {
-                    return key
-                } else {
-                  return null
-                }
-              }) }
+            </p>
+            { quiz.children.length > 0 ? this.renderChildren(quiz.key) : '' }
+            <p>
               <code>{ quiz.key }</code> returns
               <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
               <i className="inline-message fa fa-check fa-fw" />
@@ -185,11 +204,6 @@ class Quiz extends Component {
             return (
               <div id={ `q-${index}` } key={ index } style={{ display: index > this.state.index ? 'none' : 'block' }}>
                 { this.renderQuiz(quiz, index) }
-                { quiz.calls ? quiz.calls.map((call) => {
-                  return (
-                    <p>{ call }</p>
-                  )
-                }) : '' }
               </div>
             )
           }) }

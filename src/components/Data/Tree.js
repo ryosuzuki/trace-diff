@@ -272,6 +272,7 @@ class Tree {
     let key = `${func.value}(${args.map(arg => arg.value).join(', ')})`
     let value = this.getValue(key)
     let calls = this.getCalls(key)
+    let children = this.getChildren(key)
     let updates = []
     for (let i = 0; i < args.length; i++) {
       let arg = args[i]
@@ -298,6 +299,7 @@ class Tree {
       args: args,
       origin: origin,
       calls: calls,
+      children: children,
       updates: updates,
     }
     this.quizes.push(node)
@@ -307,6 +309,11 @@ class Tree {
   getCalls(key) {
     if (!this.history[key]) return []
     return this.history[key]['calls']
+  }
+
+  getChildren(key) {
+    if (!this.history[key]) return []
+    return this.history[key]['children']
   }
 
   getValue(key) {

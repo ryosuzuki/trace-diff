@@ -42,8 +42,8 @@ class MixedHint extends Component {
 
     this.generateDiff()
 
-    // this.cm2 = this.refs.editor2.getCodeMirror()
-    // this.cm2.markText({ line: 1, ch: 15}, { line: 1, ch: 26 }, { className: 'highlight' })
+    this.cm2 = this.refs.editor2.getCodeMirror()
+    this.cm2.markText({ line: 1, ch: 15}, { line: 1, ch: 26 }, { className: 'highlight' })
 
     // let code2 = this.props.before.split('\n')[3]
     // this.getAST(code2, 'loop')
@@ -157,6 +157,27 @@ class MixedHint extends Component {
       $('#expected-3').popup('show')
     })
 
+    const translate = (key, compare = false) => {
+      if (!this.props.beforeHistory[key]) return null
+      let after = this.props.afterHistory[key].history
+      let before = this.props.beforeHistory[key].history
+      let text = ''
+      for (let i = 0; i < before.length; i++) {
+        let result = before[i]
+        let expected = after[i]
+        if (i === 0) {
+          text += `${key} is initialized with ${result}`
+        } else {
+          text += `${key} is updated to ${result}`
+        }
+        if (compare) text += ` should be ${expected}`
+        text += '\n'
+      }
+      text += `${this.props.test} returns ${this.props.result}`
+      if (compare) text += ` should be ${this.props.expected}`
+      return text
+    }
+
     return (
       <div>
         <h1>Mixed Hint</h1>
@@ -172,21 +193,46 @@ class MixedHint extends Component {
 
           <div id="step-2">
             <h1>Step 2</h1>
-            <p>Let's think with the following example.</p>
+            <p>Let's think with the following example. With your <code>accumulate</code> function,</p>
             <Highlight className="python">
-              { this.props.test }
+              { `${this.props.test} returns ${this.props.result}` }
             </Highlight>
-            <p>Look at line { 2 }</p>
+
+            <p>
+              <button className="ui primary button">Q. Why { this.props.test } returns { this.props.result } ?</button>
+            </p>
+
+
+            <Highlight className="python">
+              { translate('previous') }
+            </Highlight>
+
             <Quiz
+              description={ `Q. Why previous is initialized with 121?` }
               id={ 'quiz-1' }
               options={ this.props.options }
               line={ this.props.removed[0] }
               code={ this.props.before }
               history={ this.props.beforeHistory }
             />
+
+            <Quiz
+              description={ `Q. Why previous is updated to 122?` }
+              id={ 'quiz-2' }
+              options={ this.props.options }
+              line={ 3 }
+              code={ this.props.before }
+              history={ this.props.beforeHistory }
+            />
+
+            <p>However, the behavior of <code>{ 'previous' }</code> should be somethin like this</p>
+            <Highlight className="python">
+              { translate('previous', true) }
+            </Highlight>
+
+
           </div>
 
-          {/*
           <div id="step-3">
             <h1>Step 3</h1>
             <p>Let's think about the behavior of <code>{ 'previous' }</code>.</p>
@@ -211,14 +257,6 @@ class MixedHint extends Component {
             </table>
 
             <p><code>{ 'previous' }</code> updates at line { 3 }</p>
-            <Quiz
-              id={ 'quiz-2' }
-              description={ 'When i = 1,' }
-              options={ this.props.options }
-              code={ this.props.before }
-              line={ 3 }
-              history={ this.props.beforeHistory }
-            />
 
             <p>In a similar way, the behavior of <code>prevous</code> looks like this</p>
             <button className="ui basic button">Next</button>
@@ -268,7 +306,6 @@ class MixedHint extends Component {
             />
 
           </div>
-          */}
 
         </div>
 

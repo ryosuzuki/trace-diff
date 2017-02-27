@@ -14,7 +14,7 @@ class Quiz extends Component {
       quizes: [],
       updates: [],
       ast: {},
-      index: 0,
+      index: 10,
     }
     window.quizes.push(this)
   }
@@ -79,7 +79,7 @@ class Quiz extends Component {
       index = this.state.updates.length - 1
     }
     let update = this.state.updates[index]
-    let code = `${this.state.origin}  \n# ${update}`
+    let code = `${this.state.origin}  # ${update}`
     this.setState({ code: code, index: index })
   }
 
@@ -175,18 +175,25 @@ class Quiz extends Component {
       firstLineNumber: this.state.startLine
     }
 
-    $(`#${this.props.id} .button`)
-      .popup({
-        position: 'bottom center',
-        target: `#${this.props.id} .CodeMirror`,
-        lastResort: 'bottom right',
-        popup : $(`#${this.props.id} .inline-hint`),
-        on: 'click'
-      })
-    ;
+    $(`#${this.props.id} .CodeMirror`).popup({
+      position: 'bottom center',
+      inline: true,
+      popup : $(`#${this.props.id} .inline-hint`),
+      lastResort: 'bottom right',
+      on: 'click'
+    })
+
+    $(`#${this.props.id} .button`).click(() => {
+      $(`#${this.props.id} .CodeMirror`).popup('show')
+    })
 
     return (
       <div id={ this.props.id } className="quiz">
+        <p>
+          <button className="ui primary button">{ this.props.description }</button>
+        </p>
+
+        <p>Look at line { this.props.line }</p>
 
         <CodeMirror
           value={ this.state.code }
@@ -194,11 +201,8 @@ class Quiz extends Component {
           options={ options }
         />
 
-        <button className="ui basic button">
-          Next
-        </button>
         <div className="ui fluid popup bottom left transition inline-hint">
-          <p><b>{ this.props.description }</b></p>
+          <h1><b>{ this.props.description }</b></h1>
 
           { this.state.quizes.map((quiz, index) => {
             return (

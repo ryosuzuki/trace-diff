@@ -42,8 +42,8 @@ class MixedHint extends Component {
 
     this.generateDiff()
 
-    this.cm2 = this.refs.editor2.getCodeMirror()
-    this.cm2.markText({ line: 1, ch: 15}, { line: 1, ch: 26 }, { className: 'highlight' })
+    // this.cm2 = this.refs.editor2.getCodeMirror()
+    // this.cm2.markText({ line: 1, ch: 15}, { line: 1, ch: 26 }, { className: 'highlight' })
 
     // let code2 = this.props.before.split('\n')[3]
     // this.getAST(code2, 'loop')
@@ -182,9 +182,11 @@ class MixedHint extends Component {
               options={ this.props.options }
               line={ this.props.removed[0] }
               code={ this.props.before }
+              history={ this.props.beforeHistory }
             />
           </div>
 
+          {/*
           <div id="step-3">
             <h1>Step 3</h1>
             <p>Let's think about the behavior of <code>{ 'previous' }</code>.</p>
@@ -215,6 +217,7 @@ class MixedHint extends Component {
               options={ this.props.options }
               code={ this.props.before }
               line={ 3 }
+              history={ this.props.beforeHistory }
             />
 
             <p>In a similar way, the behavior of <code>prevous</code> looks like this</p>
@@ -265,6 +268,7 @@ class MixedHint extends Component {
             />
 
           </div>
+          */}
 
         </div>
 

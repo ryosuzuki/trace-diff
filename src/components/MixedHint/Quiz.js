@@ -14,7 +14,7 @@ class Quiz extends Component {
       quizes: [],
       updates: [],
       ast: {},
-      index: 0,
+      index: 10,
     }
     window.quizes.push(this)
   }
@@ -40,13 +40,15 @@ class Quiz extends Component {
       tree.history = window.app.props.beforeHistory // TODO
       tree.tick = 0
       tree.analyze(res)
+
+      window.tree = tree
       this.setState({
         quizes: tree.quizes,
         updates: tree.updates,
         ast: tree.ast
       })
       if (tree.quizes.length + 1 !== tree.updates.length) {
-        alert(`Error in updates number updates = ${tree.updates.length} quizes = ${tree.quizes.length}`)
+        // alert(`Error in updates number updates = ${tree.updates.length} quizes = ${tree.quizes.length}`)
       }
       // this.createQuiz(tree.quizes)
     })
@@ -77,9 +79,10 @@ class Quiz extends Component {
       index = this.state.updates.length - 1
     }
     let update = this.state.updates[index]
-    let code = `${this.state.origin}  # ${update}`
+    let code = `${this.state.origin}  \n# ${update}`
     this.setState({ code: code, index: index })
   }
+
 
   renderQuiz(quiz, index) {
     switch (quiz.type) {
@@ -90,6 +93,14 @@ class Quiz extends Component {
               <b className="question">
               Q. What is the return value of <code>{ quiz.key }</code>?
               </b>
+              { quiz.calls.map((key) => {
+                let child = this.props.history[key]
+                if (child.calls.length > 0) {
+                    return key
+                } else {
+                  return null
+                }
+              }) }
               <code>{ quiz.key }</code> returns
               <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
               <i className="inline-message fa fa-check fa-fw" />

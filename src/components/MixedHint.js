@@ -69,17 +69,19 @@ class MixedHint extends Component {
     for (let event of events) {
       switch (event.type) {
         case 'call':
+          continue
           if (event.children.length === 0) continue
           for (let child of event.children) {
             text += `${event.key} calls ${child}`
           }
           break
         case 'return':
+          continue
           if (event.builtin) continue
           text += `${event.key} returns ${event.value}`
           break
         default:
-          if (!this.props.focusKeys.includes(event.key)) continue
+          // if (!this.props.focusKeys.includes(event.key)) continue
           if (!existKeys.has(event.key)) {
             text += `${event.key} is initialized with ${event.value}`
           } else {
@@ -88,6 +90,7 @@ class MixedHint extends Component {
           break
       }
       existKeys.add(event.key)
+      text += ` at line ${ event.line }`
       text += '\n'
     }
     this.setState({ text: text })

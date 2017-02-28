@@ -22,7 +22,8 @@ class Record {
     for (let i = 0; i < traces.length; i++) {
       let trace = traces[i]
       for (let func of Object.keys(trace.locals)) {
-        if (func === 'accumulate') {
+        let builtin = ['add', 'mul', 'identity', 'square', 'increment', 'triple'].includes(func)
+        if (!builtin) {
           this.addValue(traces, i, func)
         }
       }
@@ -30,19 +31,19 @@ class Record {
       if (trace.event === 'return') this.addReturn(trace)
     }
 
-    for (let key of Object.keys(this.history)) {
-      let item = this.history[key]
-      if (item.type !== 'call') continue
-      let children = []
-      for (let funcKey of item.calls) {
-        let child = this.history[funcKey]
-        if (!child.builtin) {
-          children.push(funcKey)
-        }
-      }
-      item.children = children
-      this.history[key] = item
-    }
+    // for (let key of Object.keys(this.history)) {
+    //   let item = this.history[key]
+    //   if (item.type !== 'call') continue
+    //   let children = []
+    //   for (let funcKey of item.calls) {
+    //     let child = this.history[funcKey]
+    //     if (!child.builtin) {
+    //       children.push(funcKey)
+    //     }
+    //   }
+    //   item.children = children
+    //   this.history[key] = item
+    // }
 
     if (type === 'before') {
       this.beforeHistory = this.history
@@ -61,22 +62,33 @@ class Record {
     if (func === "<module>") return
     let args = {}
     for (let key of Object.keys(trace.locals[func])) {
-      args[key] = trace.locals[func][key]
+      let arg = trace.locals[func][key]
+      if (arg !== undefined) args[key] = arg
     }
     let key = this.getKey(func, args)
     let builtin = ['add', 'mul', 'identity', 'square', 'increment', 'triple'].includes(func)
     let node = {
       type: 'call',
       calls: [],
+      children: [],
       key: key,
       value: '',
-      builtin: builtin
+      builtin: builtin,
+      history: [],
     }
     this.history[key] = node
-    this.events.push(node)
+
+    let event = _.clone(node)
+    event.line = trace.call_line
+    this.events.push(event)
 
     let last = _.last(this.stacks)
-    if (last) this.history[last].calls.push(key)
+    if (last) {
+      this.history[last].calls.push(key)
+      if (!node.builtin) {
+        this.history[last].children.push(key)
+      }
+    }
     this.stacks.push(key)
   }
 
@@ -86,26 +98,21 @@ class Record {
     let args = {}
     for (let key of Object.keys(trace.locals[func])) {
       if (key === '__return__') continue
-      args[key] = trace.locals[func][key]
+      let arg = trace.locals[func][key]
+      if (arg !== undefined) args[key] = arg
     }
     let key = this.getKey(func, args)
     let value = trace.locals[func]['__return__']
     this.history[key]['value'] = value
     this.history[key]['history'] = [value]
+    this.history[key]['line'] = trace.line
 
-    let node = _.clone(this.history[key])
-    this.events.push(Object.assign(node, { type: 'return' }))
+    let event = _.clone(this.history[key])
+    event.line = trace.line
+    event.type = 'return'
+    this.events.push(event)
 
     this.stacks.pop(key)
-  }
-
-  getKey(func, args) {
-    if (func === 'accumulate') {
-      const ks = ['combiner', 'base', 'n', 'term']
-      return `${func}(${ks.map(k => args[k]).join(', ')})`
-    } else {
-      return `${func}(${Object.values(args).join(', ')})`
-    }
   }
 
   addValue(traces, i, func) {
@@ -116,24 +123,61 @@ class Record {
       if (key === '__return__') continue
       if (value === undefined) continue
 
+      let line
+      if (trace.event === 'call') {
+        line = traces[i].line
+      }
+      if (trace.event === 'return') {
+        line = traces[i].line
+      }
+      if (trace.event === 'step_line') {
+        for (let j = i-1; j >= 0; j--) {
+          let prev = traces[j]
+          if (prev.func_name === trace.func_name) {
+            line = prev.line
+            break
+          }
+        }
+      }
+
       let node = {
         type: 'assign',
         key: key,
         value: value,
         history: [value],
       }
-      if (!this.history[key]) this.history[key] = node
-      if (!this.ticks[key]) this.ticks[key] = {}
+      let event = _.clone(node)
+      event.line = line
+
+      if (!this.history[key]) {
+        this.history[key] = node
+        this.events.push(event)
+      }
       if (this.history[key]['value'] !== value) {
         this.history[key]['value'] = value
         this.history[key]['history'].push(value)
-        this.events.push(node)
+        this.events.push(event)
       }
 
+      if (!this.ticks[key]) this.ticks[key] = {}
       this.ticks[key][i] = this.history[key].length
       if (trace.event === 'step_line') {
         this.ticks[key][i-1] = this.history[key].length
       }
+    }
+  }
+
+  getKey(func, args) {
+    // TODO
+    // Know issue http://0.0.0.0:8080/?id=55
+    // helper(combiner, n-1, term)
+    // x helper(identity, add, 0)
+    // o helper(add, 0, identity)
+    if (func === 'accumulate') {
+      const ks = ['combiner', 'base', 'n', 'term']
+      return `${func}(${ks.map(k => args[k]).join(', ')})`
+    } else {
+      return `${func}(${Object.values(args).join(', ')})`
     }
   }
 

@@ -131,8 +131,8 @@ class Stream {
         }
       }
       if (trace.event === 'return' && trace.stack_locals[0]) {
-        trace.line = trace.call_line
-        trace.change_line = trace.callline
+        // trace.line = trace.call_line
+        trace.change_line = trace.call_line
         trace.return_line = trace.call_line
         let func = trace.stack_locals[0][0]
         func += '('

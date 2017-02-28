@@ -88,9 +88,9 @@ class MixedHint extends Component {
           }
           break
       }
-      // text += ` at line ${ event.line }`
+      text += ` at line ${ event.line }`
       text += '\n'
-      filteredEvents.push(event)
+      if (event.type !== 'call') filteredEvents.push(event)
     }
     this.setState({ text: text, events: filteredEvents })
   }
@@ -130,8 +130,21 @@ class MixedHint extends Component {
 
             <h2>Step 2-2</h2>
             { this.state.events.map((event, index) => {
-              let question = `Q. Why ${event.key} ${ event.index === 0 ? 'is initialized with' : 'is updated to' } ${event.value} ?`
-
+              let question = ''
+              question += 'Q. Why '
+              question += event.key
+              if (event.type === 'return') {
+                question += ' returns '
+              }
+              if (event.type === 'assign') {
+                if (event.index === 0) {
+                  question += ' is initialized with '
+                } else {
+                  question += ' is updated to '
+                }
+              }
+              question += event.value
+              question += ' ?'
               let events = this.props.beforeEvents.slice(0, event.id)
               let history = {}
               for (let e of events) {

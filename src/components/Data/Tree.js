@@ -158,9 +158,9 @@ class Tree {
       origin: key,
       key: key,
       value: value,
-      updates: [key, value],
+      updates: key === value ? [] : [key, value],
     }
-    this.quizes.push(node)
+    if (key !== value) this.quizes.push(node)
     return node
   }
 

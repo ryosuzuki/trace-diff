@@ -3,7 +3,6 @@ class Tree {
   constructor() {
     this.history = {}
     this.ast = {}
-    this.tick = 0
 
     this.quizes = []
     this.updates = []

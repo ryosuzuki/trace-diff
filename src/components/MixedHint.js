@@ -160,7 +160,6 @@ class MixedHint extends Component {
                   <Quiz
                     description={ question }
                     id={ `quiz-${ index }` }
-                    tick={ event.index - 1 }
                     options={ this.props.options }
                     line={ event.line }
                     code={ this.props.before }
@@ -171,6 +170,7 @@ class MixedHint extends Component {
               )
             }) }
           </div>
+
           <div id="step-3" className="step">
             <h1 className="title">Step 3: Understand the Cause and Misconception</h1>
             <h2>Hint Strategy: Behavior Hints with Ladder of Abstraction</h2>
@@ -178,6 +178,9 @@ class MixedHint extends Component {
               name={ 'previous' }
               beforeHistory={ this.props.beforeHistory }
               afterHistory={ this.props.afterHistory }
+              beforeEvents={ this.props.beforeEvents }
+              afterEvents={ this.props.afterEvents }
+              focusKeys={ this.props.focusKeys }
               test={ this.props.test }
               expected={ this.props.expected }
               result={ this.props.result }

@@ -38,7 +38,6 @@ class Quiz extends Component {
 
       let tree = new Tree()
       tree.history = this.props.history
-      tree.tick = this.props.tick
       tree.analyze(res)
 
       this.setState({

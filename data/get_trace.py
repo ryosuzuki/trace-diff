@@ -2,6 +2,8 @@ import sys
 import json
 import re
 import pg_logger
+import json
+import parse
 
 path = sys.argv[1]
 
@@ -13,6 +15,29 @@ for item in items:
   before = item['before']
   after = item['after']
   test = item['test']
+
+  before_ast = []
+  after_ast = []
+
+  for line in before.splitlines():
+    line = line.strip()
+    try:
+      ast = parse.make_ast(line)
+    except Exception as err:
+      ast = { 'error': True }
+    print line
+    before_ast.append(ast)
+
+  for line in after.splitlines():
+    line = line.strip()
+    try:
+      ast = parse.make_ast(line)
+    except Exception as err:
+      ast = { 'error': True }
+    after_ast.append(ast)
+
+  item['beforeAst'] = before_ast
+  item['afterAst'] = after_ast
 
   keywords = re.findall(r"[\w]+", test)
   combiner = None
@@ -75,4 +100,3 @@ with open('example.json', 'w') as file:
 
 with open(path, 'w') as file:
   json.dump(items, file)
-

@@ -13,39 +13,93 @@ class Ladder extends Component {
       text: '',
       level: 0,
       max: 0,
-      marks: {}
+      marks: {},
+      events: []
     }
     window.ladder = this
   }
 
   init() {
-    let key = this.props.name
-    let max = 0
-    if (!this.props.beforeHistory[key]) return null
-    let after = this.props.afterHistory[key].history
-    let before = this.props.beforeHistory[key].history
+    this.translate()
+  }
+
+  hoge() {
+    let events = this.props.beforeEvents
+    let code = this.props.before
+
+    let filteredEvents = events.filter((event) => {
+      // if (event.type === 'call') return false
+      if (event.builtin) return false
+      if (!this.props.focusKeys.includes(event.key)) return false
+      return true
+    })
+
+    for (let event of filteredEvents) {
+      if (event.type === 'call') continue
+      let trimedEvents = events.slice(0, event.id)
+      let history = {}
+      for (let e of trimmedEvents) {
+        history[e.key] = e
+      }
+
+      let line = event.line
+      let snippet = code.split('\n')[line-1].trim()
+
+      $.ajax({
+        url: 'https://python-ast-explorer.com/api/_parse',
+        method: 'POST',
+        data: snippet,
+      })
+      .then((res) => {
+        let tree = new Tree()
+        tree.history = history
+        tree.analyze(res)
+        event.updates = tree.updates
+      })
+    }
+    this.setState({ events: filteredEvents })
+  }
+
+
+  translate() {
     let text = ''
-    for (let i = 0; i < before.length; i++) {
-      let quiz = window.quizes[i]
-      if (!quiz) continue
-      let updates = _.uniq(quiz.state.updates).reverse()
+    let max = 0
+    let events = this.props.beforeEvents
+    for (let event of events) {
+      let updates = _.uniq(event.updates).reverse()
       let update = updates[this.state.level]
       max = Math.max(max, updates.length - 1)
       if (!update) update = _.last(updates)
-      if (i === 0) {
-        text += `${key} is initialized with ${update}`
-      } else {
-        text += `${key} is updated to ${update}`
+
+      switch (event.type) {
+        case 'call':
+          if (event.children.length === 0) continue
+          for (let child of event.children) {
+            text += `${event.key} calls ${child}`
+          }
+          break
+        case 'return':
+          if (event.builtin) continue
+          text += `${event.key} returns ${update}`
+          break
+        default:
+          if (!this.props.focusKeys.includes(event.key)) continue
+          if (event.index === 0) {
+            text += `${event.key} is initialized with ${update}`
+          } else {
+            text += `${event.key} is updated to ${update}`
+          }
+          break
       }
+      text += ` at line ${ event.line }`
       text += '\n'
     }
-    text += `${this.props.test} returns ${this.props.result}`
-
     let marks = {}
     marks[0] = 'concrete'
     marks[max] = 'abstract'
     this.setState({ text: text, max: max, marks: marks })
   }
+
 
   onChange(value) {
     this.setState({ level: value }, () => {

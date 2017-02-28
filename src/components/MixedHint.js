@@ -11,7 +11,7 @@ class MixedHint extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      step: 4,
+      step: 1,
       loops: [],
       text: '',
       events: [],
@@ -41,8 +41,8 @@ class MixedHint extends Component {
     this.generateDiff()
     this.translate()
 
-    this.cm2 = this.refs.editor2.getCodeMirror()
-    this.cm2.markText({ line: 1, ch: 15}, { line: 1, ch: 26 }, { className: 'highlight' })
+    // this.cm2 = this.refs.editor2.getCodeMirror()
+    // this.cm2.markText({ line: 1, ch: 15}, { line: 1, ch: 26 }, { className: 'highlight' })
 
     // let code2 = this.props.before.split('\n')[3]
     // this.getAST(code2, 'loop')
@@ -109,9 +109,13 @@ class MixedHint extends Component {
             <Highlight className="python">
               { this.props.log }
             </Highlight>
+
+            <div id="next-1" className="next" style={{ display: this.state.step <= 1 ? 'block' : 'none' }}>
+              <button className="ui primary button" onClick={ this.onClick.bind(this) }>Next</button>
+            </div>
           </div>
 
-          <div id="step-2" className="step">
+          <div id="step-2" className="step" style={{ display: this.state.step >= 2 ? 'block' : 'none' }}>
             <h1 className="title">Step 2: Understand the Behavior</h1>
             <h2>Hint Strategy: Data or Behavior Hints with Scaffolding Questions</h2>
 
@@ -171,9 +175,13 @@ class MixedHint extends Component {
                 </div>
               )
             }) }
+
+            <div id="next-1" className="next" style={{ display: this.state.step <= 2 ? 'block' : 'none' }}>
+              <button className="ui primary button" onClick={ this.onClick.bind(this) }>Next</button>
+            </div>
           </div>
 
-          <div id="step-3" className="step">
+          <div id="step-3" className="step" style={{ display: this.state.step >= 3 ? 'block' : 'none' }}>
             <h1 className="title">Step 3: Understand the Cause and Misconception</h1>
             <h2>Hint Strategy: Behavior Hints with Ladder of Abstraction</h2>
             <Ladder
@@ -188,35 +196,43 @@ class MixedHint extends Component {
               expected={ this.props.expected }
               result={ this.props.result }
             />
+
+            <div id="next-1" className="next" style={{ display: this.state.step <= 3 ? 'block' : 'none' }}>
+              <button className="ui primary button" onClick={ this.onClick.bind(this) }>Next</button>
+            </div>
           </div>
 
-          <div id="step-4" className="step">
+          <div id="step-4" className="step" style={{ display: this.state.step >= 4 ? 'block' : 'none' }}>
             <h1 className="title">Step 4: Fix the Error</h1>
             <h2>Hint Strategy: Location Hints and Interactive Debugger</h2>
             <p>How can you fix it?</p>
+          </div>
 
+          <div id="step-code" className="step">
+            <h2>Code</h2>
             <CodeMirror
               value={ this.props.before }
               ref="editor2"
               options={ this.props.options }
             />
-
           </div>
-
         </div>
 
-        <h2>Answer</h2>
-        <CodeMirror
-          value={ this.props.code }
-          ref="editor"
-          options={ this.props.options }
-        />
+        <div className="teacher" style={{ marginTop: '30px', display: this.state.step >= 4 ? 'block' : 'none' }}>
+          <h1 className="title">Teacher</h1>
+          <h2>Answer</h2>
+          <CodeMirror
+            value={ this.props.code }
+            ref="editor"
+            options={ this.props.options }
+          />
 
-        <h2>Code Traces</h2>
-        <HistoryLog
-          beforeHistory={ this.props.beforeHistory }
-          afterHistory={ this.props.afterHistory }
-        />
+          <h2>Code Traces</h2>
+          <HistoryLog
+            beforeHistory={ this.props.beforeHistory }
+            afterHistory={ this.props.afterHistory }
+          />
+        </div>
       </div>
     )
   }

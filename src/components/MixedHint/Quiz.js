@@ -98,17 +98,32 @@ class Quiz extends Component {
       case 'call':
         return (
           <div className="mini-quiz">
-            <p>
-              <b className="question">
-              Q. What is the return value of <code>{ quiz.key }</code>?
-              </b>
-            </p>
-            { quiz.children.length > 0 ? this.renderChildren(quiz.key) : '' }
-            <p>
-              <code>{ quiz.key }</code> returns
-              <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
-              <i className="inline-message fa fa-check fa-fw" />
-            </p>
+            { quiz.children.length > 0 ?
+              <div>
+                <p>
+                  <b className="question">
+                  Q. What is the value of <code>{ quiz.key }</code>?
+                  </b>
+                </p>
+                { this.renderChildren(quiz.key) }
+                <p>
+                  <code>{ quiz.key }</code> returns
+                  <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
+                  <i className="inline-message fa fa-check fa-fw" />
+                </p>
+              </div>
+            :
+              <div>
+                <p>
+                  <b className="question">
+                  Q. What is the value of <code>{ quiz.key }</code>?
+                  </b>
+                  <code>{ quiz.key }</code> returns
+                  <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
+                  <i className="inline-message fa fa-check fa-fw" />
+                </p>
+              </div>
+            }
           </div>
         )
         break
@@ -150,7 +165,6 @@ class Quiz extends Component {
         break
     }
   }
-
 
   render() {
     const options = {

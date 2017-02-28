@@ -115,12 +115,13 @@ class MixedHint extends Component {
             <h1 className="title">Step 2: Understand the Behavior</h1>
             <h2>Hint Strategy: Data or Behavior Hints with Scaffolding Questions</h2>
 
+
+            <h2>Step 2-1: Highlight the Behavior of Key Variables</h2>
             <p>Let's think with the following example. With your <code>accumulate</code> function,</p>
             <Highlight className="python">
               { `${this.props.test} returns ${this.props.result}` }
             </Highlight>
 
-            <h2>Step 2-1</h2>
             <p>Q. Why { this.props.test } returns { this.props.result } ?</p>
             <p>
               <button className="ui primary button">Why ?</button>
@@ -131,7 +132,7 @@ class MixedHint extends Component {
             </Highlight>
 
 
-            <h2>Step 2-2</h2>
+            <h2>Step 2-2: Understand the Behavior with Scaffolding Questions</h2>
             { this.state.events.map((event, index) => {
               let question = ''
               question += 'Q. Why '
@@ -164,7 +165,6 @@ class MixedHint extends Component {
                     line={ event.line }
                     before={ this.props.before }
                     beforeAst={ this.props.beforeAst }
-                    afterAst={ this.props.afterAst }
                     history={ history }
                   />
                   <div className="ui divider"></div>
@@ -177,7 +177,6 @@ class MixedHint extends Component {
             <h1 className="title">Step 3: Understand the Cause and Misconception</h1>
             <h2>Hint Strategy: Behavior Hints with Ladder of Abstraction</h2>
             <Ladder
-              name={ 'previous' }
               beforeHistory={ this.props.beforeHistory }
               afterHistory={ this.props.afterHistory }
               beforeEvents={ this.props.beforeEvents }
@@ -194,8 +193,7 @@ class MixedHint extends Component {
           <div id="step-4" className="step">
             <h1 className="title">Step 4: Fix the Error</h1>
             <h2>Hint Strategy: Location Hints and Interactive Debugger</h2>
-            <p>So, it seems like your 2nd argument of initialization is wrong.</p>
-            <p>How can you fix that?</p>
+            <p>How can you fix it?</p>
 
             <CodeMirror
               value={ this.props.before }

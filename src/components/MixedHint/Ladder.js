@@ -14,63 +14,77 @@ class Ladder extends Component {
       level: 0,
       max: 0,
       marks: {},
-      events: []
+      beforeEvents: [],
+      afterEvents: []
     }
     window.ladder = this
   }
 
   init() {
-    this.translate()
+    this.generate('before')
+    this.generate('after')
   }
 
-  hoge() {
-    let events = this.props.beforeEvents
-    let code = this.props.before
+
+  generate(type) {
+    let events, asts, key
+    if (type === 'before') {
+      events = this.props.beforeEvents
+      asts = this.props.beforeAst
+      key = 'beforeEvents'
+    } else {
+      events = this.props.afterEvents
+      asts = this.props.afterAst
+      key = 'afterEvents'
+    }
 
     let filteredEvents = events.filter((event) => {
-      // if (event.type === 'call') return false
+      if (event.type === 'call') return false
       if (event.builtin) return false
       if (!this.props.focusKeys.includes(event.key)) return false
       return true
     })
 
-    for (let event of filteredEvents) {
-      if (event.type === 'call') continue
-      let trimedEvents = events.slice(0, event.id)
+    filteredEvents = filteredEvents.map((event) => {
+      let trimmedEvents = events.slice(0, event.id)
       let history = {}
       for (let e of trimmedEvents) {
         history[e.key] = e
       }
 
-      let line = event.line
-      let snippet = code.split('\n')[line-1].trim()
+      let ast = asts[event.line-1]
+      let tree = new Tree()
+      tree.history = history
+      tree.analyze(ast)
+      event.updates = tree.updates
+      return event
+    })
 
-      $.ajax({
-        url: 'https://python-ast-explorer.com/api/_parse',
-        method: 'POST',
-        data: snippet,
-      })
-      .then((res) => {
-        let tree = new Tree()
-        tree.history = history
-        tree.analyze(res)
-        event.updates = tree.updates
-      })
-    }
-    this.setState({ events: filteredEvents })
+    let state = {}
+    state[key] = filteredEvents
+    this.setState(state, () => {
+      this.translate()
+    })
   }
-
 
   translate() {
     let text = ''
     let max = 0
-    let events = this.props.beforeEvents
-    for (let event of events) {
-      let updates = _.uniq(event.updates).reverse()
-      let update = updates[this.state.level]
-      max = Math.max(max, updates.length - 1)
-      if (!update) update = _.last(updates)
+    let length = Math.min(this.state.beforeEvents.length, this.state.afterEvents.length)
+    for (let i = 0; i < length; i++) {
+      let beforeEvent = this.state.beforeEvents[i]
+      let afterEvent = this.state.afterEvents[i]
+      let beforeUpdates = _.uniq(beforeEvent.updates).reverse()
+      let afterUpdates = _.uniq(afterEvent.updates).reverse()
+      let result = beforeUpdates[this.state.level]
+      let expected = afterUpdates[this.state.level]
+      if (!result) result = _.last(beforeUpdates)
+      if (!expected) expected = _.last(afterUpdates)
 
+      max = Math.max(max, beforeUpdates.length - 1)
+      max = Math.max(max, afterUpdates.length - 1)
+
+      let event = beforeEvent
       switch (event.type) {
         case 'call':
           if (event.children.length === 0) continue
@@ -80,20 +94,21 @@ class Ladder extends Component {
           break
         case 'return':
           if (event.builtin) continue
-          text += `${event.key} returns ${update}`
+          text += `${ event.key } returns ${ result } should be ${ expected }`
           break
         default:
           if (!this.props.focusKeys.includes(event.key)) continue
           if (event.index === 0) {
-            text += `${event.key} is initialized with ${update}`
+            text += `${ event.key } is initialized with ${ result } should be ${ expected }`
           } else {
-            text += `${event.key} is updated to ${update}`
+            text += `${ event.key } is updated to ${ result } should be ${ expected }`
           }
           break
       }
-      text += ` at line ${ event.line }`
+      // text += ` at line ${ event.line }`
       text += '\n'
     }
+
     let marks = {}
     marks[0] = 'concrete'
     marks[max] = 'abstract'
@@ -111,8 +126,7 @@ class Ladder extends Component {
   render() {
     return (
       <div id={ this.props.id } className="ladder">
-        <p>However, the behavior of <code>{ this.props.name }</code> should be somethin like this</p>
-        <p>Q. Why the behavior of previous is different ?</p>
+        <p>Q. Why the behavior is different ?</p>
         <p>
           <button className="ui primary button" onClick={ this.init.bind(this) }>Why ?</button>
         </p>
@@ -148,7 +162,7 @@ const handle = (props) => {
     <Tooltip
       overlay={ value === 0 ? 'concrete value' : `${value}-step abstract` }
       visible={dragging}
-      placement="top"
+      placement="bottom"
       key={index}
     >
       <Handle {...restProps} />

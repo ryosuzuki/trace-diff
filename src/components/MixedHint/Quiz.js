@@ -15,6 +15,7 @@ class Quiz extends Component {
       updates: [],
       ast: {},
       index: 0,
+      clicked: false,
     }
     window.quizes.push(this)
   }
@@ -166,6 +167,23 @@ class Quiz extends Component {
     }
   }
 
+  onClick() {
+    $(`#${this.props.id} .button`).removeClass('primary')
+    this.setState({ clicked: true }, () => {
+      setTimeout(() => {
+        let popup = $(`#${this.props.id} .popup`)
+        let target = $(`#${this.props.id} .CodeMirror`)
+        console.log(popup.hasClass('visible'))
+        if (popup.hasClass('visible')) {
+          popup.removeClass('visible')
+          popup.addClass('hidden')
+        } else {
+          target.popup('show')
+        }
+      }, 100)
+    })
+  }
+
   render() {
     const options = {
       mode: 'python',
@@ -182,36 +200,31 @@ class Quiz extends Component {
       on: 'click'
     })
 
-    $(`#${this.props.id} .button`).click(() => {
-      $(`#${this.props.id} .CodeMirror`).popup('show')
-    })
 
     return (
       <div id={ this.props.id } className="quiz">
         <p>
-          <button className="ui basic button">{ this.props.description }</button>
+          <button className="ui basic primary button" onClick={ this.onClick.bind(this) }>{ this.props.description }</button>
         </p>
+        <div className='hint' style={{ display: this.state.clicked ? 'block' : 'none' }}>
+          <p>Look at line { this.props.line }</p>
+          <CodeMirror
+            value={ this.state.code }
+            ref="editor"
+            options={ options }
+          />
+          <div className="ui fluid popup bottom left transition inline-hint">
+            <h1><b>{ this.props.description }</b></h1>
 
-        <p>Look at line { this.props.line }</p>
-
-        <CodeMirror
-          value={ this.state.code }
-          ref="editor"
-          options={ options }
-        />
-
-        <div className="ui fluid popup bottom left transition inline-hint">
-          <h1><b>{ this.props.description }</b></h1>
-
-          { this.state.quizes.map((quiz, index) => {
-            return (
-              <div id={ `q-${index}` } key={ index } style={{ display: index > this.state.index ? 'none' : 'block' }}>
-                { this.renderQuiz(quiz, index) }
-              </div>
-            )
-          }) }
+            { this.state.quizes.map((quiz, index) => {
+              return (
+                <div id={ `q-${index}` } key={ index } style={{ display: index > this.state.index ? 'none' : 'block' }}>
+                  { this.renderQuiz(quiz, index) }
+                </div>
+              )
+            }) }
+          </div>
         </div>
-
 
       </div>
     )

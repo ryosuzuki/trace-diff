@@ -15,7 +15,8 @@ class Ladder extends Component {
       max: 0,
       marks: {},
       beforeEvents: [],
-      afterEvents: []
+      afterEvents: [],
+      clicked: false,
     }
     window.ladder = this
   }
@@ -122,29 +123,42 @@ class Ladder extends Component {
     })
   }
 
+  onClick() {
+    $('#ladder #why-button').removeClass('primary')
+    this.setState({ clicked: true })
+    this.init()
+  }
 
   render() {
     return (
-      <div id={ this.props.id } className="ladder">
-        <p>Q. Why the behavior is different ?</p>
+      <div id='ladder' className="ladder">
         <p>
-          <button className="ui primary button" onClick={ this.init.bind(this) }>Why ?</button>
+          <button id="why-button" className="ui basic primary button" onClick={ this.onClick.bind(this) }>Q. Why the behavior is different ?</button>
         </p>
 
-        <Highlight className="python">
-          { this.state.text }
-        </Highlight>
+        <div className='hint' style={{ display: this.state.clicked ? 'block' : 'none' }}>
+          <Highlight className="python">
+            { this.state.text }
+          </Highlight>
 
-        <Slider
-          dots
-          min={ 0 }
-          max={ this.state.max }
-          marks={ this.state.marks }
-          value={ this.state.level }
-          handle={ handle }
-          onChange={ this.onChange.bind(this) }
-        />
+          <div style={{ width: '10%'}}></div>
+          <div style={{ width: '80%'}}>
+            <Slider
+              dots
+              min={ 0 }
+              max={ this.state.max }
+              marks={ this.state.marks }
+              value={ this.state.level }
+              handle={ handle }
+              onChange={ this.onChange.bind(this) }
+            />
+          </div>
+          <div style={{ width: '10%'}}></div>
 
+          <div id="next-1" className="next" style={{ display: this.props.root.state.step <= 3 ? 'block' : 'none', marginTop: '50px' }}>
+            <button className="ui primary button" onClick={ this.props.root.onClick.bind(this.props.root) }>Next</button>
+          </div>
+        </div>
 
 
       </div>

@@ -11,7 +11,7 @@ class MixedHint extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      step: 1,
+      step: 4,
       loops: [],
       text: '',
       events: [],
@@ -95,8 +95,13 @@ class MixedHint extends Component {
     this.setState({ text: text, events: filteredEvents })
   }
 
-  render() {
+  clickWhy() {
+    $('#step-2-1').show()
+    $('#button-2-1').removeClass('primary')
 
+  }
+
+  render() {
     return (
       <div>
         <h1>Mixed Hint</h1>
@@ -110,15 +115,14 @@ class MixedHint extends Component {
               { this.props.log }
             </Highlight>
 
-            <div id="next-1" className="next" style={{ display: this.state.step <= 1 ? 'block' : 'none' }}>
+            <div id="next-1" className="next" style={{ display: this.state.step <= 0 ? 'block' : 'none' }}>
               <button className="ui primary button" onClick={ this.onClick.bind(this) }>Next</button>
             </div>
           </div>
 
-          <div id="step-2" className="step" style={{ display: this.state.step >= 2 ? 'block' : 'none' }}>
+          <div id="step-2" className="step" style={{ display: this.state.step >= 1 ? 'block' : 'none' }}>
             <h1 className="title">Step 2: Understand the Behavior</h1>
             <h2>Hint Strategy: Data or Behavior Hints with Scaffolding Questions</h2>
-
 
             <h2>Step 2-1: Highlight the Behavior of Key Variables</h2>
             <p>Let's think with the following example. With your <code>accumulate</code> function,</p>
@@ -126,58 +130,63 @@ class MixedHint extends Component {
               { `${this.props.test} returns ${this.props.result}` }
             </Highlight>
 
-            <p>Q. Why { this.props.test } returns { this.props.result } ?</p>
             <p>
-              <button className="ui primary button">Why ?</button>
+              <button id="button-2-1" className="ui basic primary button" onClick={ this.clickWhy }>Q. Why { this.props.test } returns { this.props.result } ?</button>
             </p>
 
-            <Highlight className="python">
-              { this.state.text }
-            </Highlight>
+            <div id="step-2-1" style={{ display: 'none' }}>
+              <Highlight className="python">
+                { this.state.text }
+              </Highlight>
+              <div className="next">
+                <button className="ui primary button" onClick={ this.onClick.bind(this) }>Next</button>
+              </div>
+            </div>
 
-
-            <h2>Step 2-2: Understand the Behavior with Scaffolding Questions</h2>
-            { this.state.events.map((event, index) => {
-              let question = ''
-              question += 'Q. Why '
-              question += event.key
-              if (event.type === 'return') {
-                question += ' returns '
-              }
-              if (event.type === 'assign') {
-                if (event.index === 0) {
-                  question += ' is initialized with '
-                } else {
-                  question += ' is updated to '
+            <div id="step2-2" style={{ display: this.state.step >= 2 ? 'block' : 'none' }}>
+              <h2>Step 2-2: Understand the Behavior with Scaffolding Questions</h2>
+              { this.state.events.map((event, index) => {
+                let question = ''
+                question += 'Q. Why '
+                question += event.key
+                if (event.type === 'return') {
+                  question += ' returns '
                 }
-              }
-              question += event.value
-              question += ' ?'
-              let events = this.props.beforeEvents.slice(0, event.id)
-              let history = {}
-              for (let e of events) {
-                history[e.key] = e
-              }
+                if (event.type === 'assign') {
+                  if (event.index === 0) {
+                    question += ' is initialized with '
+                  } else {
+                    question += ' is updated to '
+                  }
+                }
+                question += event.value
+                question += ' ?'
+                let events = this.props.beforeEvents.slice(0, event.id)
+                let history = {}
+                for (let e of events) {
+                  history[e.key] = e
+                }
 
-              return (
-                <div key={ index }>
-                  <p>{  }</p>
-                  <Quiz
-                    description={ question }
-                    id={ `quiz-${ index }` }
-                    options={ this.props.options }
-                    line={ event.line }
-                    before={ this.props.before }
-                    beforeAst={ this.props.beforeAst }
-                    history={ history }
-                  />
-                  <div className="ui divider"></div>
-                </div>
-              )
-            }) }
+                return (
+                  <div key={ index }>
+                    <p>{  }</p>
+                    <Quiz
+                      description={ question }
+                      id={ `quiz-${ index }` }
+                      options={ this.props.options }
+                      line={ event.line }
+                      before={ this.props.before }
+                      beforeAst={ this.props.beforeAst }
+                      history={ history }
+                    />
+                    <div className="ui divider"></div>
+                  </div>
+                )
+              }) }
 
-            <div id="next-1" className="next" style={{ display: this.state.step <= 2 ? 'block' : 'none' }}>
-              <button className="ui primary button" onClick={ this.onClick.bind(this) }>Next</button>
+              <div id="next-1" className="next" style={{ display: this.state.step <= 2 ? 'block' : 'none' }}>
+                <button className="ui primary button" onClick={ this.onClick.bind(this) }>Next</button>
+              </div>
             </div>
           </div>
 
@@ -195,17 +204,26 @@ class MixedHint extends Component {
               test={ this.props.test }
               expected={ this.props.expected }
               result={ this.props.result }
+              root={ this }
             />
-
-            <div id="next-1" className="next" style={{ display: this.state.step <= 3 ? 'block' : 'none' }}>
-              <button className="ui primary button" onClick={ this.onClick.bind(this) }>Next</button>
-            </div>
           </div>
 
           <div id="step-4" className="step" style={{ display: this.state.step >= 4 ? 'block' : 'none' }}>
             <h1 className="title">Step 4: Fix the Error</h1>
             <h2>Hint Strategy: Location Hints and Interactive Debugger</h2>
             <p>How can you fix it?</p>
+
+            <div className="ui negative message">
+              <div className="header">
+                Python back-end is currently not available.
+              </div>
+              <p>
+                Since the current app is running with pure client JavaScript, Python back-end is only available at localhost.
+                <br/>
+                It is supposed to be an interactive code editor and debugger.
+              </p>
+            </div>
+
           </div>
 
           <div id="step-code" className="step">

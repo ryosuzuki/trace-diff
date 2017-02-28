@@ -52,6 +52,8 @@ let initialStore = {
   afterHistory: {},
   beforeEvents: [],
   afterEvents: [],
+  beforeAst: [],
+  afterAst: [],
   beforeTicks: {},
   afterTicks: {},
   commonKeys: [],

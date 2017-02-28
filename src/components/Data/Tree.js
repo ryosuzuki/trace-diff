@@ -14,27 +14,23 @@ class Tree {
     this.updates = []
   }
 
-  analyze(res) {
-    if (res.ast.error) return false
-    let body = res.ast.Module.body[0]
+  analyze(ast) {
+    if (ast.error) return false
+    let body = ast.Module.body[0]
     let key = Object.keys(body)[0]
-    window.body = body
 
-    let ast
     for (let key of Object.keys(body)) {
       let el = body[key]
       if (key === 'Assign') {
-        ast = this.addAssign(el)
+        this.ast = this.addAssign(el)
       }
       if (key === 'Return') {
-        ast = this.addReturn(el)
+        this.ast = this.addReturn(el)
       }
       if (key === 'Expr') {
-        ast = this.addExpr(el)
+        this.ast = this.addExpr(el)
       }
     }
-    this.ast = ast
-    window.ast = ast
   }
 
   addAssign(el) {

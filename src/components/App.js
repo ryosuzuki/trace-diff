@@ -189,6 +189,9 @@ class App extends Component {
               beforeTicks={ this.props.beforeTicks}
               afterTicks={ this.props.afterTicks}
 
+              beforeAst={ this.props.beforeAst}
+              afterAst={ this.props.afterAst}
+
               commonKeys={ this.props.commonKeys}
               focusKeys={ this.props.focusKeys}
             />

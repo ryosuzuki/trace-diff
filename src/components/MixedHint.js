@@ -155,14 +155,16 @@ class MixedHint extends Component {
               }
 
               return (
-                <div>
+                <div key={ index }>
                   <p>{  }</p>
                   <Quiz
                     description={ question }
                     id={ `quiz-${ index }` }
                     options={ this.props.options }
                     line={ event.line }
-                    code={ this.props.before }
+                    before={ this.props.before }
+                    beforeAst={ this.props.beforeAst }
+                    afterAst={ this.props.afterAst }
                     history={ history }
                   />
                   <div className="ui divider"></div>
@@ -180,6 +182,8 @@ class MixedHint extends Component {
               afterHistory={ this.props.afterHistory }
               beforeEvents={ this.props.beforeEvents }
               afterEvents={ this.props.afterEvents }
+              beforeAst={ this.props.beforeAst }
+              afterAst={ this.props.afterAst }
               focusKeys={ this.props.focusKeys }
               test={ this.props.test }
               expected={ this.props.expected }

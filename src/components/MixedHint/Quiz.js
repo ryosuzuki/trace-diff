@@ -23,33 +23,20 @@ class Quiz extends Component {
   }
 
   init() {
-    // let code = 'previous = term(base)'
     let line = this.props.line
-
-    let code = this.props.code.split('\n')[line-1].trim()
-    $.ajax({
-      url: 'https://python-ast-explorer.com/api/_parse',
-      method: 'POST',
-      data: code,
+    let code = this.props.before.split('\n')[line-1].trim()
+    let ast = this.props.beforeAst[line-1]
+    let tree = new Tree()
+    tree.history = this.props.history
+    tree.analyze(ast)
+    this.setState({
+      quizes: tree.quizes,
+      updates: tree.updates,
+      ast: tree.ast
     })
-    .then((res) => {
-      console.log('get response')
-      window.res = res
-
-      let tree = new Tree()
-      tree.history = this.props.history
-      tree.analyze(res)
-
-      this.setState({
-        quizes: tree.quizes,
-        updates: tree.updates,
-        ast: tree.ast
-      })
-      if (tree.quizes.length + 1 !== tree.updates.length) {
-        // alert(`Error in updates number updates = ${tree.updates.length} quizes = ${tree.quizes.length}`)
-      }
-      // this.createQuiz(tree.quizes)
-    })
+    if (tree.quizes.length + 1 !== tree.updates.length) {
+      // alert(`Error in updates number updates = ${tree.updates.length} quizes = ${tree.quizes.length}`)
+    }
 
     this.setState({
       code: code,

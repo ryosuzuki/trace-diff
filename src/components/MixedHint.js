@@ -14,6 +14,7 @@ class MixedHint extends Component {
       step: 4,
       loops: [],
       text: '',
+      events: [],
     }
     window.mixedHint = this
   }
@@ -64,36 +65,34 @@ class MixedHint extends Component {
   translate(compare = false) {
     let events = this.props.beforeEvents
     // .filter(event => this.props.focusKeys.includes(event.key))
+    let filteredEvents = []
     let text = ''
-    let existKeys = new Set()
     for (let event of events) {
       switch (event.type) {
         case 'call':
-          continue
           if (event.children.length === 0) continue
           for (let child of event.children) {
             text += `${event.key} calls ${child}`
           }
           break
         case 'return':
-          continue
           if (event.builtin) continue
           text += `${event.key} returns ${event.value}`
           break
         default:
-          // if (!this.props.focusKeys.includes(event.key)) continue
-          if (!existKeys.has(event.key)) {
+          if (!this.props.focusKeys.includes(event.key)) continue
+          if (event.index === 0) {
             text += `${event.key} is initialized with ${event.value}`
           } else {
             text += `${event.key} is updated to ${event.value}`
           }
           break
       }
-      existKeys.add(event.key)
-      text += ` at line ${ event.line }`
+      // text += ` at line ${ event.line }`
       text += '\n'
+      filteredEvents.push(event)
     }
-    this.setState({ text: text })
+    this.setState({ text: text, events: filteredEvents })
   }
 
   render() {
@@ -130,26 +129,31 @@ class MixedHint extends Component {
 
 
             <h2>Step 2-2</h2>
-            <p>Q. Why previous is initialized with 121?</p>
-            <Quiz
-              description={ `Q. Why previous is initialized with 121?` }
-              id={ 'quiz-1' }
-              options={ this.props.options }
-              line={ this.props.removed[0] }
-              code={ this.props.before }
-              history={ this.props.beforeHistory }
-            />
+            { this.state.events.map((event, index) => {
+              let question = `Q. Why ${event.key} ${ event.index === 0 ? 'is initialized with' : 'is updated to' } ${event.value} ?`
 
-            <h2>Step 2-3</h2>
-            <p>Q. Why previous is updated to 122 ?</p>
-            <Quiz
-              description={ `Q. Why previous is updated to 122?` }
-              id={ 'quiz-2' }
-              options={ this.props.options }
-              line={ 3 }
-              code={ this.props.before }
-              history={ this.props.beforeHistory }
-            />
+              let events = this.props.beforeEvents.slice(0, event.id)
+              let history = {}
+              for (let e of events) {
+                history[e.key] = e
+              }
+
+              return (
+                <div>
+                  <p>{  }</p>
+                  <Quiz
+                    description={ question }
+                    id={ `quiz-${ index }` }
+                    tick={ event.index - 1 }
+                    options={ this.props.options }
+                    line={ event.line }
+                    code={ this.props.before }
+                    history={ history }
+                  />
+                  <div className="ui divider"></div>
+                </div>
+              )
+            }) }
 
             <h2>Step 2-4</h2>
             <Ladder

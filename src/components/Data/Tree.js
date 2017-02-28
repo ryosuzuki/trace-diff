@@ -3,9 +3,7 @@ class Tree {
   constructor() {
     this.history = {}
     this.ast = {}
-    this.tick = 2 // <- TODO: assign
-    // let step = 9
-    // let tick = this.props.beforeTicks[name][step]
+    this.tick = 0
 
     this.quizes = []
     this.updates = []
@@ -321,12 +319,7 @@ class Tree {
     if (!Object.keys(this.history).includes(key)) {
       return key
     }
-    if (this.history[key].length > 1) {
-      value = this.history[key]['history'][this.tick]
-    } else {
-      value = this.history[key]['history'][0]
-    }
-    return value
+    return this.history[key]['value']
   }
 
 

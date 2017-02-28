@@ -26,7 +26,7 @@ class Quiz extends Component {
     // let code = 'previous = term(base)'
     let line = this.props.line
 
-    let code = this.props.code.split('\n')[line].trim()
+    let code = this.props.code.split('\n')[line-1].trim()
     $.ajax({
       url: 'https://python-ast-explorer.com/api/_parse',
       method: 'POST',
@@ -37,11 +37,10 @@ class Quiz extends Component {
       window.res = res
 
       let tree = new Tree()
-      tree.history = window.app.props.beforeHistory // TODO
-      tree.tick = 0
+      tree.history = this.props.history
+      tree.tick = this.props.tick
       tree.analyze(res)
 
-      window.tree = tree
       this.setState({
         quizes: tree.quizes,
         updates: tree.updates,
@@ -190,7 +189,7 @@ class Quiz extends Component {
     return (
       <div id={ this.props.id } className="quiz">
         <p>
-          <button className="ui primary button">Why ?</button>
+          <button className="ui basic button">{ this.props.description }</button>
         </p>
 
         <p>Look at line { this.props.line }</p>

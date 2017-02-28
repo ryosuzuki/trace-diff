@@ -45,6 +45,11 @@ class Record {
     //   this.history[key] = item
     // }
 
+    this.events = this.events.map((event, index) => {
+      event.id = index
+      return event
+    })
+
     if (type === 'before') {
       this.beforeHistory = this.history
       this.beforeTicks = this.ticks
@@ -148,7 +153,7 @@ class Record {
       }
       let event = _.clone(node)
       event.line = line
-
+      event.index = 0
       if (!this.history[key]) {
         this.history[key] = node
         this.events.push(event)
@@ -156,6 +161,7 @@ class Record {
       if (this.history[key]['value'] !== value) {
         this.history[key]['value'] = value
         this.history[key]['history'].push(value)
+        event.index = this.history[key]['history'].length-1
         this.events.push(event)
       }
 

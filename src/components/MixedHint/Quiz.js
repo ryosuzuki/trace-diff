@@ -14,7 +14,7 @@ class Quiz extends Component {
       quizes: [],
       updates: [],
       ast: {},
-      index: 10,
+      index: 0,
     }
     window.quizes.push(this)
   }

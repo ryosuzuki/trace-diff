@@ -8,12 +8,17 @@ class Record {
     this.afterTicks = {}
     this.commonKeys = []
     this.focusKeys = []
+
+    this.events = []
   }
 
   generate(traces, type) {
     this.stacks = []
     this.history = {}
     this.ticks = {}
+
+    this.events = []
+
     for (let i = 0; i < traces.length; i++) {
       let trace = traces[i]
       for (let func of Object.keys(trace.locals)) {
@@ -42,11 +47,13 @@ class Record {
     if (type === 'before') {
       this.beforeHistory = this.history
       this.beforeTicks = this.ticks
+      this.beforeEvents = this.events
     } else if (type === 'after') {
       this.afterHistory = this.history
       this.afterTicks = this.ticks
+      this.afterEvents = this.events
     }
-    return { history: this.history, ticks: this.ticks }
+    return { history: this.history, ticks: this.ticks, events: this.events }
   }
 
   addCall(trace) {
@@ -61,10 +68,12 @@ class Record {
     let node = {
       type: 'call',
       calls: [],
+      key: key,
       value: '',
       builtin: builtin
     }
     this.history[key] = node
+    this.events.push(node)
 
     let last = _.last(this.stacks)
     if (last) this.history[last].calls.push(key)
@@ -83,6 +92,9 @@ class Record {
     let value = trace.locals[func]['__return__']
     this.history[key]['value'] = value
     this.history[key]['history'] = [value]
+
+    let node = _.clone(this.history[key])
+    this.events.push(Object.assign(node, { type: 'return' }))
 
     this.stacks.pop(key)
   }
@@ -106,6 +118,7 @@ class Record {
 
       let node = {
         type: 'assign',
+        key: key,
         value: value,
         history: [value],
       }
@@ -114,7 +127,9 @@ class Record {
       if (this.history[key]['value'] !== value) {
         this.history[key]['value'] = value
         this.history[key]['history'].push(value)
+        this.events.push(node)
       }
+
       this.ticks[key][i] = this.history[key].length
       if (trace.event === 'step_line') {
         this.ticks[key][i-1] = this.history[key].length

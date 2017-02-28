@@ -13,7 +13,7 @@ class Ladder extends Component {
       text: '',
       level: 0,
       max: 0,
-      marks: []
+      marks: {}
     }
     window.ladder = this
   }
@@ -30,7 +30,7 @@ class Ladder extends Component {
       if (!quiz) continue
       let updates = _.uniq(quiz.state.updates).reverse()
       let update = updates[this.state.level]
-      max = Math.max(max, updates.length)
+      max = Math.max(max, updates.length - 1)
       if (!update) update = _.last(updates)
       if (i === 0) {
         text += `${key} is initialized with ${update}`
@@ -41,7 +41,7 @@ class Ladder extends Component {
     }
     text += `${this.props.test} returns ${this.props.result}`
 
-    let marks = new Array(max)
+    let marks = {}
     marks[0] = 'concrete'
     marks[max] = 'abstract'
     this.setState({ text: text, max: max, marks: marks })
@@ -58,14 +58,14 @@ class Ladder extends Component {
     return (
       <div id={ this.props.id } className="ladder">
         <p>However, the behavior of <code>{ this.props.name }</code> should be somethin like this</p>
-        <Highlight className="python">
-          { this.state.text }
-        </Highlight>
-
         <p>Q. Why the behavior of previous is different ?</p>
         <p>
           <button className="ui primary button" onClick={ this.init.bind(this) }>Why ?</button>
         </p>
+
+        <Highlight className="python">
+          { this.state.text }
+        </Highlight>
 
         <Slider
           dots

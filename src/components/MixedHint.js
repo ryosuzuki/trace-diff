@@ -2,15 +2,10 @@ import React, { Component } from 'react'
 import CodeMirror from 'react-codemirror'
 import 'codemirror/mode/python/python'
 import _ from 'lodash'
-
-import FirstStep from './MixedHint/FirstStep'
-import SecondStep from './MixedHint/SecondStep'
-
 import Highlight from 'react-highlight'
 import Quiz from './MixedHint/Quiz'
 import HistoryLog from './MixedHint/HistoryLog'
 import Ladder from './MixedHint/Ladder'
-
 
 class MixedHint extends Component {
   constructor(props) {
@@ -18,7 +13,7 @@ class MixedHint extends Component {
     this.state = {
       step: 4,
       loops: [],
-      detail: '',
+      text: '',
     }
     window.mixedHint = this
   }
@@ -43,6 +38,7 @@ class MixedHint extends Component {
     // }
 
     this.generateDiff()
+    this.translate()
 
     this.cm2 = this.refs.editor2.getCodeMirror()
     this.cm2.markText({ line: 1, ch: 15}, { line: 1, ch: 26 }, { className: 'highlight' })
@@ -65,29 +61,39 @@ class MixedHint extends Component {
     this.setState({ step: this.state.step + 1 })
   }
 
+  translate(compare = false) {
+    let events = this.props.beforeEvents
+    // .filter(event => this.props.focusKeys.includes(event.key))
+    let text = ''
+    let existKeys = new Set()
+    for (let event of events) {
+      switch (event.type) {
+        case 'call':
+          if (event.children.length === 0) continue
+          for (let child of event.children) {
+            text += `${event.key} calls ${child}`
+          }
+          break
+        case 'return':
+          if (event.builtin) continue
+          text += `${event.key} returns ${event.value}`
+          break
+        default:
+          if (!this.props.focusKeys.includes(event.key)) continue
+          if (!existKeys.has(event.key)) {
+            text += `${event.key} is initialized with ${event.value}`
+          } else {
+            text += `${event.key} is updated to ${event.value}`
+          }
+          break
+      }
+      existKeys.add(event.key)
+      text += '\n'
+    }
+    this.setState({ text: text })
+  }
 
   render() {
-
-    const translate = (key, compare = false) => {
-      if (!this.props.beforeHistory[key]) return null
-      let after = this.props.afterHistory[key].history
-      let before = this.props.beforeHistory[key].history
-      let text = ''
-      for (let i = 0; i < before.length; i++) {
-        let result = before[i]
-        let expected = after[i]
-        if (i === 0) {
-          text += `${key} is initialized with ${result}`
-        } else {
-          text += `${key} is updated to ${result}`
-        }
-        if (compare) text += ` should be ${expected}`
-        text += '\n'
-      }
-      text += `${this.props.test} returns ${this.props.result}`
-      if (compare) text += ` should be ${this.props.expected}`
-      return text
-    }
 
     return (
       <div>
@@ -116,7 +122,7 @@ class MixedHint extends Component {
             </p>
 
             <Highlight className="python">
-              { translate('previous') }
+              { this.state.text }
             </Highlight>
 
 

@@ -50,6 +50,8 @@ let initialStore = {
   relatedItems: [],
   beforeHistory: {},
   afterHistory: {},
+  beforeEvents: [],
+  afterEvents: [],
   beforeTicks: {},
   afterTicks: {},
   commonKeys: [],

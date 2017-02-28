@@ -95,6 +95,8 @@ class App extends Component {
       afterTicks: record.afterTicks,
       commonKeys: record.commonKeys,
       focusKeys: record.focusKeys,
+      beforeEvents: record.beforeEvents,
+      afterEvents: record.afterEvents,
     })
     this.updateState(state)
     window.history.pushState(null, null, `?id=${id}`)
@@ -163,23 +165,30 @@ class App extends Component {
               result={ this.props.result }
               log={ this.props.log }
 
-              traces={ this.props.traces }
-              currentCode={ this.props.currentCode }
               step={ this.props.step }
               stop={ this.props.stop }
+
               beforeCode={ this.props.beforeCode }
               afterCode={ this.props.afterCode }
-              beforeTraces={ this.props.beforeTraces }
-              afterTraces={ this.props.afterTraces }
               added={ this.props.added }
               removed={ this.props.removed }
               addedLine={ this.props.addedLine }
               removedLine={ this.props.removedLine }
               diffs={ this.props.diffs }
+
+              traces={ this.props.traces }
+              beforeTraces={ this.props.beforeTraces }
+              afterTraces={ this.props.afterTraces }
+
               beforeHistory={ this.props.beforeHistory}
               afterHistory={ this.props.afterHistory}
+
+              beforeEvents={ this.props.beforeEvents}
+              afterEvents={ this.props.afterEvents}
+
               beforeTicks={ this.props.beforeTicks}
               afterTicks={ this.props.afterTicks}
+
               commonKeys={ this.props.commonKeys}
               focusKeys={ this.props.focusKeys}
             />

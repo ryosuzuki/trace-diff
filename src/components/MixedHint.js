@@ -9,15 +9,16 @@ import SecondStep from './MixedHint/SecondStep'
 import Highlight from 'react-highlight'
 import Quiz from './MixedHint/Quiz'
 import HistoryLog from './MixedHint/HistoryLog'
+import Ladder from './MixedHint/Ladder'
 
 
 class MixedHint extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      detail: '',
       step: 4,
       loops: [],
+      detail: '',
     }
     window.mixedHint = this
   }
@@ -63,6 +64,7 @@ class MixedHint extends Component {
   onClick() {
     this.setState({ step: this.state.step + 1 })
   }
+
 
   render() {
 
@@ -141,18 +143,14 @@ class MixedHint extends Component {
             />
 
             <h2>Step 2-4</h2>
-            <p>However, the behavior of <code>{ 'previous' }</code> should be somethin like this</p>
-            <Highlight className="python">
-              { translate('previous', true) }
-            </Highlight>
-
-            <p>Q. Why the behavior of previous is different ?</p>
-            <p>
-              <button className="ui primary button">Why ?</button>
-            </p>
-
-
-
+            <Ladder
+              name={ 'previous' }
+              beforeHistory={ this.props.beforeHistory }
+              afterHistory={ this.props.afterHistory }
+              test={ this.props.test }
+              expected={ this.props.expected }
+              result={ this.props.result }
+            />
           </div>
 
           <div id="step-3" className="step">

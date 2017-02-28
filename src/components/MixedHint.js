@@ -103,7 +103,8 @@ class MixedHint extends Component {
 
         <div className="ui message hint-message">
           <div id="step-1" className="step">
-            <h1 className="title">Step 1</h1>
+            <h1 className="title">Step 1: Identify the Error</h1>
+            <h2>Hint Strategy: Test-based Hints</h2>
             <p>Your <code>accumulate</code> function failed 1 test case</p>
             <Highlight className="python">
               { this.props.log }
@@ -111,7 +112,9 @@ class MixedHint extends Component {
           </div>
 
           <div id="step-2" className="step">
-            <h1 className="title">Step 2</h1>
+            <h1 className="title">Step 2: Understand the Behavior</h1>
+            <h2>Hint Strategy: Data or Behavior Hints with Scaffolding Questions</h2>
+
             <p>Let's think with the following example. With your <code>accumulate</code> function,</p>
             <Highlight className="python">
               { `${this.props.test} returns ${this.props.result}` }
@@ -167,8 +170,10 @@ class MixedHint extends Component {
                 </div>
               )
             }) }
-
-            <h2>Step 2-4</h2>
+          </div>
+          <div id="step-3" className="step">
+            <h1 className="title">Step 3: Understand the Cause and Misconception</h1>
+            <h2>Hint Strategy: Behavior Hints with Ladder of Abstraction</h2>
             <Ladder
               name={ 'previous' }
               beforeHistory={ this.props.beforeHistory }
@@ -179,8 +184,9 @@ class MixedHint extends Component {
             />
           </div>
 
-          <div id="step-3" className="step">
-            <h1 className="title">Step 3</h1>
+          <div id="step-4" className="step">
+            <h1 className="title">Step 4: Fix the Error</h1>
+            <h2>Hint Strategy: Location Hints and Interactive Debugger</h2>
             <p>So, it seems like your 2nd argument of initialization is wrong.</p>
             <p>How can you fix that?</p>
 
@@ -194,14 +200,14 @@ class MixedHint extends Component {
 
         </div>
 
-        <h2>Code</h2>
+        <h2>Answer</h2>
         <CodeMirror
           value={ this.props.code }
           ref="editor"
           options={ this.props.options }
         />
 
-
+        <h2>Code Traces</h2>
         <HistoryLog
           beforeHistory={ this.props.beforeHistory }
           afterHistory={ this.props.afterHistory }

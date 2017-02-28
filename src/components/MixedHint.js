@@ -11,7 +11,7 @@ class MixedHint extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      step: 4,
+      step: 0,
       loops: [],
       text: '',
       events: [],
@@ -115,7 +115,7 @@ class MixedHint extends Component {
               { this.props.log }
             </Highlight>
 
-            <div id="next-1" className="next" style={{ display: this.state.step <= 0 ? 'block' : 'none' }}>
+            <div id="next-1" className="next" style={{ display: this.state.step === 0 ? 'block' : 'none' }}>
               <button className="ui primary button" onClick={ this.onClick.bind(this) }>Next</button>
             </div>
           </div>
@@ -138,7 +138,7 @@ class MixedHint extends Component {
               <Highlight className="python">
                 { this.state.text }
               </Highlight>
-              <div className="next">
+              <div className="next" style={{ display: this.state.step === 1 ? 'block' : 'none' }}>
                 <button className="ui primary button" onClick={ this.onClick.bind(this) }>Next</button>
               </div>
             </div>
@@ -184,7 +184,7 @@ class MixedHint extends Component {
                 )
               }) }
 
-              <div id="next-1" className="next" style={{ display: this.state.step <= 2 ? 'block' : 'none' }}>
+              <div id="next-1" className="next" style={{ display: this.state.step === 2 ? 'block' : 'none' }}>
                 <button className="ui primary button" onClick={ this.onClick.bind(this) }>Next</button>
               </div>
             </div>
@@ -223,6 +223,8 @@ class MixedHint extends Component {
                 It is supposed to be an interactive code editor and debugger.
               </p>
             </div>
+            <h2>Location Hint</h2>
+            <p>Under construction (e.g. the assignment of previous has a mistake at line 2, and highlight <code>term(base)</code>)</p>
 
           </div>
 

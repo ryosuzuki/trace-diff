@@ -39,7 +39,7 @@ class Tree {
     for (let target of el.targets) {
       let tn = this.addNode(target)
       left.push(tn)
-      this.quizes.pop()
+      if (_.last(this.quizes).key === tn.key) this.quizes.pop()
     }
     let key = left.map(target => target.key).join(', ')
     let value = right.value

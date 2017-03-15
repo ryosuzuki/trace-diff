@@ -9,6 +9,7 @@ import DiffView from './HintView/DiffView'
 import HintView from './HintView/Index'
 import MockupView from './HintMockup/Index'
 import MixedHint from './MixedHint'
+import InteractiveHint from './InteractiveHint'
 import Stream from './Data/Stream'
 import Record from './Data/Record'
 import Tree from './Data/Tree'
@@ -153,7 +154,7 @@ class App extends Component {
         <div className="ui two column centered grid">
           <div id="mixed-hint" className="ten wide column">
             <h1 className="title">Student</h1>
-            <MixedHint
+            <InteractiveHint
               options={ options }
               id={ this.props.id }
               code={ this.props.code }
@@ -198,6 +199,53 @@ class App extends Component {
           </div>
         </div>
         {/*
+        <div className="ui two column centered grid">
+          <div id="mixed-hint" className="ten wide column">
+            <h1 className="title">Student</h1>
+            <MixedHint
+              options={ options }
+              id={ this.props.id }
+              code={ this.props.code }
+              before={ this.props.before }
+              after={ this.props.after }
+
+              test={ this.props.test }
+              expected={ this.props.expected }
+              result={ this.props.result }
+              log={ this.props.log }
+
+              step={ this.props.step }
+              stop={ this.props.stop }
+
+              beforeCode={ this.props.beforeCode }
+              afterCode={ this.props.afterCode }
+              added={ this.props.added }
+              removed={ this.props.removed }
+              addedLine={ this.props.addedLine }
+              removedLine={ this.props.removedLine }
+              diffs={ this.props.diffs }
+
+              traces={ this.props.traces }
+              beforeTraces={ this.props.beforeTraces }
+              afterTraces={ this.props.afterTraces }
+
+              beforeHistory={ this.props.beforeHistory}
+              afterHistory={ this.props.afterHistory}
+
+              beforeEvents={ this.props.beforeEvents}
+              afterEvents={ this.props.afterEvents}
+
+              beforeTicks={ this.props.beforeTicks}
+              afterTicks={ this.props.afterTicks}
+
+              beforeAst={ this.props.beforeAst}
+              afterAst={ this.props.afterAst}
+
+              commonKeys={ this.props.commonKeys}
+              focusKeys={ this.props.focusKeys}
+            />
+          </div>
+        </div>
         <div className="ui two column centered grid">
           <div id="diff-view" className="six wide column">
             <h1 className="title">Teacher</h1>

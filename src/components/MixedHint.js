@@ -11,7 +11,7 @@ class MixedHint extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      step: 0,
+      step: 10,
       loops: [],
       text: '',
       events: [],

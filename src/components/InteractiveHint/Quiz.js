@@ -172,7 +172,9 @@ class Quiz extends Component {
     this.setState({ clicked: true }, () => {
       setTimeout(() => {
         let popup = $(`#${this.props.id} .popup`)
-        let target = $(`#${this.props.id} .CodeMirror`)
+        // let target = $(`#hoge .CodeMirror`)
+        let target = $($('.CodeMirror-linenumber')[2])
+
         console.log(popup.hasClass('visible'))
         if (popup.hasClass('visible')) {
           popup.removeClass('visible')
@@ -192,7 +194,7 @@ class Quiz extends Component {
       firstLineNumber: this.state.startLine
     }
 
-    $(`#${this.props.id} .CodeMirror`).popup({
+    $('.CodeMirror-linenumber').popup({
       position: 'bottom center',
       inline: true,
       popup : $(`#${this.props.id} .inline-hint`),
@@ -208,11 +210,6 @@ class Quiz extends Component {
         </p>
         <div className='hint' style={{ display: this.state.clicked ? 'block' : 'none' }}>
           <p>Look at line { this.props.line }</p>
-          <CodeMirror
-            value={ this.state.code }
-            ref="editor"
-            options={ options }
-          />
           <div className="ui fluid popup bottom left transition inline-hint">
             <h1><b>{ this.props.description }</b></h1>
 

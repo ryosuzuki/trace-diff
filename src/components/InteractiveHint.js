@@ -27,6 +27,9 @@ class InteractiveHint extends Component {
   init() {
     this.translate()
 
+    if (!this.refs.editor) return false
+    this.cm = this.refs.editor.getCodeMirror()
+
   }
 
   translate(compare = false) {
@@ -81,11 +84,13 @@ class InteractiveHint extends Component {
           <div className="ui two column grid">
             <div className="eight wide column">
               <h2>Code</h2>
+              <div id="hoge">
               <CodeMirror
                 value={ this.props.currentCode }
-                ref="editor2"
+                ref="editor"
                 options={ this.props.options }
               />
+              </div>
               <br />
               <h2>Failed Test Result</h2>
               <Highlight className="python">
@@ -174,6 +179,10 @@ class InteractiveHint extends Component {
           beforeHistory={ this.props.beforeHistory }
           afterHistory={ this.props.afterHistory }
         />
+
+          <div className="arrow-up"></div>
+          <div className="arrow-border"></div>
+          <pre className="dynamic-hint"></pre>
 
       </div>
     )

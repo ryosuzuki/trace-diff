@@ -156,10 +156,6 @@ class Ladder extends Component {
             />
           </div>
           <div style={{ width: '10%'}}></div>
-
-          <div id="next-1" className="next" style={{ display: this.props.root.state.step <= 3 ? 'block' : 'none', marginTop: '50px' }}>
-            <button className="ui primary button" onClick={ this.props.root.onClick.bind(this.props.root) }>Next</button>
-          </div>
         </div>
 
 

@@ -16,7 +16,8 @@ class InteractiveHint extends Component {
       loops: [],
       text: '',
       events: [],
-      quizIndex: null
+      quizIndex: null,
+      currentLine: null,
     }
     window.interactiveHint = this
   }
@@ -79,16 +80,24 @@ class InteractiveHint extends Component {
     $(event.target).removeClass('primary')
     setTimeout(() => {
       let target = $(`#hoge .CodeMirror`)
-      target.popup('show')
+      target.popup('toggle')
 
-      // $('.quiz').hide()
-      this.setState({ quizIndex: index })
-
+      this.setState({ quizIndex: index, currentLine: line })
       let top = 75 + parseInt(line)*24
       $('.inline-hint').css('top',`${top}px`)
       window.cm.addLineClass(line-1, '', 'current-line')
     }, 100)
- }
+  }
+
+  onClose() {
+    let popup = $('.popup')
+    if (popup.hasClass('visible')) {
+      popup.removeClass('visible')
+      popup.addClass('hidden')
+    }
+    window.cm.removeLineClass(this.state.currentLine-1, '', 'current-line')
+    this.setState({ quizIndex: null, currentLine: null })
+  }
 
   clickWhy() {
     $('#step-2-1').show()
@@ -98,11 +107,13 @@ class InteractiveHint extends Component {
   render() {
 
     $('#hoge .CodeMirror').popup({
+      target: $('#hoge .CodeMirror'),
       position: 'bottom center',
       inline: true,
       popup : $(`.inline-hint`),
-      lastResort: 'bottom center',
-      on: 'click'
+      on: 'manual',
+      onHide: () => {
+      },
     })
 
     return (
@@ -189,6 +200,7 @@ class InteractiveHint extends Component {
                     </div>
                   )
                 }) }
+                <button className="ui basic button close-button" onClick={ this.onClose.bind(this) } style={{ float: 'right' }}>Close</button>
               </div>
 
               {/*

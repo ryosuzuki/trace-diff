@@ -16,6 +16,7 @@ class InteractiveHint extends Component {
       loops: [],
       text: '',
       events: [],
+      quizIndex: null
     }
     window.interactiveHint = this
   }
@@ -29,6 +30,15 @@ class InteractiveHint extends Component {
 
     if (!this.refs.editor) return false
     this.cm = this.refs.editor.getCodeMirror()
+
+    window.cm = this.cm
+
+    let msg = document.createElement('div')
+    // msg = React.createElement('div', { className: 'hoge' },
+    //   'fjwaofjaeow'
+    // )
+    this.cm.addLineWidget(3, msg, { coverGutter: true })
+
 
   }
 
@@ -65,10 +75,20 @@ class InteractiveHint extends Component {
     this.setState({ text: text, events: filteredEvents })
   }
 
+  onClick(index, line, event) {
+    $(event.target).removeClass('primary')
+    setTimeout(() => {
+      let target = $(`#hoge .CodeMirror`)
+      target.popup('show')
 
-  onClick() {
-    this.setState({ step: this.state.step + 1 })
-  }
+      // $('.quiz').hide()
+      this.setState({ quizIndex: index })
+
+      let top = 75 + parseInt(line)*24
+      $('.inline-hint').css('top',`${top}px`)
+      window.cm.addLineClass(line-1, '', 'current-line')
+    }, 100)
+ }
 
   clickWhy() {
     $('#step-2-1').show()
@@ -76,6 +96,15 @@ class InteractiveHint extends Component {
   }
 
   render() {
+
+    $('#hoge .CodeMirror').popup({
+      position: 'bottom center',
+      inline: true,
+      popup : $(`.inline-hint`),
+      lastResort: 'bottom center',
+      on: 'click'
+    })
+
     return (
       <div>
         <h1>Interactive Hint</h1>
@@ -114,43 +143,53 @@ class InteractiveHint extends Component {
               />
 
               { this.state.events.map((event, index) => {
-                let question = ''
-                question += 'Q. Why '
-                question += event.key
-                if (event.type === 'return') {
-                  question += ' returns '
-                }
-                if (event.type === 'assign') {
-                  if (event.index === 0) {
-                    question += ' is initialized with '
-                  } else {
-                    question += ' is updated to '
-                  }
-                }
-                question += event.value
-                question += ' ?'
-                let events = this.props.beforeEvents.slice(0, event.id)
-                let history = {}
-                for (let e of events) {
-                  history[e.key] = e
-                }
-
                 return (
-                  <div key={ index }>
-                    <p>{  }</p>
-                    <Quiz
-                      description={ question }
-                      id={ `quiz-${ index }` }
-                      options={ this.props.options }
-                      line={ event.line }
-                      before={ this.props.before }
-                      beforeAst={ this.props.beforeAst }
-                      history={ history }
-                    />
-                    <div className="ui divider"></div>
-                  </div>
+                  <p key={ index }>
+                    <button className="ui basic primary button" onClick={ this.onClick.bind(this, index, event.line) }>Why ?</button>
+                  </p>
                 )
               }) }
+
+              <div className="ui fluid popup bottom center transition inline-hint">
+                { this.state.events.map((event, index) => {
+                  let question = ''
+                  question += 'Q. Why '
+                  question += event.key
+                  if (event.type === 'return') {
+                    question += ' returns '
+                  }
+                  if (event.type === 'assign') {
+                    if (event.index === 0) {
+                      question += ' is initialized with '
+                    } else {
+                      question += ' is updated to '
+                    }
+                  }
+                  question += event.value
+                  question += ' ?'
+                  let events = this.props.beforeEvents.slice(0, event.id)
+                  let history = {}
+                  for (let e of events) {
+                    history[e.key] = e
+                  }
+
+                  return (
+                    <div id={ `quiz-${index} `} className="quiz" key={ index } style={{ display: this.state.quizIndex === index ? 'block' : 'none' }}>
+                      <h1><b>{ question }</b></h1>
+                      <Quiz
+                        id={ `quiz-${ index }` }
+                        options={ this.props.options }
+                        line={ event.line }
+                        currentCode={ this.props.currentCode }
+                        beforeCode={ this.props.beforeCode }
+                        before={ this.props.before }
+                        beforeAst={ this.props.beforeAst }
+                        history={ history }
+                      />
+                    </div>
+                  )
+                }) }
+              </div>
 
               {/*
               <Play

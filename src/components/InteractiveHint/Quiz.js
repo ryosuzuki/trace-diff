@@ -65,8 +65,19 @@ class Quiz extends Component {
       index = this.state.updates.length - 1
     }
     let update = this.state.updates[index]
-    let code = `${this.state.origin}  # ${update}`
-    this.setState({ code: code, index: index })
+
+    let origin = this.props.beforeCode.split('\n')[this.props.line-1]
+
+    let currentCode = this.props.currentCode.split('\n').map((code, index) => {
+      if (index === this.props.line-1) {
+        return `${origin}  # ${update}`
+      } else {
+        return code
+      }
+    }).join('\n')
+    // let code = `${this.state.origin}  # ${update}`
+    this.setState({ index: index })
+    window.app.updateState({ currentCode: currentCode })
   }
 
   renderChildren(key) {
@@ -167,24 +178,7 @@ class Quiz extends Component {
     }
   }
 
-  onClick() {
-    $(`#${this.props.id} .button`).removeClass('primary')
-    this.setState({ clicked: true }, () => {
-      setTimeout(() => {
-        let popup = $(`#${this.props.id} .popup`)
-        // let target = $(`#hoge .CodeMirror`)
-        let target = $($('.CodeMirror-linenumber')[2])
 
-        console.log(popup.hasClass('visible'))
-        if (popup.hasClass('visible')) {
-          popup.removeClass('visible')
-          popup.addClass('hidden')
-        } else {
-          target.popup('show')
-        }
-      }, 100)
-    })
-  }
 
   render() {
     const options = {
@@ -194,35 +188,16 @@ class Quiz extends Component {
       firstLineNumber: this.state.startLine
     }
 
-    $('.CodeMirror-linenumber').popup({
-      position: 'bottom center',
-      inline: true,
-      popup : $(`#${this.props.id} .inline-hint`),
-      lastResort: 'bottom right',
-      on: 'click'
-    })
-
 
     return (
-      <div id={ this.props.id } className="quiz">
-        <p>
-          <button className="ui basic primary button" onClick={ this.onClick.bind(this) }>{ this.props.description }</button>
-        </p>
-        <div className='hint' style={{ display: this.state.clicked ? 'block' : 'none' }}>
-          <p>Look at line { this.props.line }</p>
-          <div className="ui fluid popup bottom left transition inline-hint">
-            <h1><b>{ this.props.description }</b></h1>
-
-            { this.state.quizes.map((quiz, index) => {
-              return (
-                <div id={ `q-${index}` } key={ index } style={{ display: index > this.state.index ? 'none' : 'block' }}>
-                  { this.renderQuiz(quiz, index) }
-                </div>
-              )
-            }) }
-          </div>
-        </div>
-
+      <div>
+        { this.state.quizes.map((quiz, index) => {
+          return (
+            <div id={ `q-${index}` } key={ index } style={{ display: index > this.state.index ? 'none' : 'block' }}>
+              { this.renderQuiz(quiz, index) }
+            </div>
+          )
+        }) }
       </div>
     )
   }

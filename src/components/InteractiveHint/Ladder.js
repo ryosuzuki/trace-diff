@@ -21,9 +21,15 @@ class Ladder extends Component {
     window.ladder = this
   }
 
+  componentDidMount() {
+    this.init()
+  }
+
   init() {
-    this.generate('before')
-    this.generate('after')
+    setTimeout(() => {
+      this.generate('before')
+      this.generate('after')
+    }, 1500);
   }
 
 
@@ -132,11 +138,7 @@ class Ladder extends Component {
   render() {
     return (
       <div id='ladder' className="ladder">
-        <p>
-          <button id="why-button" className="ui basic primary button" onClick={ this.onClick.bind(this) }>Q. Why the behavior is different ?</button>
-        </p>
-
-        <div className='hint' style={{ display: this.state.clicked ? 'block' : 'none' }}>
+        <div className='hint'>
           <Highlight className="python">
             { this.state.text }
           </Highlight>

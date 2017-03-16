@@ -169,6 +169,7 @@ class App extends Component {
               step={ this.props.step }
               stop={ this.props.stop }
 
+              currentCode={ this.props.currentCode }
               beforeCode={ this.props.beforeCode }
               afterCode={ this.props.afterCode }
               added={ this.props.added }

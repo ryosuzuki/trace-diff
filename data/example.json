@@ -21,7 +21,7 @@
       }
     ], 
     "code": "def accumulate(combiner, base, n, term):\n    previous = term(base)\n    previous = base\n    for i in range(1, n+1):\n        previous = combiner(previous, term(i))\n    return previous\n", 
-    "afterCode": "def accumulate(combiner, base, n, term):\n    previous = base\n    for i in range(1, n+1):\n        previous = combiner(previous, term(i))\n    return previous\n\ndef add(a, b):\n  return a + b\n\n\ndef square(x):\n  return x * x\n\naccumulate(add, 11, 3, square)", 
+    "afterCode": "def accumulate(combiner, base, n, term):\n    previous = base\n    for i in range(1, n+1):\n        previous = combiner(previous, term(i))\n    return previous\n\ndef add(a, b):\n  return a + b\n\ndef square(x):\n  return x * x\n\naccumulate(add, 11, 3, square)", 
     "log": ">>> accumulate(add, 11, 3, square)   # 11 + 1^2 + 2^2 + 3^2\n135\n\n# Error: expected\n#     25\n# but got\n#     135", 
     "addedLine": [
       {
@@ -138,7 +138,7 @@
       }
     ], 
     "after": "def accumulate(combiner, base, n, term):\n    previous = base\n    for i in range(1, n+1):\n        previous = combiner(previous, term(i))\n    return previous", 
-    "beforeCode": "def accumulate(combiner, base, n, term):\n    previous = term(base)\n    for i in range(1, n+1):\n        previous = combiner(previous, term(i))\n    return previous\n\ndef add(a, b):\n  return a + b\n\n\ndef square(x):\n  return x * x\n\naccumulate(add, 11, 3, square)", 
+    "beforeCode": "def accumulate(combiner, base, n, term):\n    previous = term(base)\n    for i in range(1, n+1):\n        previous = combiner(previous, term(i))\n    return previous\n\ndef add(a, b):\n  return a + b\n\ndef square(x):\n  return x * x\n\naccumulate(add, 11, 3, square)", 
     "rule": "Apply(ast, CPatch(EditMap(\\node => Delete(node, ReferenceNode(node, StartsWithParent(Node(AssignmentStatementNode, TChildren(LeafWildcard(\"NameExpressionNode\"), TChild(Target(Node(CallExpressionNode, TChildren(LeafWildcard(\"NameExpressionNode\"), TChild(Node(ArgNode, TChild(LeafWildcard(\"NameExpressionNode\"))))))))))), Tutor.synthesis.MagicK)), Selected(\\x => Match(x, StartsWithTarget(Target(Node(AssignmentStatementNode, TChildren(LeafWildcard(\"NameExpressionNode\"), TChild(Node(CallExpressionNode, TChildren(LeafWildcard(\"NameExpressionNode\"), TChild(Node(ArgNode, TChild(LeafWildcard(\"NameExpressionNode\")))))))))))), InOrderSort(ast))), Patch(EditMap(\\node => Move(node, ReferenceNode(node, StartsWithParent(Node(ArgNode, TChild(Target(LeafWildcard(\"NameExpressionNode\"))))), Tutor.synthesis.MagicK), 1), Selected(\\x => Match(x, StartsWithTarget(Target(Node(AssignmentStatementNode, TChildren(LeafWildcard(\"NameExpressionNode\"), TChild(Node(CallExpressionNode, TChildren(LeafWildcard(\"NameExpressionNode\"), TChild(Node(ArgNode, TChild(LeafWildcard(\"NameExpressionNode\")))))))))))), InOrderSort(ast))))))", 
     "beforeTraces": [
       {
@@ -162,7 +162,7 @@
       }, 
       {
         "func_name": "<module>", 
-        "line": 11, 
+        "line": 10, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -178,7 +178,7 @@
       }, 
       {
         "func_name": "<module>", 
-        "line": 14, 
+        "line": 13, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -270,7 +270,7 @@
       }, 
       {
         "func_name": "square", 
-        "line": 11, 
+        "line": 10, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -312,7 +312,7 @@
       }, 
       {
         "func_name": "square", 
-        "line": 12, 
+        "line": 11, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -354,7 +354,7 @@
       }, 
       {
         "func_name": "square", 
-        "line": 12, 
+        "line": 11, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -472,7 +472,7 @@
       }, 
       {
         "func_name": "square", 
-        "line": 11, 
+        "line": 10, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -516,7 +516,7 @@
       }, 
       {
         "func_name": "square", 
-        "line": 12, 
+        "line": 11, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -560,7 +560,7 @@
       }, 
       {
         "func_name": "square", 
-        "line": 12, 
+        "line": 11, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -817,7 +817,7 @@
       }, 
       {
         "func_name": "square", 
-        "line": 11, 
+        "line": 10, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -861,7 +861,7 @@
       }, 
       {
         "func_name": "square", 
-        "line": 12, 
+        "line": 11, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -905,7 +905,7 @@
       }, 
       {
         "func_name": "square", 
-        "line": 12, 
+        "line": 11, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -1162,7 +1162,7 @@
       }, 
       {
         "func_name": "square", 
-        "line": 11, 
+        "line": 10, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -1206,7 +1206,7 @@
       }, 
       {
         "func_name": "square", 
-        "line": 12, 
+        "line": 11, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -1250,7 +1250,7 @@
       }, 
       {
         "func_name": "square", 
-        "line": 12, 
+        "line": 11, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -1546,7 +1546,7 @@
       }, 
       {
         "func_name": "<module>", 
-        "line": 14, 
+        "line": 13, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -1588,7 +1588,7 @@
       }, 
       {
         "func_name": "<module>", 
-        "line": 11, 
+        "line": 10, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -1604,7 +1604,7 @@
       }, 
       {
         "func_name": "<module>", 
-        "line": 14, 
+        "line": 13, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -1771,7 +1771,7 @@
       }, 
       {
         "func_name": "square", 
-        "line": 11, 
+        "line": 10, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -1815,7 +1815,7 @@
       }, 
       {
         "func_name": "square", 
-        "line": 12, 
+        "line": 11, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -1859,7 +1859,7 @@
       }, 
       {
         "func_name": "square", 
-        "line": 12, 
+        "line": 11, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -2116,7 +2116,7 @@
       }, 
       {
         "func_name": "square", 
-        "line": 11, 
+        "line": 10, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -2160,7 +2160,7 @@
       }, 
       {
         "func_name": "square", 
-        "line": 12, 
+        "line": 11, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -2204,7 +2204,7 @@
       }, 
       {
         "func_name": "square", 
-        "line": 12, 
+        "line": 11, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -2461,7 +2461,7 @@
       }, 
       {
         "func_name": "square", 
-        "line": 11, 
+        "line": 10, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -2505,7 +2505,7 @@
       }, 
       {
         "func_name": "square", 
-        "line": 12, 
+        "line": 11, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -2549,7 +2549,7 @@
       }, 
       {
         "func_name": "square", 
-        "line": 12, 
+        "line": 11, 
         "globals": {
           "accumulate": [
             "REF", 
@@ -2845,7 +2845,7 @@
       }, 
       {
         "func_name": "<module>", 
-        "line": 14, 
+        "line": 13, 
         "globals": {
           "accumulate": [
             "REF", 

@@ -70,13 +70,13 @@ for item in items:
     combiner_func = "\n\ndef mul(a, b):\n  return a * b\n"
 
   if term == 'identity':
-    term_func = "\n\ndef identity(x):\n  return x\n"
+    term_func = "\ndef identity(x):\n  return x\n"
   elif term == 'square':
-    term_func = "\n\ndef square(x):\n  return x * x\n"
+    term_func = "\ndef square(x):\n  return x * x\n"
   elif term == 'increment':
-    term_func = "\n\ndef increment(x):\n  return x + 1\n"
+    term_func = "\ndef increment(x):\n  return x + 1\n"
   elif term == 'triple':
-    term_func = "\n\ndef triple(x):\n  return 3 * x\n"
+    term_func = "\ndef triple(x):\n  return 3 * x\n"
 
   before += combiner_func
   before += term_func

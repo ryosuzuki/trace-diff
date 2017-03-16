@@ -6,6 +6,9 @@ import Tree from '../Data/Tree'
 import Slider from 'rc-slider'
 import Tooltip from 'rc-tooltip'
 
+import Quiz from './Quiz'
+
+
 class Ladder extends Component {
   constructor(props) {
     super(props)
@@ -17,19 +20,22 @@ class Ladder extends Component {
       beforeEvents: [],
       afterEvents: [],
       clicked: false,
+      events: [],
+      quizIndex: null,
+      currentLine: null,
     }
     window.ladder = this
   }
 
   componentDidMount() {
-    this.init()
+    setTimeout(() => {
+      this.init()
+    }, 1500);
   }
 
   init() {
-    setTimeout(() => {
-      this.generate('before')
-      this.generate('after')
-    }, 1500);
+    this.generate('before')
+    this.generate('after')
   }
 
 
@@ -77,6 +83,7 @@ class Ladder extends Component {
   translate() {
     let text = ''
     let max = 0
+    let events = []
     let length = Math.min(this.state.beforeEvents.length, this.state.afterEvents.length)
     for (let i = 0; i < length; i++) {
       let beforeEvent = this.state.beforeEvents[i]
@@ -92,36 +99,16 @@ class Ladder extends Component {
       max = Math.max(max, afterUpdates.length - 1)
 
       let event = beforeEvent
-      switch (event.type) {
-        case 'call':
-          if (event.children.length === 0) continue
-          for (let child of event.children) {
-            text += `${event.key} calls ${child}`
-          }
-          break
-        case 'return':
-          if (event.builtin) continue
-          text += `${ event.key } returns ${ result } should be ${ expected }`
-          break
-        default:
-          if (!this.props.focusKeys.includes(event.key)) continue
-          if (event.index === 0) {
-            text += `${ event.key } is initialized with ${ result } should be ${ expected }`
-          } else {
-            text += `${ event.key } is updated to ${ result } should be ${ expected }`
-          }
-          break
-      }
-      // text += ` at line ${ event.line }`
-      text += '\n'
+      event.result = result
+      event.expected = expected
+      events.push(event)
     }
 
     let marks = {}
     marks[0] = 'concrete'
     marks[max] = 'abstract'
-    this.setState({ text: text, max: max, marks: marks })
+    this.setState({ events: events, max: max, marks: marks })
   }
-
 
   onChange(value) {
     this.setState({ level: value }, () => {
@@ -129,19 +116,81 @@ class Ladder extends Component {
     })
   }
 
-  onClick() {
-    $('#ladder #why-button').removeClass('primary')
-    this.setState({ clicked: true })
-    this.init()
+  onClick(index, line, event) {
+    console.log('fjewo')
+    $(event.target).removeClass('primary')
+    setTimeout(() => {
+      let target = $(`#hoge .CodeMirror`)
+      target.popup('toggle')
+
+      this.setState({ quizIndex: index, currentLine: line })
+      let top = 75 + parseInt(line)*24
+      $('.inline-hint').css('top',`${top}px`)
+      window.cm.addLineClass(line-1, '', 'current-line')
+    }, 100)
+  }
+
+  onClose() {
+    let popup = $('.popup')
+    if (popup.hasClass('visible')) {
+      popup.removeClass('visible')
+      popup.addClass('hidden')
+    }
+    window.cm.removeLineClass(this.state.currentLine-1, '', 'current-line')
+    this.setState({ quizIndex: null, currentLine: null })
   }
 
   render() {
+
+    $('#hoge .CodeMirror').popup({
+      target: $('#hoge .CodeMirror'),
+      position: 'bottom center',
+      inline: true,
+      popup : $(`.inline-hint`),
+      on: 'manual',
+    })
+
+
     return (
       <div id='ladder' className="ladder">
         <div className='hint'>
-          <Highlight className="python">
-            { this.state.text }
-          </Highlight>
+          <pre><code className="hljs">
+          { this.state.events.map((event, index) => {
+            switch (event.type) {
+              case 'call':
+                return ''
+              case 'return':
+                return (
+                  <div key={ index }>
+                    <p>
+                      <span className="hljs-keyword">{ `${event.key} `}</span>
+                      returns
+                      <span className="hljs-number">{ ` ${event.result} ` }</span>
+                      should be
+                      <span className="hljs-number">{ ` ${event.expected} ` }</span>
+                      <br />
+                      <i className="fa fa-long-arrow-right fa-fw"></i><a onClick={ this.onClick.bind(this, index, event.line) }> why { `${event.key} returns ${event.result} ?` }</a>
+                    </p>
+                  </div>
+                )
+              default:
+                return (
+                  <div key={ index }>
+                    <p>
+                      <span className="hljs-keyword">{ `${event.key} `}</span>
+                      =
+                      <span className="hljs-number">{ ` ${event.result} ` }</span>
+                      should be
+                      <span className="hljs-number">{ ` ${event.expected} ` }</span>
+                      <br />
+                      <i className="fa fa-long-arrow-right fa-fw"></i><a onClick={ this.onClick.bind(this, index, event.line) }> why { `${ event.key } = ${ event.result } ?` }</a>
+                    </p>
+                  </div>
+                )
+            }
+          }) }
+          </code></pre>
+
 
           <div style={{ width: '10%'}}></div>
           <div style={{ width: '80%'}}>
@@ -157,6 +206,49 @@ class Ladder extends Component {
           </div>
           <div style={{ width: '10%'}}></div>
         </div>
+
+        <div className="ui fluid popup bottom center transition inline-hint">
+          { this.state.events.map((event, index) => {
+            let question = ''
+            question += 'Q. Why '
+            question += event.key
+            if (event.type === 'return') {
+              question += ' returns '
+            }
+            if (event.type === 'assign') {
+              if (event.index === 0) {
+                question += ' is initialized with '
+              } else {
+                question += ' is updated to '
+              }
+            }
+            question += event.value
+            question += ' ?'
+            let events = this.props.beforeEvents.slice(0, event.id)
+            let history = {}
+            for (let e of events) {
+              history[e.key] = e
+            }
+
+            return (
+              <div id={ `quiz-${index} `} className="quiz" key={ index } style={{ display: this.state.quizIndex === index ? 'block' : 'none' }}>
+                <h1><b>{ question }</b></h1>
+                <Quiz
+                  id={ `quiz-${ index }` }
+                  options={ this.props.options }
+                  line={ event.line }
+                  currentCode={ this.props.currentCode }
+                  beforeCode={ this.props.beforeCode }
+                  before={ this.props.before }
+                  beforeAst={ this.props.beforeAst }
+                  history={ history }
+                />
+              </div>
+            )
+          }) }
+          <button className="ui basic button close-button" onClick={ this.onClose.bind(this) } style={{ float: 'right' }}>Close</button>
+        </div>
+
 
 
       </div>
@@ -181,3 +273,41 @@ const handle = (props) => {
     </Tooltip>
   );
 };
+
+/*
+
+  translate(compare = false) {
+    let events = this.props.beforeEvents
+    // .filter(event => this.props.focusKeys.includes(event.key))
+    let filteredEvents = []
+    let text = ''
+    for (let event of events) {
+      switch (event.type) {
+        case 'call':
+          if (event.children.length === 0) continue
+          for (let child of event.children) {
+            text += `${event.key} calls ${child}`
+          }
+          break
+        case 'return':
+          if (event.builtin) continue
+          text += `${event.key} returns ${event.value}`
+          break
+        default:
+          if (!this.props.focusKeys.includes(event.key)) continue
+          if (event.index === 0) {
+            text += `${event.key} is initialized with ${event.value}`
+          } else {
+            text += `${event.key} is updated to ${event.value}`
+          }
+          break
+      }
+      text += ` at line ${ event.line }`
+      text += '\n'
+      if (event.type !== 'call') filteredEvents.push(event)
+    }
+    this.setState({ text: text, events: filteredEvents })
+  }
+
+
+ */

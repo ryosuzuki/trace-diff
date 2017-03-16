@@ -67,11 +67,15 @@ class Ladder extends Component {
 
       let ast = asts[event.line-1]
       let tree = new Tree()
-      tree.history = history
-      tree.analyze(ast)
-      event.updates = tree.updates
-      return event
-    })
+      try {
+        tree.history = history
+        tree.analyze(ast)
+        event.updates = tree.updates
+        return event
+      } catch (err) {
+        return false
+      }
+    }).filter(event => event)
 
     let state = {}
     state[key] = filteredEvents
@@ -156,9 +160,17 @@ class Ladder extends Component {
         <div className='hint'>
           <pre><code className="hljs">
           { this.state.events.map((event, index) => {
+            if (event.result === undefined) return null
             switch (event.type) {
               case 'call':
-                return ''
+                if (event.children.length === 0) return null
+                return (
+                  <div key={ index }>
+                    { event.children.map((child) => {
+                      return <p><span className="hljs-keyword">{ `${event.key} `}</span> calls <span className="hljs-number">{ ` ${child} ` }</span></p>
+                    }) }
+                  </div>
+                )
               case 'return':
                 return (
                   <div key={ index }>

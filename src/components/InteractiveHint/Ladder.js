@@ -51,7 +51,9 @@ class Ladder extends Component {
       key = 'afterEvents'
     }
 
-    let filteredEvents = events.filter((event) => {
+    let filteredEvents = []
+
+    filteredEvents = events.filter((event) => {
       if (event.type === 'call') return false
       if (event.builtin) return false
       if (!this.props.focusKeys.includes(event.key)) return false
@@ -96,8 +98,8 @@ class Ladder extends Component {
       let afterUpdates = _.uniq(afterEvent.updates).reverse()
       let result = beforeUpdates[this.state.level]
       let expected = afterUpdates[this.state.level]
-      if (!result) result = _.last(beforeUpdates)
-      if (!expected) expected = _.last(afterUpdates)
+      if (result === undefined) result = _.last(beforeUpdates)
+      if (expected === undefined) expected = _.last(afterUpdates)
 
       max = Math.max(max, beforeUpdates.length - 1)
       max = Math.max(max, afterUpdates.length - 1)

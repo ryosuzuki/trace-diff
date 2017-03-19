@@ -105,6 +105,7 @@ class App extends Component {
     setTimeout(() => {
       console.log('call init')
       window.interactiveHint.init()
+      window.ladder.init()
       window.quizes.map((quiz) => { quiz.init() })
 
       // window.locationHint.init()

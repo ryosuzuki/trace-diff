@@ -39,7 +39,7 @@ class InteractiveHint extends Component {
 
         <div className="ui message hint-message">
           <div className="ui two column grid">
-            <div className="six wide column">
+            <div className="eleven wide column">
               <h2>Code</h2>
               <div id="hoge">
               <CodeMirror
@@ -48,14 +48,16 @@ class InteractiveHint extends Component {
                 options={ this.props.options }
               />
               </div>
-              <br />
+            </div>
+            <div className="five wide column">
               <h2>Failed Test Result</h2>
               <Highlight className="python">
                 { this.props.log }
               </Highlight>
             </div>
-            <div className="ten wide column">
-              <h2>Behavior</h2>
+          </div>
+          <div className="ui two column grid">
+            <div className="sixteen wide column">
               <Ladder
                 beforeHistory={ this.props.beforeHistory }
                 afterHistory={ this.props.afterHistory }

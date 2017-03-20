@@ -127,7 +127,6 @@ class Ladder extends Component {
   }
 
   onClick(index, line, event) {
-    console.log('fjewo')
     $(event.target).removeClass('primary')
     setTimeout(() => {
       let target = $(`#hoge .CodeMirror`)
@@ -148,6 +147,21 @@ class Ladder extends Component {
     }
     window.cm.removeLineClass(this.state.currentLine-1, '', 'current-line')
     this.setState({ quizIndex: null, currentLine: null })
+  }
+
+
+  onMouseOver(line) {
+    let popup = $('.popup')
+    if (!popup.hasClass('visible')) {
+      window.cm.addLineClass(line-1, '', 'current-line')
+    }
+  }
+
+  onMouseOut(line) {
+    let popup = $('.popup')
+    if (!popup.hasClass('visible')) {
+      window.cm.removeLineClass(line-1, '', 'current-line')
+    }
   }
 
   fuga(type) {
@@ -188,7 +202,8 @@ class Ladder extends Component {
         event.updates = tree.updates
         return event
       } catch (err) {
-        return false
+        event.updates = []
+        return event
       }
     }).filter(event => event)
 
@@ -242,24 +257,21 @@ class Ladder extends Component {
     this.setState(state)
   }
 
-  onMouseOver(line) {
-    window.cm.addLineClass(line-1, '', 'current-line')
-  }
-
-  onMouseOut(line) {
-    window.cm.removeLineClass(line-1, '', 'current-line')
-  }
 
   hoge(event, index) {
     return (
       <div key={ index } >
-        <p style={{ marginLeft: `${10 * event.indent}px` }}
+        <p style={{ paddingLeft: `${10 * event.indent}px` }}
           onMouseOver={ this.onMouseOver.bind(this, event.line) }
           onMouseOut={ this.onMouseOut.bind(this, event.line) }
         >
-          { event.html.map((html) => {
-            return <span className={ `hljs-${html.className}` }>{ html.text }</span>
+          { event.html.map((html, index) => {
+            return <span key={ index }className={ `hljs-${html.className}` }>{ html.text }</span>
           }) }
+          &nbsp;
+          <i className="fa fa-long-arrow-right fa-fw"></i><a onClick={ this.onClick.bind(this, index, event.line) }> why ?</a>
+
+
         </p>
       </div>
     )
@@ -355,7 +367,7 @@ class Ladder extends Component {
         </div>
 
         <div className="ui fluid popup bottom center transition inline-hint">
-          { this.state.events.map((event, index) => {
+          { this.state.beforeEvents.map((event, index) => {
             let question = ''
             question += 'Q. Why '
             question += event.key

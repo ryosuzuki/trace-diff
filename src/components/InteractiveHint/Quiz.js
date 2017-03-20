@@ -120,7 +120,7 @@ class Quiz extends Component {
                 { this.renderChildren(quiz.key) }
                 <p>
                   <code>{ quiz.key }</code> returns
-                  <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
+                  <input className={ 'inline-input' } type="text" placeholder={ '' } onChange={ this.onChange.bind(this, quiz, index) } />
                   <i className="inline-message fa fa-check fa-fw" />
                 </p>
               </div>
@@ -131,7 +131,7 @@ class Quiz extends Component {
                   Q. What is the value of <code>{ quiz.key }</code>?
                   </b>
                   <code>{ quiz.key }</code> returns
-                  <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
+                  <input className={ 'inline-input' } type="text" placeholder={ '' } onChange={ this.onChange.bind(this, quiz, index) } />
                   <i className="inline-message fa fa-check fa-fw" />
                 </p>
               </div>
@@ -144,7 +144,10 @@ class Quiz extends Component {
           <div className="mini-quiz">
             <p><b>Therefore,</b>
               <code>{ quiz.key }</code> =
-              <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
+              {/*
+              <input className={ 'inline-input' } type="text" placeholder={ '' } onChange={ this.onChange.bind(this, quiz, index) } />
+              */}
+              <code>{ quiz.value }</code>
               <i className="inline-message fa fa-check fa-fw" />
             </p>
           </div>
@@ -155,7 +158,10 @@ class Quiz extends Component {
           <div className="mini-quiz">
             <p><b>Therefore,</b>
             <code>{ quiz.key }</code> returns
-              <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
+              {/*
+              <input className={ 'inline-input' } type="text" placeholder={ '' } onChange={ this.onChange.bind(this, quiz, index) } />
+              */}
+              <code>{ quiz.value }</code>
               <i className="inline-message fa fa-check fa-fw" />
               </p>
           </div>
@@ -169,7 +175,7 @@ class Quiz extends Component {
               Q. What is the value of <code>{ quiz.key }</code>?
             </b>
               <code>{ quiz.key }</code> =
-              <input className={ 'inline-input' } type="text" placeholder={ quiz.value } onChange={ this.onChange.bind(this, quiz, index) } />
+              <input className={ 'inline-input' } type="text" placeholder={ '' } onChange={ this.onChange.bind(this, quiz, index) } />
               <i className="inline-message fa fa-check fa-fw" />
             </p>
           </div>

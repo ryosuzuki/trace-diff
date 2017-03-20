@@ -236,17 +236,27 @@ class Ladder extends Component {
     let marks = {}
     marks[0] = 'concrete'
     marks[max] = 'abstract'
-
     state['max'] = max
     state['marks'] = marks
     state[key] = events
     this.setState(state)
   }
 
+  onMouseOver(line) {
+    window.cm.addLineClass(line-1, '', 'current-line')
+  }
+
+  onMouseOut(line) {
+    window.cm.removeLineClass(line-1, '', 'current-line')
+  }
+
   hoge(event, index) {
     return (
       <div key={ index } >
-        <p style={{ marginLeft: `${10 * event.indent}px` }}>
+        <p style={{ marginLeft: `${10 * event.indent}px` }}
+          onMouseOver={ this.onMouseOver.bind(this, event.line) }
+          onMouseOut={ this.onMouseOut.bind(this, event.line) }
+        >
           { event.html.map((html) => {
             return <span className={ `hljs-${html.className}` }>{ html.text }</span>
           }) }

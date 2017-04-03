@@ -6,6 +6,7 @@ var connectorInactiveColor = '#cccccc';
 var errorColor = brightRed;
 var breakpointColor = brightRed;
 
+var heapPtrSrcRE = /__heap_pointer_src_/;
 var rightwardNudgeHack = true;
 
 class DataVisualizer {

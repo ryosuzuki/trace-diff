@@ -127,6 +127,7 @@ class App extends Component {
 
     return (
       <div>
+        {/*
         <div className="ui two column centered grid">
           <div className="sixteen wide column">
             <h1 id="top-title" className="ui center aligned huge header">
@@ -143,6 +144,7 @@ class App extends Component {
             />
           </div>
         </div>
+        */}
         <div className="ui two column centered grid">
           <div id="python-tutor" className="fourteen wide column">
             <h1 className="title">Student</h1>

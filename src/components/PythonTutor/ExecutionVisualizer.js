@@ -1,108 +1,59 @@
-export class ExecutionVisualizer {
-  static curVisualizerID = 1;
 
-  static DEFAULT_EMBEDDED_CODE_DIV_WIDTH = 350;
-  static DEFAULT_EMBEDDED_CODE_DIV_HEIGHT = 400;
+import DataVisualizer from './DataVisualizer'
+import NavigationController from './NavigationController'
+import ProgramOutputBox from './ProgramOutputBox'
+import CodeDisplay from './CodeDisplay'
 
-  params: any = {};
-  curInputCode: string;
-  curTrace: any[];
 
-  // an array of objects with the following fields:
-  //   'text' - the text of the line of code
-  //   'lineNumber' - one-indexed (always the array index + 1)
-  //   'executionPoints' - an ordered array of zero-indexed execution points where this line was executed
-  //   'breakpointHere' - has a breakpoint been set here?
-  codeOutputLines: {text: string, lineNumber: number, executionPoints: number[], breakpointHere: boolean}[] = [];
+let curVisualizerID = 1;
+let DEFAULT_EMBEDDED_CODE_DIV_WIDTH = 350;
+let DEFAULT_EMBEDDED_CODE_DIV_HEIGHT = 400;
 
-  promptForUserInput: boolean;
-  userInputPromptStr: string;
-  promptForMouseInput: boolean;
+class ExecutionVisualizer {
 
-  codDisplay: CodeDisplay;
-  navControls: NavigationController;
-  outputBox: ProgramOutputBox;
-  dataViz: DataVisualizer;
-
-  domRoot: any;
-  domRootD3: any;
-
-  curInstr: number = 0;
-
-  updateHistory: any[];
-  creationTime: number;
-
-  // API for adding a hook, created by David Pritchard
-  // keys, hook names; values, list of functions
-  pytutor_hooks: {string?: any[]} = {};
-
-  // represent the current state of the visualizer object; i.e., which
-  // step is it currently visualizing?
-  prevLineIsReturn: boolean;
-  curLineIsReturn: boolean;
-  prevLineNumber: number;
-  curLineNumber: number;
-  curLineExceptionMsg: string;
-
-  // true iff trace ended prematurely since maximum instruction limit has
-  // been reached
-  instrLimitReached: boolean = false;
-  instrLimitReachedWarningMsg: string;
-
-  hasRendered: boolean = false;
-
-  visualizerID: number;
-
-  breakpoints: d3.Map<{}> = d3.map(); // set of execution points to set as breakpoints
-  sortedBreakpointsList: any[] = [];  // sorted and synced with breakpoints
-
-  // Constructor with an ever-growing feature-crepped list of options :)
-  // domRootID is the string ID of the root element where to render this instance
-  //
-  // dat is data returned by the Python Tutor backend consisting of two fields:
-  //   code  - string of executed code
-  //   trace - a full execution trace
-  //
-  // params is an object containing optional parameters, such as:
-  //   jumpToEnd - if non-null, jump to the very end of execution if
-  //               there's no error, or if there's an error, jump to the
-  //               FIRST ENTRY with an error
-  //   startingInstruction - the (zero-indexed) execution point to display upon rendering
-  //                         if this is set, then it *overrides* jumpToEnd
-  //   codeDivHeight - maximum height of #pyCodeOutputDiv (in integer pixels)
-  //   codeDivWidth  - maximum width  of #pyCodeOutputDiv (in integer pixels)
-  //   editCodeBaseURL - the base URL to visit when the user clicks 'Edit code' (if null, then 'Edit code' link hidden)
-  //   embeddedMode         - shortcut for codeDivWidth=DEFAULT_EMBEDDED_CODE_DIV_WIDTH,
-  //                                       codeDivHeight=DEFAULT_EMBEDDED_CODE_DIV_HEIGHT
-  //                          (and hide a bunch of other stuff & don't activate keyboard shortcuts!)
-  //   disableHeapNesting   - if true, then render all heap objects at the top level (i.e., no nested objects)
-  //   drawParentPointers   - if true, then draw environment diagram parent pointers for all frames
-  //                          WARNING: there are hard-to-debug MEMORY LEAKS associated with activating this option
-  //   textualMemoryLabels  - render references using textual memory labels rather than as jsPlumb arrows.
-  //                          this is good for slow browsers or when used with disableHeapNesting
-  //                          to prevent "arrow overload"
-  //   updateOutputCallback - function to call (with 'this' as parameter)
-  //                          whenever this.updateOutput() is called
-  //                          (BEFORE rendering the output display)
-  //   heightChangeCallback - function to call (with 'this' as parameter)
-  //                          whenever the HEIGHT of #dataViz changes
-  //   verticalStack - if true, then stack code display ON TOP of visualization
-  //                   (else place side-by-side)
-  //   visualizerIdOverride - override visualizer ID instead of auto-assigning it
-  //                          (BE CAREFUL ABOUT NOT HAVING DUPLICATE IDs ON THE SAME PAGE,
-  //                           OR ELSE ARROWS AND OTHER STUFF WILL GO HAYWIRE!)
-  //   executeCodeWithRawInputFunc - function to call when you want to re-execute the given program
-  //                                 with some new user input (somewhat hacky!)
-  //   compactFuncLabels - render functions with a 'func' prefix and no type label
-  //   showAllFrameLabels - display frame and parent frame labels for all functions (default: false)
-  //   hideCode - hide the code display and show only the data structure viz
-  //   lang - to render labels in a style appropriate for other languages,
-  //          and to display the proper language in langDisplayDiv:
-  //          'py2' for Python 2, 'py3' for Python 3, 'js' for JavaScript, 'java' for Java,
-  //          'ts' for TypeScript, 'ruby' for Ruby, 'c' for C, 'cpp' for C++
-  //          [default is Python-style labels]
   constructor(domRootID, dat, params) {
-    this.curInputCode = dat.code.rtrim(); // kill trailing spaces
+    this.params = {};
+    this.curInputCode = '';
+    this.curTrace = [];
+
+    this.codeOutputLines = []
+    // {text: string, lineNumber: number, executionPoints: number[], this.breakpointHere = boolean}[] = [];
+
+    this.promptForUserInput // boolean;
+    this.userInputPromptStr // string;
+    this.promptForMouseInput // boolean;
+
+    this.curInstr = 0;
+
+    this.updateHistory = [];
+    this.creationTime // number;
+
+    // API for adding a hook, created by David Pritchard
+    // keys, hook names; values, list of functions
+    this.pytutor_hooks = {} // {string?: any[]} = {};
+
+    // represent the current state of the visualizer object; i.e., which
+    // step is it currently visualizing?
+    this.prevLineIsReturn // boolean;
+    this.curLineIsReturn // boolean;
+    this.prevLineNumber // number;
+    this.curLineNumber // number;
+    this.curLineExceptionMsg // string;
+
+    // true iff trace ended prematurely since maximum instruction limit has
+    // been reached
+    this.instrLimitReached = false;
+    this.instrLimitReachedWarningMsg // string;
+
+    this.hasRendered = false;
+    this.visualizerID // number;
+
+    this.breakpoints = d3.map(); // d3.Map<{}>  set of execution points to set as breakpoints
+    this.sortedBreakpointsList = [];  // sorted and synced with breakpoints
+
+
+
+    this.curInputCode = dat.code.replace(/\s*$/g, ""); // kill trailing spaces
     this.params = params;
     this.curTrace = dat.trace;
 
@@ -135,9 +86,9 @@ export class ExecutionVisualizer {
     if (this.params.visualizerIdOverride) {
       this.visualizerID = this.params.visualizerIdOverride;
     } else {
-      this.visualizerID = ExecutionVisualizer.curVisualizerID;
+      this.visualizerID = curVisualizerID;
       assert(this.visualizerID > 0);
-      ExecutionVisualizer.curVisualizerID++;
+      curVisualizerID++;
     }
 
     // sanitize to avoid nasty 'undefined' states
@@ -309,11 +260,11 @@ export class ExecutionVisualizer {
     if (this.params.embeddedMode) {
       // don't override if they've already been set!
       if (this.params.codeDivWidth === undefined) {
-        this.params.codeDivWidth = ExecutionVisualizer.DEFAULT_EMBEDDED_CODE_DIV_WIDTH;
+        this.params.codeDivWidth = DEFAULT_EMBEDDED_CODE_DIV_WIDTH;
       }
 
       if (this.params.codeDivHeight === undefined) {
-        this.params.codeDivHeight = ExecutionVisualizer.DEFAULT_EMBEDDED_CODE_DIV_HEIGHT;
+        this.params.codeDivHeight = DEFAULT_EMBEDDED_CODE_DIV_HEIGHT;
       }
 
       // add an extra label to link back to the main site, so that viewers
@@ -1002,3 +953,209 @@ export class ExecutionVisualizer {
   }
 
 } // END class ExecutionVisualizer
+
+
+export function assert(cond) {
+  if (!cond) {
+    console.trace();
+    alert("Assertion Failure (see console log for backtrace)");
+    throw 'Assertion Failure';
+  }
+}
+
+// taken from http://www.toao.net/32-my-htmlspecialchars-function-for-javascript
+export function htmlspecialchars(str) {
+  if (typeof(str) == "string") {
+    str = str.replace(/&/g, "&amp;"); /* must do &amp; first */
+
+    // ignore these for now ...
+    //str = str.replace(/"/g, "&quot;");
+    //str = str.replace(/'/g, "&#039;");
+
+    str = str.replace(/</g, "&lt;");
+    str = str.replace(/>/g, "&gt;");
+
+    // replace spaces:
+    str = str.replace(/ /g, "&nbsp;");
+
+    // replace tab as four spaces:
+    str = str.replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
+  }
+  return str;
+}
+
+
+// same as htmlspecialchars except don't worry about expanding spaces or
+// tabs since we want proper word wrapping in divs.
+function htmlsanitize(str) {
+  if (typeof(str) == "string") {
+    str = str.replace(/&/g, "&amp;"); /* must do &amp; first */
+
+    str = str.replace(/</g, "&lt;");
+    str = str.replace(/>/g, "&gt;");
+  }
+  return str;
+}
+
+
+
+// make sure varname doesn't contain any weird
+// characters that are illegal for CSS ID's ...
+//
+// I know for a fact that iterator tmp variables named '_[1]'
+// are NOT legal names for CSS ID's.
+// I also threw in '{', '}', '(', ')', '<', '>' as illegal characters.
+//
+// also some variable names are like '.0' (for generator expressions),
+// and '.' seems to be illegal.
+//
+// also '=', '!', and '?' are common in Ruby names, so escape those as well
+//
+// also spaces are illegal, so convert to '_'
+// TODO: what other characters are illegal???
+var lbRE = new RegExp('\\[|{|\\(|<', 'g');
+var rbRE = new RegExp('\\]|}|\\)|>', 'g');
+function varnameToCssID(varname) {
+  // make sure to REPLACE ALL (using the 'g' option)
+  // rather than just replacing the first entry
+  return varname.replace(lbRE, 'LeftB_')
+                .replace(rbRE, '_RightB')
+                .replace(/[!]/g, '_BANG_')
+                .replace(/[?]/g, '_QUES_')
+                .replace(/[:]/g, '_COLON_')
+                .replace(/[=]/g, '_EQ_')
+                .replace(/[.]/g, '_DOT_')
+                .replace(/ /g, '_');
+}
+
+function isHeapRef(obj, heap) {
+  // ordinary REF
+  if (obj[0] === 'REF') {
+    return (heap[obj[1]] !== undefined);
+  } else if (obj[0] === 'C_DATA' && obj[2] === 'pointer') {
+    // C-style pointer that has a valid value
+    if (obj[3] != '<UNINITIALIZED>' && obj[3] != '<UNALLOCATED>') {
+      return (heap[obj[3]] !== undefined);
+    }
+  }
+
+  return false;
+}
+
+function getRefID(obj) {
+  if (obj[0] == 'REF') {
+    return obj[1];
+  } else {
+    assert (obj[0] === 'C_DATA' && obj[2] === 'pointer');
+    assert (obj[3] != '<UNINITIALIZED>' && obj[3] != '<UNALLOCATED>');
+    return obj[3]; // pointed-to address
+  }
+}
+
+
+export default ExecutionVisualizer
+
+
+
+
+  // Constructor with an ever-growing feature-crepped list of options :)
+  // domRootID is the string ID of the root element where to render this instance
+  //
+  // dat is data returned by the Python Tutor backend consisting of two fields:
+  //   code  - string of executed code
+  //   trace - a full execution trace
+  //
+  // params is an object containing optional parameters, such as:
+  //   jumpToEnd - if non-null, jump to the very end of execution if
+  //               there's no error, or if there's an error, jump to the
+  //               FIRST ENTRY with an error
+  //   startingInstruction - the (zero-indexed) execution point to display upon rendering
+  //                         if this is set, then it *overrides* jumpToEnd
+  //   codeDivHeight - maximum height of #pyCodeOutputDiv (in integer pixels)
+  //   codeDivWidth  - maximum width  of #pyCodeOutputDiv (in integer pixels)
+  //   editCodeBaseURL - the base URL to visit when the user clicks 'Edit code' (if null, then 'Edit code' link hidden)
+  //   embeddedMode         - shortcut for codeDivWidth=DEFAULT_EMBEDDED_CODE_DIV_WIDTH,
+  //                                       codeDivHeight=DEFAULT_EMBEDDED_CODE_DIV_HEIGHT
+  //                          (and hide a bunch of other stuff & don't activate keyboard shortcuts!)
+  //   disableHeapNesting   - if true, then render all heap objects at the top level (i.e., no nested objects)
+  //   drawParentPointers   - if true, then draw environment diagram parent pointers for all frames
+  //                          WARNING: there are hard-to-debug MEMORY LEAKS associated with activating this option
+  //   textualMemoryLabels  - render references using textual memory labels rather than as jsPlumb arrows.
+  //                          this is good for slow browsers or when used with disableHeapNesting
+  //                          to prevent "arrow overload"
+  //   updateOutputCallback - function to call (with 'this' as parameter)
+  //                          whenever this.updateOutput() is called
+  //                          (BEFORE rendering the output display)
+  //   heightChangeCallback - function to call (with 'this' as parameter)
+  //                          whenever the HEIGHT of #dataViz changes
+  //   verticalStack - if true, then stack code display ON TOP of visualization
+  //                   (else place side-by-side)
+  //   visualizerIdOverride - override visualizer ID instead of auto-assigning it
+  //                          (BE CAREFUL ABOUT NOT HAVING DUPLICATE IDs ON THE SAME PAGE,
+  //                           OR ELSE ARROWS AND OTHER STUFF WILL GO HAYWIRE!)
+  //   executeCodeWithRawInputFunc - function to call when you want to re-execute the given program
+  //                                 with some new user input (somewhat hacky!)
+  //   compactFuncLabels - render functions with a 'func' prefix and no type label
+  //   showAllFrameLabels - display frame and parent frame labels for all functions (default: false)
+  //   hideCode - hide the code display and show only the data structure viz
+  //   lang - to render labels in a style appropriate for other languages,
+  //          and to display the proper language in langDisplayDiv:
+  //          'py2' for Python 2, 'py3' for Python 3, 'js' for JavaScript, 'java' for Java,
+  //          'ts' for TypeScript, 'ruby' for Ruby, 'c' for C, 'cpp' for C++
+  //          [default is Python-style labels]
+
+
+
+  /*
+  params: any = {};
+  curInputCode: string;
+  curTrace: any[];
+
+  // an array of objects with the following fields:
+  //   'text' - the text of the line of code
+  //   'lineNumber' - one-indexed (always the array index + 1)
+  //   'executionPoints' - an ordered array of zero-indexed execution points where this line was executed
+  //   'breakpointHere' - has a breakpoint been set here?
+  codeOutputLines: {text: string, lineNumber: number, executionPoints: number[], breakpointHere: boolean}[] = [];
+
+  promptForUserInput: boolean;
+  userInputPromptStr: string;
+  promptForMouseInput: boolean;
+
+  codDisplay: CodeDisplay;
+  navControls: NavigationController;
+  outputBox: ProgramOutputBox;
+  dataViz: DataVisualizer;
+
+  domRoot: any;
+  domRootD3: any;
+
+  curInstr: number = 0;
+
+  updateHistory: any[];
+  creationTime: number;
+
+  // API for adding a hook, created by David Pritchard
+  // keys, hook names; values, list of functions
+  pytutor_hooks: {string?: any[]} = {};
+
+  // represent the current state of the visualizer object; i.e., which
+  // step is it currently visualizing?
+  prevLineIsReturn: boolean;
+  curLineIsReturn: boolean;
+  prevLineNumber: number;
+  curLineNumber: number;
+  curLineExceptionMsg: string;
+
+  // true iff trace ended prematurely since maximum instruction limit has
+  // been reached
+  instrLimitReached: boolean = false;
+  instrLimitReachedWarningMsg: string;
+
+  hasRendered: boolean = false;
+
+  visualizerID: number;
+
+  breakpoints: d3.Map<{}> = d3.map(); // set of execution points to set as breakpoints
+  sortedBreakpointsList: any[] = [];  // sorted and synced with breakpoints
+  */

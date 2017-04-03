@@ -16,7 +16,8 @@ module.exports = {
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.ProvidePlugin({
       $: 'jquery',
-      jQuery: 'jquery'
+      jQuery: 'jquery',
+      d3: 'd3',
     })
   ],
   module: {

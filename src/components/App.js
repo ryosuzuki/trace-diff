@@ -14,6 +14,8 @@ import Stream from './Data/Stream'
 import Record from './Data/Record'
 import Tree from './Data/Tree'
 
+import PythonTutor from './PythonTutor'
+
 import Datastore from 'nedb'
 const db = new Datastore()
 
@@ -68,7 +70,6 @@ class App extends Component {
     })
   }
 
-
   setCurrent(id) {
     console.log('set current')
     let item = this.props.items[id]
@@ -104,23 +105,13 @@ class App extends Component {
     // window.diffView.generateDiff(id)
     setTimeout(() => {
       console.log('call init')
-      window.interactiveHint.init()
-      window.ladder.init()
-      window.quizes.map((quiz) => { quiz.init() })
 
-      // window.locationHint.init()
-      // window.transformationHint.init()
-      // window.behaviorHint.init()
-      // window.exampleHint.init()
-      // window.scaffoldingHint.init()
-
+      window.pythonTutor.init()
     }, 500)
 
     db.find({ test: item.test, result: item.result }, function(err, items) {
       this.updateState({ relatedItems: items })
     }.bind(this))
-
-
   }
 
   updateState(state) {
@@ -153,9 +144,9 @@ class App extends Component {
           </div>
         </div>
         <div className="ui two column centered grid">
-          <div id="mixed-hint" className="sixteen wide column">
+          <div id="python-tutor" className="fourteen wide column">
             <h1 className="title">Student</h1>
-            <InteractiveHint
+            <PythonTutor
               options={ options }
               id={ this.props.id }
               code={ this.props.code }
@@ -200,108 +191,6 @@ class App extends Component {
             />
           </div>
         </div>
-        {/*
-        <div className="ui two column centered grid">
-          <div id="mixed-hint" className="ten wide column">
-            <h1 className="title">Student</h1>
-            <MixedHint
-              options={ options }
-              id={ this.props.id }
-              code={ this.props.code }
-              before={ this.props.before }
-              after={ this.props.after }
-
-              test={ this.props.test }
-              expected={ this.props.expected }
-              result={ this.props.result }
-              log={ this.props.log }
-
-              step={ this.props.step }
-              stop={ this.props.stop }
-
-              beforeCode={ this.props.beforeCode }
-              afterCode={ this.props.afterCode }
-              added={ this.props.added }
-              removed={ this.props.removed }
-              addedLine={ this.props.addedLine }
-              removedLine={ this.props.removedLine }
-              diffs={ this.props.diffs }
-
-              traces={ this.props.traces }
-              beforeTraces={ this.props.beforeTraces }
-              afterTraces={ this.props.afterTraces }
-
-              beforeHistory={ this.props.beforeHistory}
-              afterHistory={ this.props.afterHistory}
-
-              beforeEvents={ this.props.beforeEvents}
-              afterEvents={ this.props.afterEvents}
-
-              beforeTicks={ this.props.beforeTicks}
-              afterTicks={ this.props.afterTicks}
-
-              beforeAst={ this.props.beforeAst}
-              afterAst={ this.props.afterAst}
-
-              commonKeys={ this.props.commonKeys}
-              focusKeys={ this.props.focusKeys}
-            />
-          </div>
-        </div>
-        <div className="ui two column centered grid">
-          <div id="diff-view" className="six wide column">
-            <h1 className="title">Teacher</h1>
-            <DiffView
-              options={ options }
-              id={ this.props.id }
-              code={ this.props.code }
-              added={ this.props.added }
-              removed={ this.props.removed }
-              log={ this.props.log }
-              rule={ this.props.rule }
-              relatedItems={ this.props.relatedItems }
-            />
-          </div>
-          <div id="hint-view" className="ten wide column">
-            <h1 className="title">Student</h1>
-            <HintView
-              options={ options }
-              id={ this.props.id }
-              code={ this.props.code }
-              before={ this.props.before }
-              after={ this.props.after }
-              traces={ this.props.traces }
-              currentCode={ this.props.currentCode }
-              step={ this.props.step }
-              stop={ this.props.stop }
-              beforeCode={ this.props.beforeCode }
-              afterCode={ this.props.afterCode }
-              beforeTraces={ this.props.beforeTraces }
-              afterTraces={ this.props.afterTraces }
-              added={ this.props.added }
-              removed={ this.props.removed }
-              addedLine={ this.props.addedLine }
-              removedLine={ this.props.removedLine }
-              diffs={ this.props.diffs }
-              log={ this.props.log }
-              test={ this.props.test }
-              beforeHistory={ this.props.beforeHistory}
-              afterHistory={ this.props.afterHistory}
-              beforeTicks={ this.props.beforeTicks}
-              afterTicks={ this.props.afterTicks}
-              commonKeys={ this.props.commonKeys}
-              focusKeys={ this.props.focusKeys}
-            />
-          </div>
-        </div>
-        <div className="ui two column centered grid">
-          <div id="mockup-view" className="nine wide column">
-            <MockupView
-              options={ options }
-            />
-          </div>
-        </div>
-        */}
       </div>
     )
   }

@@ -1,4 +1,6 @@
 import 'semantic-ui-css/semantic.js'
+import 'jquery-ui-bundle/jquery-ui.js'
+import 'd3/d3.v2.js'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/zenburn.css'
 import 'codemirror/theme/solarized.css'

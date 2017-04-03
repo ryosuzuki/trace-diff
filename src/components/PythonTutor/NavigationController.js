@@ -147,6 +147,15 @@ class NavigationController {
 
 export default NavigationController
 
+function assert(cond) {
+  if (!cond) {
+    console.trace();
+    alert("Assertion Failure (see console log for backtrace)");
+    throw 'Assertion Failure';
+  }
+}
+
+
 /*
   owner: ExecutionVisualizer;
   domRoot: any;

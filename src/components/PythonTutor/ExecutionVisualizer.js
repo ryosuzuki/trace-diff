@@ -4,7 +4,6 @@ import NavigationController from './NavigationController'
 import ProgramOutputBox from './ProgramOutputBox'
 import CodeDisplay from './CodeDisplay'
 
-
 let curVisualizerID = 1;
 let DEFAULT_EMBEDDED_CODE_DIV_WIDTH = 350;
 let DEFAULT_EMBEDDED_CODE_DIV_HEIGHT = 400;
@@ -955,7 +954,7 @@ class ExecutionVisualizer {
 } // END class ExecutionVisualizer
 
 
-export function assert(cond) {
+function assert(cond) {
   if (!cond) {
     console.trace();
     alert("Assertion Failure (see console log for backtrace)");
@@ -964,7 +963,7 @@ export function assert(cond) {
 }
 
 // taken from http://www.toao.net/32-my-htmlspecialchars-function-for-javascript
-export function htmlspecialchars(str) {
+function htmlspecialchars(str) {
   if (typeof(str) == "string") {
     str = str.replace(/&/g, "&amp;"); /* must do &amp; first */
 
@@ -1013,20 +1012,6 @@ function htmlsanitize(str) {
 //
 // also spaces are illegal, so convert to '_'
 // TODO: what other characters are illegal???
-var lbRE = new RegExp('\\[|{|\\(|<', 'g');
-var rbRE = new RegExp('\\]|}|\\)|>', 'g');
-function varnameToCssID(varname) {
-  // make sure to REPLACE ALL (using the 'g' option)
-  // rather than just replacing the first entry
-  return varname.replace(lbRE, 'LeftB_')
-                .replace(rbRE, '_RightB')
-                .replace(/[!]/g, '_BANG_')
-                .replace(/[?]/g, '_QUES_')
-                .replace(/[:]/g, '_COLON_')
-                .replace(/[=]/g, '_EQ_')
-                .replace(/[.]/g, '_DOT_')
-                .replace(/ /g, '_');
-}
 
 function isHeapRef(obj, heap) {
   // ordinary REF
@@ -1040,16 +1025,6 @@ function isHeapRef(obj, heap) {
   }
 
   return false;
-}
-
-function getRefID(obj) {
-  if (obj[0] == 'REF') {
-    return obj[1];
-  } else {
-    assert (obj[0] === 'C_DATA' && obj[2] === 'pointer');
-    assert (obj[3] != '<UNINITIALIZED>' && obj[3] != '<UNALLOCATED>');
-    return obj[3]; // pointed-to address
-  }
 }
 
 

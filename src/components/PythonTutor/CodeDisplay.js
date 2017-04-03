@@ -4,15 +4,10 @@ const SVG_ARROW_HEIGHT = 10; // must match height of SVG_ARROW_POLYGON
 
 
 var brightRed = '#e93f34';
-var connectorBaseColor = '#005583';
-var connectorHighlightColor = brightRed;
-var connectorInactiveColor = '#cccccc';
-var errorColor = brightRed;
-var breakpointColor = brightRed;
-
-// Unicode arrow types: '\u21d2', '\u21f0', '\u2907'
 var darkArrowColor = brightRed;
 var lightArrowColor = '#c9e6ca';
+// Unicode arrow types: '\u21d2', '\u21f0', '\u2907'
+
 var heapPtrSrcRE = /__heap_pointer_src_/;
 var rightwardNudgeHack = true; // suggested by John DeNero, toggle with global
 
@@ -21,6 +16,9 @@ class CodeDisplay {
 
   constructor(owner, domRoot, domRootD3,
               codToDisplay: string, lang: string, editCodeBaseURL: string) {
+
+    this.leftGutterSvgInitialized = false;
+
     this.owner = owner;
     this.domRoot = domRoot;
     this.domRootD3 = domRootD3;
@@ -70,9 +68,10 @@ class CodeDisplay {
         pyVer = 'cpp';
       }
 
-      var urlStr = $.param.fragment(editCodeBaseURL,
-                                    {code: this.codToDisplay, py: pyVer},
-                                    2);
+      var urlStr = ''
+      // $.param.fragment(editCodeBaseURL,
+      //                               {code: this.codToDisplay, py: pyVer},
+      //                               2);
       this.domRoot.find('#editBtn').attr('href', urlStr);
     }
     else {
@@ -369,15 +368,31 @@ class CodeDisplay {
 
 export default CodeDisplay
 
-/*
-  owner: ExecutionVisualizer;
-  domRoot: any;
-  domRootD3: any;
 
-  codToDisplay: string;
+function assert(cond) {
+  if (!cond) {
+    console.trace();
+    alert("Assertion Failure (see console log for backtrace)");
+    throw 'Assertion Failure';
+  }
+}
 
-  leftGutterSvgInitialized: boolean = false;
-  arrowOffsetY: number;
-  codeRowHeight: number;
+function htmlspecialchars(str) {
+  if (typeof(str) == "string") {
+    str = str.replace(/&/g, "&amp;"); /* must do &amp; first */
 
- */
+    // ignore these for now ...
+    //str = str.replace(/"/g, "&quot;");
+    //str = str.replace(/'/g, "&#039;");
+
+    str = str.replace(/</g, "&lt;");
+    str = str.replace(/>/g, "&gt;");
+
+    // replace spaces:
+    str = str.replace(/ /g, "&nbsp;");
+
+    // replace tab as four spaces:
+    str = str.replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
+  }
+  return str;
+}

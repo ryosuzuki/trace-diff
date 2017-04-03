@@ -1,7 +1,20 @@
 
+var brightRed = '#e93f34';
+var connectorBaseColor = '#005583';
+var connectorHighlightColor = brightRed;
+var connectorInactiveColor = '#cccccc';
+var errorColor = brightRed;
+var breakpointColor = brightRed;
+
+var rightwardNudgeHack = true;
+
 class DataVisualizer {
 
   constructor(owner, domRoot, domRootD3) {
+    this.curTrace = [];
+    this.curTraceLayouts = [];
+    this.classAttrsHidden = {};
+
     this.owner = owner;
     this.params = this.owner.params;
     this.curTrace = this.owner.curTrace;
@@ -477,7 +490,6 @@ class DataVisualizer {
           }
         });
       });
-
 
       // iterate through remaining elements of idsToRemove and REMOVE them from curLayout
       idsToRemove.forEach(function(id, xxx) {
@@ -2009,18 +2021,55 @@ class DataVisualizer {
 export default DataVisualizer
 
 
-  /*
-  owner: ExecutionVisualizer;
-  params: any; // aliases owner.params for convenience
-  curTrace: any[]; // aliases owner.curTrace
+function assert(cond) {
+  if (!cond) {
+    console.trace();
+    alert("Assertion Failure (see console log for backtrace)");
+    throw 'Assertion Failure';
+  }
+}
 
-  domRoot: any;
-  domRootD3: any;
+function getRefID(obj) {
+  if (obj[0] == 'REF') {
+    return obj[1];
+  } else {
+    assert (obj[0] === 'C_DATA' && obj[2] === 'pointer');
+    assert (obj[3] != '<UNINITIALIZED>' && obj[3] != '<UNALLOCATED>');
+    return obj[3]; // pointed-to address
+  }
+}
 
-  curTraceLayouts: any[];
+function htmlspecialchars(str) {
+  if (typeof(str) == "string") {
+    str = str.replace(/&/g, "&amp;"); /* must do &amp; first */
 
-  jsPlumbInstance: any;
-  jsPlumbManager: any;
+    // ignore these for now ...
+    //str = str.replace(/"/g, "&quot;");
+    //str = str.replace(/'/g, "&#039;");
 
-  classAttrsHidden: any = {}; // kludgy hack for 'show/hide attributes' for class objects
-  */
+    str = str.replace(/</g, "&lt;");
+    str = str.replace(/>/g, "&gt;");
+
+    // replace spaces:
+    str = str.replace(/ /g, "&nbsp;");
+
+    // replace tab as four spaces:
+    str = str.replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
+  }
+  return str;
+}
+
+function varnameToCssID(varname) {
+  var lbRE = new RegExp('\\[|{|\\(|<', 'g');
+  var rbRE = new RegExp('\\]|}|\\)|>', 'g');
+  // make sure to REPLACE ALL (using the 'g' option)
+  // rather than just replacing the first entry
+  return varname.replace(lbRE, 'LeftB_')
+                .replace(rbRE, '_RightB')
+                .replace(/[!]/g, '_BANG_')
+                .replace(/[?]/g, '_QUES_')
+                .replace(/[:]/g, '_COLON_')
+                .replace(/[=]/g, '_EQ_')
+                .replace(/[.]/g, '_DOT_')
+                .replace(/ /g, '_');
+}

@@ -1,0 +1,736 @@
+/*
+
+Online Python Tutor
+https://github.com/pgbovine/OnlinePythonTutor/
+
+Copyright (C) Philip J. Guo (philip@pgbovine.net)
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+*/
+/* Most recent color scheme redesign on 2012-08-19 */
+/* To prevent CSS namespace clashes, prefix all rules with:
+     div.ExecutionVisualizer
+*/
+/* reset some styles to nullify effects of existing stylesheets
+   e.g., http://meyerweb.com/eric/tools/css/reset/
+*/
+
+
+/*
+div.ExecutionVisualizer div#codeDisplayDiv {
+  width: 550px;
+}
+*/
+
+div.ExecutionVisualizer {
+  table.visualizer {
+    font-family: verdana, arial, helvetica, sans-serif;
+    font-size: 10pt;
+    margin-bottom: 10px;
+    td.vizLayoutTd {
+      vertical-align: top;
+    }
+  }
+  td#stack_td {
+    vertical-align: top;
+    font-size: 10pt;
+  }
+  td#heap_td {
+    vertical-align: top;
+    font-size: 10pt;
+  }
+  div#pyCodeOutputDiv {
+    max-height: 460px;
+    overflow: auto;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  table#pyCodeOutput {
+    font-family: Andale mono, monospace;
+    font-size: 11pt;
+    line-height: 1.1em;
+    border-collapse: separate;
+    border-spacing: 0px;
+    border-top: 1px solid #bbb;
+    padding-top: 3px;
+    border-bottom: 1px solid #bbb;
+    margin: 6px auto;
+    td {
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+    .lineNo {
+      color: #aaa;
+      padding: 0.2em;
+      padding-left: 0.3em;
+      padding-right: 0.5em;
+      text-align: right;
+    }
+    .cod {
+      margin-left: 3px;
+      padding-left: 7px;
+      text-align: left;
+    }
+  }
+  #leftCodeGutterSVG {
+    width: 18px;
+    min-width: 18px;
+    height: 0px;
+  }
+  #prevLegendArrowSVG {
+    width: 18px;
+    height: 10px;
+  }
+  #curLegendArrowSVG {
+    width: 18px;
+    height: 10px;
+  }
+  .arrow {
+    font-size: 16pt;
+  }
+  div#progOutputs {
+    margin-left: 13px;
+    margin-bottom: 3px;
+  }
+  div#legendDiv {
+    padding: 0px;
+    text-align: left;
+    color: #666;
+    font-size: 9pt;
+  }
+  div#editCodeLinkDiv {
+    text-align: center;
+    margin: 8px auto;
+    font-size: 11pt;
+  }
+  div#annotateLinkDiv {
+    margin-top: 0px;
+    margin-bottom: 12px;
+  }
+  div#stepAnnotationDiv {
+    margin-bottom: 12px;
+  }
+  textarea#stepAnnotationEditor {
+    border: 1px solid #999999;
+    padding: 4px;
+    overflow: auto;
+    resize: none;
+  }
+  textarea#vizTitleEditor {
+    border: 1px solid #999999;
+    padding: 4px;
+    overflow: auto;
+    resize: none;
+  }
+  textarea#vizDescriptionEditor {
+    border: 1px solid #999999;
+    padding: 4px;
+    overflow: auto;
+    resize: none;
+  }
+  #errorOutput {
+    color: #e93f34;
+    font-size: 12pt;
+    padding: 2px;
+    line-height: 1.5em;
+    margin-bottom: 4px;
+  }
+  #vcrControls {
+    margin: 15px auto;
+    text-align: center;
+    button {
+      margin-left: 2px;
+      margin-right: 2px;
+    }
+    #curInstr {
+      margin-left: 4px;
+      margin-right: 4px;
+    }
+  }
+  #pyStdout {
+    border: 1px solid #999999;
+    font-size: 10pt;
+    padding: 3px;
+    font-family: Andale mono, monospace;
+    overflow: auto;
+    resize: none;
+  }
+  .vizFrame {
+    margin-bottom: 20px;
+    padding-left: 8px;
+    border-left: 2px solid #cccccc;
+  }
+  .nullObj {
+    // font-size: 8pt;
+  }
+  .stringObj {
+    font-family: Andale mono, monospace;
+    white-space: nowrap;
+  }
+  .customObj {
+    font-family: Andale mono, monospace;
+    white-space: nowrap;
+  }
+  .funcObj {
+    font-family: Andale mono, monospace;
+    white-space: nowrap;
+  }
+  .funcCode {
+    font-size: 8pt;
+  }
+  .retval {
+    font-size: 9pt;
+  }
+  .stackFrame {
+    .retval {
+      color: #e93f34;
+    }
+  }
+  table.listTbl {
+    background-color: #ffffc6;
+    border: 0px solid black;
+    border-spacing: 0px;
+    td.listHeader {
+      padding-left: 4px;
+      padding-top: 2px;
+      padding-bottom: 3px;
+      font-size: 8pt;
+      color: #777;
+      text-align: left;
+      border-left: 1px solid #555555;
+    }
+    td.listElt {
+      border-bottom: 1px solid #555555;
+      border-left: 1px solid #555555;
+      padding-top: 0px;
+      padding-bottom: 8px;
+      padding-left: 10px;
+      padding-right: 10px;
+      vertical-align: bottom;
+    }
+  }
+  table.tupleTbl {
+    background-color: #ffffc6;
+    border-spacing: 0px;
+    color: black;
+    border-bottom: 1px solid #555555;
+    border-top: 1px solid #555555;
+    border-right: 1px solid #555555;
+    td.tupleHeader {
+      padding-left: 4px;
+      padding-top: 2px;
+      padding-bottom: 3px;
+      font-size: 8pt;
+      color: #777;
+      text-align: left;
+      border-left: 1px solid #555555;
+    }
+    td.tupleElt {
+      border-left: 1px solid #555555;
+      padding-top: 0px;
+      padding-bottom: 8px;
+      padding-left: 10px;
+      padding-right: 10px;
+      vertical-align: bottom;
+    }
+  }
+  table.setTbl {
+    background-color: #ffffc6;
+    border: 1px solid #555555;
+    border-spacing: 0px;
+    text-align: center;
+    td.setElt {
+      padding: 8px;
+    }
+  }
+  table.cArrayTbl {
+    background-color: #ffffc6;
+    padding-left: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    font-size: 8pt;
+    color: #777;
+    text-align: left;
+    border: 0px solid black;
+    border-spacing: 0px;
+    td.cArrayHeader {
+      padding-left: 5px;
+      padding-top: 0px;
+      padding-bottom: 2px;
+      font-size: 6pt;
+      color: #777;
+      text-align: left;
+      border-bottom: 0px solid black;
+    }
+    td.cArrayElt {
+      border-bottom: 1px solid #888;
+      border-left: 1px solid #888;
+      border-top: 0px solid black;
+      color: black;
+      padding-top: 2px;
+      padding-bottom: 4px;
+      padding-left: 5px;
+      padding-right: 4px;
+      vertical-align: bottom;
+    }
+    td.cMultidimArrayHeader {
+      padding-left: 5px;
+      padding-right: 5px;
+      padding-top: 1px;
+      padding-bottom: 3px;
+      font-size: 6pt;
+      color: #777;
+      text-align: left;
+      border-top: 1px solid #888;
+      border-left: 1px solid #888;
+      border-bottom: 0px solid black;
+    }
+    td.cMultidimArrayElt {
+      border-left: 1px solid #888;
+      color: black;
+      padding-top: 1px;
+      padding-bottom: 4px;
+      padding-left: 5px;
+      padding-right: 5px;
+      vertical-align: bottom;
+    }
+  }
+  .cdataHeader {
+    font-size: 6pt;
+    color: #555;
+    padding-bottom: 2px;
+  }
+  .cdataElt {
+    font-size: 10pt;
+  }
+  .cdataUninit {
+    color: #888;
+  }
+  table.customObjTbl {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    td.customObjElt {
+      padding: 5px;
+    }
+  }
+  table.dictTbl {
+    border-spacing: 1px;
+    td.dictKey {
+      background-color: #faebbf;
+      padding-top: 6px;
+      padding-bottom: 6px;
+      padding-left: 10px;
+      padding-right: 4px;
+      text-align: right;
+    }
+    td.dictVal {
+      background-color: #ffffc6;
+      padding-top: 6px;
+      padding-bottom: 6px;
+      padding-right: 10px;
+      padding-left: 4px;
+    }
+  }
+  table.instTbl {
+    border-spacing: 1px;
+    td.instKey {
+      background-color: #faebbf;
+      padding-top: 6px;
+      padding-bottom: 6px;
+      padding-left: 10px;
+      padding-right: 4px;
+      text-align: right;
+    }
+    td.instVal {
+      background-color: #ffffc6;
+      padding-top: 6px;
+      padding-bottom: 6px;
+      padding-right: 10px;
+      padding-left: 4px;
+      border-left: 1px #888 solid;
+    }
+    td {
+      border-bottom: 1px #888 solid;
+    }
+  }
+  table.classTbl {
+    border-spacing: 1px;
+    border-collapse: collapse;
+    border: 1px #888 solid;
+    td.classKey {
+      background-color: #faebbf;
+      padding-top: 6px;
+      padding-bottom: 6px;
+      padding-left: 10px;
+      padding-right: 4px;
+      text-align: right;
+    }
+    td.classVal {
+      background-color: #ffffc6;
+      padding-top: 6px;
+      padding-bottom: 6px;
+      padding-right: 10px;
+      padding-left: 4px;
+      border-left: 1px #888 solid;
+    }
+    td {
+      border-bottom: 1px #888 solid;
+    }
+  }
+  td.funcCod {
+    background-color: #ffffc6;
+    padding-left: 4px;
+  }
+  table.funcTbl {
+    border-collapse: collapse;
+    border: 1px #888 solid;
+  }
+  td.listElt {
+    table.dictTbl {
+      border: 1px #888 solid;
+    }
+  }
+  td.tupleElt {
+    table.dictTbl {
+      border: 1px #888 solid;
+    }
+  }
+  td.dictVal {
+    table.dictTbl {
+      border: 1px #888 solid;
+    }
+  }
+  td.instVal {
+    table.dictTbl {
+      border: 1px #888 solid;
+    }
+  }
+  td.classVal {
+    table.dictTbl {
+      border: 1px #888 solid;
+    }
+  }
+  .objectIdLabel {
+    font-size: 8pt;
+    color: #444;
+    margin-bottom: 2px;
+  }
+  .typeLabel {
+    font-size: 8pt;
+    color: #555;
+    margin-bottom: 2px;
+  }
+  div#stack {
+    padding-left: 10px;
+    padding-right: 30px;
+  }
+  div#globals_area {
+    padding-left: 10px;
+    padding-right: 30px;
+  }
+  div.stackFrame {
+    background-color: #ffffff;
+    margin-bottom: 15px;
+    padding: 2px;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-bottom: 4px;
+    font-size: 10pt;
+    border-left: 1px solid #a6b3b6;
+  }
+  div.zombieStackFrame {
+    background-color: #ffffff;
+    margin-bottom: 15px;
+    padding: 2px;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-bottom: 4px;
+    font-size: 10pt;
+    border-left: 1px dotted #aaa;
+    color: #a0a0a0;
+  }
+  div.highlightedStackFrame {
+    background-color: #e2ebf6;
+    border-left: 1px solid #a6b3b6;
+  }
+  div.stackFrameHeader {
+    font-family: Andale mono, monospace;
+    font-size: 10pt;
+    margin-top: 4px;
+    margin-bottom: 3px;
+    white-space: nowrap;
+  }
+  td.stackFrameVar {
+    text-align: right;
+    padding-right: 8px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
+  td.stackFrameValue {
+    text-align: left;
+    border-bottom: 1px solid #aaaaaa;
+    border-left: 1px solid #aaaaaa;
+    vertical-align: middle;
+    padding-top: 3px;
+    padding-left: 3px;
+    padding-bottom: 3px;
+  }
+  .stackFrameVarTable {
+    text-align: right;
+    padding-top: 3px;
+    margin-left: auto;
+    margin-right: 0px;
+    border-collapse: separate;
+    border-spacing: 2px;
+  }
+  div#heap {
+    float: left;
+    padding-left: 30px;
+  }
+  td.toplevelHeapObject {
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+  table.heapRow {
+    margin-bottom: 10px;
+  }
+  div.heapObject {
+    padding-left: 2px;
+  }
+  div.heapPrimitive {
+    padding-left: 4px;
+  }
+  div#stackHeader {
+    margin-bottom: 15px;
+    text-align: right;
+    color: #333333;
+    font-size: 10pt;
+  }
+  div#heapHeader {
+    margin-bottom: 15px;
+    color: #333333;
+    font-size: 10pt;
+  }
+  div#langDisplayDiv {
+    text-align: center;
+    margin-top: 2pt;
+    margin-bottom: 3pt;
+    color: #333333;
+    font-size: 10pt;
+  }
+  #executionSlider {
+    margin-top: 15px;
+    margin-bottom: 5px;
+    width: 98%;
+  }
+  #executionSliderCaption {
+    font-size: 8pt;
+    color: #666666;
+    margin-top: 15px;
+  }
+  #executionSliderFooter {
+    margin-top: -7px;
+  }
+  #codeFooterDocs {
+    margin-bottom: 3px;
+    font-size: 8pt;
+    color: #666;
+    margin-top: 5px;
+    margin-bottom: 12px;
+    width: 95%;
+  }
+  #printOutputDocs {
+    margin-bottom: 3px;
+    font-size: 8pt;
+    color: #666;
+  }
+  .ui-slider {
+    .ui-slider-handle {
+      border: 1px solid #999;
+    }
+  }
+  .annotationText {
+    font-family: verdana, arial, helvetica, sans-serif;
+    font-size: 11pt;
+    line-height: 1.5em;
+  }
+  .vizDescriptionText {
+    font-family: verdana, arial, helvetica, sans-serif;
+    font-size: 11pt;
+    line-height: 1.5em;
+  }
+  .vizTitleText {
+    font-family: verdana, arial, helvetica, sans-serif;
+    font-size: 16pt;
+    margin-bottom: 12pt;
+  }
+  div#vizHeader {
+    margin-bottom: 10px;
+    width: 700px;
+    max-width: 700px;
+  }
+  .highlight-prev {
+    background-color: #F0F0EA;
+  }
+  .highlight-cur {
+    background-color: #FFFF66;
+  }
+  .highlight-legend {
+    padding: 2px;
+  }
+  a {
+    color: #3D58A2;
+    &:visited {
+      color: #3D58A2;
+    }
+    &:hover {
+      color: #3D58A2;
+    }
+  }
+  div#rawUserInputDiv {
+    padding: 5px;
+    width: 95%;
+    margin: 5px auto;
+    text-align: center;
+    border: 1px #e93f34 solid;
+  }
+  .pycrazy-highlight-prev {
+    background-color: #eeeeee;
+  }
+  .pycrazy-highlight-cur {
+    background-color: #FFFF66;
+  }
+  .pycrazy-highlight-prev-and-cur {
+    background-color: #FFFF66;
+    text-decoration: none;
+    border-bottom: 1px solid #999999;
+  }
+  table.queueTbl {
+    background-color: #ffffc6;
+    border: 0px solid black;
+    border-spacing: 0px;
+    td.queueElt {
+      padding-left: 8px;
+      padding-right: 8px;
+      padding-top: 2px;
+      padding-bottom: 3px;
+      border-top: 1px solid #555555;
+      border-bottom: 1px solid #555555;
+      border-left: 1px dashed #555555;
+    }
+    td.queueFElt {
+      background-color: white;
+      border-top: 1px solid #555555;
+      border-bottom: 1px solid #555555;
+    }
+    td.queueLElt {
+      background-color: white;
+      border-top: 1px solid#555555;
+      border-bottom: 1px solid #555555;
+      border-left: 1px dashed #555555;
+    }
+  }
+  table.stackTbl {
+    background-color: #ffffc6;
+    border: 0px solid black;
+    border-spacing: 0px;
+    td.stackElt {
+      padding-left: 8px;
+      padding-right: 8px;
+      padding-top: 2px;
+      padding-bottom: 3px;
+      border-top: 1px solid #555555;
+      border-bottom: 1px solid #555555;
+      border-left: 1px dashed #555555;
+    }
+    td.stackFElt {
+      background-color: white;
+      border-top: 1px solid #555555;
+      border-bottom: 1px solid #555555;
+    }
+    td.stackLElt {
+      background-color: white;
+      border-left: 1px solid #555555;
+    }
+  }
+  td.stackElt {
+    table.dictTbl {
+      border: 1px #888 solid;
+    }
+  }
+  td.stackLElt {
+    table.dictTbl {
+      border: 1px #888 solid;
+    }
+  }
+  td.stackFElt {
+    table.dictTbl {
+      border: 1px #888 solid;
+    }
+  }
+  td.queueElt {
+    table.dictTbl {
+      border: 1px #888 solid;
+    }
+  }
+  td.queueLElt {
+    table.dictTbl {
+      border: 1px #888 solid;
+    }
+  }
+  td.queueFElt {
+    table.dictTbl {
+      border: 1px #888 solid;
+    }
+  }
+}
+textarea.bubbleInputText {
+  border: 1px solid #ccc;
+  outline: none;
+  overflow: auto;
+  resize: none;
+  width: 225px;
+  max-width: 225px;
+  height: 35px;
+  max-height: 35px;
+}
+.ui-resizable-e {
+  background-color: #dddddd;
+  width: 1px;
+  border: 3px solid white;
+  &:hover {
+    border-color: #dddddd;
+  }
+}
+#optTabularView {
+  thead.stepTableThead {
+    background-color: #bbb;
+  }
+  td.stepTableTd {
+    padding: 3px 10px;
+  }
+}
+.symbolic {
+  font-size: 18pt;
+}

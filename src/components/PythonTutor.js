@@ -18,20 +18,33 @@ class PythonTutor extends Component {
   init() {
     console.log('hello world')
 
-    const data = {
-      code: this.props.beforeCode,
-      trace: this.props.beforeTraces
-    }
-    const options = {
+    let options = {
       embeddedMode: true,
       lang: 'py2',
       startingInstruction: 10,
       editCodeBaseURL: 'visualize.html'
     }
-    const demoViz = new ExecutionVisualizer('demoViz', data, options);
+
+    let beforeData = {
+      code: this.props.beforeCode,
+      trace: this.props.beforeTraces,
+      vizId: 'before',
+    }
+    let beforeViz = new ExecutionVisualizer('beforeViz', beforeData, options);
+    window.beforeViz = beforeViz
+
+    let afterData = {
+      code: this.props.afterCode,
+      trace: this.props.afterTraces,
+      vizId: 'after'
+    }
+    options.hideCode = true
+    let afterViz = new ExecutionVisualizer('afterViz', afterData, options);
+    window.afterViz = afterViz
+
+
 
     $('.variableTr[data-name="previous"]').addClass('highlight-var-name')
-
     window.ladder.init()
 
   }
@@ -40,7 +53,8 @@ class PythonTutor extends Component {
     return (
       <div className="ui two column centered grid">
         PythonTutor
-        <div id="demoViz" className="ten wide column"></div>
+        <div id="beforeViz" className="ten wide column"></div>
+        <div id="afterViz" className="five wide column"></div>
         <div className="five wide column">
           <Ladder
             beforeHistory={ this.props.beforeHistory }

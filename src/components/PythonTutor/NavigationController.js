@@ -27,10 +27,26 @@ class NavigationController {
 
     this.domRoot.append(navHTML);
 
-    this.domRoot.find("#jmpFirstInstr").click(() => {this.owner.renderStep(0);});
-    this.domRoot.find("#jmpLastInstr").click(() => {this.owner.renderStep(this.nSteps - 1);});
-    this.domRoot.find("#jmpStepBack").click(() => {this.owner.stepBack();});
-    this.domRoot.find("#jmpStepFwd").click(() => {this.owner.stepForward();});
+    this.domRoot.find("#jmpFirstInstr").click(() => {
+      // this.owner.renderStep(0);
+      window.beforeViz.renderStep(0);
+      window.afterViz.renderStep(0);
+    });
+    this.domRoot.find("#jmpLastInstr").click(() => {
+      // this.owner.renderStep(this.nSteps - 1);
+      window.beforeViz.renderStep(this.nSteps - 1);
+      window.afterViz.renderStep(this.nSteps - 1);
+    });
+    this.domRoot.find("#jmpStepBack").click(() => {
+      // this.owner.stepBack();
+      window.beforeViz.stepBack();
+      window.afterViz.stepBack();
+    });
+    this.domRoot.find("#jmpStepFwd").click(() => {
+      // this.owner.stepForward();
+      window.beforeViz.stepForward();
+      window.afterViz.stepForward();
+    });
 
     // disable controls initially ...
     this.domRoot.find("#vcrControls #jmpFirstInstr").attr("disabled", true);

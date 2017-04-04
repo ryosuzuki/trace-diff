@@ -55,6 +55,7 @@ class ExecutionVisualizer {
     this.curInputCode = dat.code.replace(/\s*$/g, ""); // kill trailing spaces
     this.params = params;
     this.curTrace = dat.trace;
+    this.vizId = dat.vizId
 
     // postprocess the trace
     if (this.curTrace.length > 0) {

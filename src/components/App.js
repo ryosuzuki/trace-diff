@@ -104,10 +104,13 @@ class App extends Component {
     this.updateState(state)
     window.history.pushState(null, null, `?id=${id}`)
     // window.diffView.generateDiff(id)
+
+    window.pythonTutor.init()
+
     setTimeout(() => {
       console.log('call init')
 
-      window.pythonTutor.init()
+      // window.pythonTutor.init()
     }, 500)
 
     db.find({ test: item.test, result: item.result }, function(err, items) {

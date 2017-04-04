@@ -4,6 +4,7 @@ import 'codemirror/mode/python/python'
 import _ from 'lodash'
 
 import ExecutionVisualizer from './PythonTutor/ExecutionVisualizer'
+import Ladder from './PythonTutor/Ladder'
 
 class PythonTutor extends Component {
   constructor(props) {
@@ -31,13 +32,38 @@ class PythonTutor extends Component {
 
     $('.variableTr[data-name="previous"]').addClass('highlight-var-name')
 
+    window.ladder.init()
+
   }
 
   render() {
     return (
-      <div>
+      <div className="ui two column centered grid">
         PythonTutor
-        <div id="demoViz"></div>
+        <div id="demoViz" className="ten wide column"></div>
+        <div className="five wide column">
+          <Ladder
+            beforeHistory={ this.props.beforeHistory }
+            afterHistory={ this.props.afterHistory }
+
+            beforeEvents={ this.props.beforeEvents }
+            afterEvents={ this.props.afterEvents }
+
+            beforeAst={ this.props.beforeAst }
+            afterAst={ this.props.afterAst }
+
+            currentCode={ this.props.currentCode }
+            beforeCode={ this.props.beforeCode }
+
+            before={ this.props.before }
+
+            focusKeys={ this.props.focusKeys }
+            test={ this.props.test }
+            expected={ this.props.expected }
+            result={ this.props.result }
+            root={ this }
+          />
+        </div>
       </div>
     )
   }

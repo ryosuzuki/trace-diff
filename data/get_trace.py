@@ -11,6 +11,7 @@ items = []
 with open(path) as file:
   items = json.load(file)
 
+i = 0
 for item in items:
   before = item['before']
   after = item['after']
@@ -25,7 +26,6 @@ for item in items:
       ast = parse.make_ast(line)
     except Exception as err:
       ast = { 'error': True }
-    print line
     before_ast.append(ast)
 
   for line in after.splitlines():
@@ -38,7 +38,6 @@ for item in items:
 
   item['beforeAst'] = before_ast
   item['afterAst'] = after_ast
-
 
   keywords = re.findall(r"[\w]+", test)
   combiner = None

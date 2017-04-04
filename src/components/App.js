@@ -73,6 +73,7 @@ class App extends Component {
   setCurrent(id) {
     console.log('set current')
     let item = this.props.items[id]
+
     let stream = new Stream()
     stream.generate(item.beforeTraces, item.beforeCode, 'before')
     stream.generate(item.afterTraces, item.afterCode, 'after')

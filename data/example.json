@@ -148,6 +148,7 @@
         "stack_to_render": [], 
         "globals": {}, 
         "heap": {}, 
+        "stack_locals": [], 
         "line": 1, 
         "event": "step_line"
       }, 
@@ -171,6 +172,7 @@
             null
           ]
         }, 
+        "stack_locals": [], 
         "line": 7, 
         "event": "step_line"
       }, 
@@ -204,6 +206,7 @@
             null
           ]
         }, 
+        "stack_locals": [], 
         "line": 10, 
         "event": "step_line"
       }, 
@@ -247,6 +250,7 @@
             null
           ]
         }, 
+        "stack_locals": [], 
         "line": 13, 
         "event": "step_line"
       }, 
@@ -318,6 +322,23 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "base": 11, 
+              "n": 3
+            }
+          ]
+        ], 
         "line": 1, 
         "event": "call"
       }, 
@@ -389,6 +410,23 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "base": 11, 
+              "n": 3
+            }
+          ]
+        ], 
         "line": 2, 
         "event": "step_line"
       }, 
@@ -475,6 +513,29 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "square", 
+            {
+              "x": 11
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "base": 11, 
+              "n": 3
+            }
+          ]
+        ], 
         "line": 10, 
         "event": "call"
       }, 
@@ -561,6 +622,29 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "square", 
+            {
+              "x": 11
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "base": 11, 
+              "n": 3
+            }
+          ]
+        ], 
         "line": 11, 
         "event": "step_line"
       }, 
@@ -649,6 +733,30 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "square", 
+            {
+              "__return__": 121, 
+              "x": 11
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "base": 11, 
+              "n": 3
+            }
+          ]
+        ], 
         "line": 11, 
         "event": "return"
       }, 
@@ -722,6 +830,24 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "accumulate", 
+            {
+              "previous": 121, 
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "base": 11, 
+              "n": 3
+            }
+          ]
+        ], 
         "line": 3, 
         "event": "step_line"
       }, 
@@ -797,6 +923,25 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 1, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 121
+            }
+          ]
+        ], 
         "line": 4, 
         "event": "step_line"
       }, 
@@ -887,6 +1032,31 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "square", 
+            {
+              "x": 1
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 1, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 121
+            }
+          ]
+        ], 
         "line": 10, 
         "event": "call"
       }, 
@@ -977,6 +1147,31 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "square", 
+            {
+              "x": 1
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 1, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 121
+            }
+          ]
+        ], 
         "line": 11, 
         "event": "step_line"
       }, 
@@ -1069,6 +1264,32 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "square", 
+            {
+              "__return__": 1, 
+              "x": 1
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 1, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 121
+            }
+          ]
+        ], 
         "line": 11, 
         "event": "return"
       }, 
@@ -1161,6 +1382,32 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "add", 
+            {
+              "a": 121, 
+              "b": 1
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 1, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 121
+            }
+          ]
+        ], 
         "line": 7, 
         "event": "call"
       }, 
@@ -1253,6 +1500,32 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "add", 
+            {
+              "a": 121, 
+              "b": 1
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 1, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 121
+            }
+          ]
+        ], 
         "line": 8, 
         "event": "step_line"
       }, 
@@ -1347,6 +1620,33 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "add", 
+            {
+              "a": 121, 
+              "__return__": 122, 
+              "b": 1
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 1, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 121
+            }
+          ]
+        ], 
         "line": 8, 
         "event": "return"
       }, 
@@ -1422,6 +1722,25 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 1, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 122
+            }
+          ]
+        ], 
         "line": 3, 
         "event": "step_line"
       }, 
@@ -1497,6 +1816,25 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 2, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 122
+            }
+          ]
+        ], 
         "line": 4, 
         "event": "step_line"
       }, 
@@ -1587,6 +1925,31 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "square", 
+            {
+              "x": 2
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 2, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 122
+            }
+          ]
+        ], 
         "line": 10, 
         "event": "call"
       }, 
@@ -1677,6 +2040,31 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "square", 
+            {
+              "x": 2
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 2, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 122
+            }
+          ]
+        ], 
         "line": 11, 
         "event": "step_line"
       }, 
@@ -1769,6 +2157,32 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "square", 
+            {
+              "__return__": 4, 
+              "x": 2
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 2, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 122
+            }
+          ]
+        ], 
         "line": 11, 
         "event": "return"
       }, 
@@ -1861,6 +2275,32 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "add", 
+            {
+              "a": 122, 
+              "b": 4
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 2, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 122
+            }
+          ]
+        ], 
         "line": 7, 
         "event": "call"
       }, 
@@ -1953,6 +2393,32 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "add", 
+            {
+              "a": 122, 
+              "b": 4
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 2, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 122
+            }
+          ]
+        ], 
         "line": 8, 
         "event": "step_line"
       }, 
@@ -2047,6 +2513,33 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "add", 
+            {
+              "a": 122, 
+              "__return__": 126, 
+              "b": 4
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 2, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 122
+            }
+          ]
+        ], 
         "line": 8, 
         "event": "return"
       }, 
@@ -2122,6 +2615,25 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 2, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 126
+            }
+          ]
+        ], 
         "line": 3, 
         "event": "step_line"
       }, 
@@ -2197,6 +2709,25 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 3, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 126
+            }
+          ]
+        ], 
         "line": 4, 
         "event": "step_line"
       }, 
@@ -2287,6 +2818,31 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "square", 
+            {
+              "x": 3
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 3, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 126
+            }
+          ]
+        ], 
         "line": 10, 
         "event": "call"
       }, 
@@ -2377,6 +2933,31 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "square", 
+            {
+              "x": 3
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 3, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 126
+            }
+          ]
+        ], 
         "line": 11, 
         "event": "step_line"
       }, 
@@ -2469,6 +3050,32 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "square", 
+            {
+              "__return__": 9, 
+              "x": 3
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 3, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 126
+            }
+          ]
+        ], 
         "line": 11, 
         "event": "return"
       }, 
@@ -2561,6 +3168,32 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "add", 
+            {
+              "a": 126, 
+              "b": 9
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 3, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 126
+            }
+          ]
+        ], 
         "line": 7, 
         "event": "call"
       }, 
@@ -2653,6 +3286,32 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "add", 
+            {
+              "a": 126, 
+              "b": 9
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 3, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 126
+            }
+          ]
+        ], 
         "line": 8, 
         "event": "step_line"
       }, 
@@ -2747,6 +3406,33 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "add", 
+            {
+              "a": 126, 
+              "__return__": 135, 
+              "b": 9
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 3, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 126
+            }
+          ]
+        ], 
         "line": 8, 
         "event": "return"
       }, 
@@ -2822,6 +3508,25 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 3, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 135
+            }
+          ]
+        ], 
         "line": 3, 
         "event": "step_line"
       }, 
@@ -2897,6 +3602,25 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 3, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 135
+            }
+          ]
+        ], 
         "line": 5, 
         "event": "step_line"
       }, 
@@ -2974,6 +3698,26 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 3, 
+              "n": 3, 
+              "base": 11, 
+              "__return__": 135, 
+              "previous": 135
+            }
+          ]
+        ], 
         "line": 5, 
         "event": "return"
       }, 
@@ -3017,6 +3761,7 @@
             null
           ]
         }, 
+        "stack_locals": [], 
         "line": 13, 
         "event": "return"
       }
@@ -3030,6 +3775,7 @@
         "stack_to_render": [], 
         "globals": {}, 
         "heap": {}, 
+        "stack_locals": [], 
         "line": 1, 
         "event": "step_line"
       }, 
@@ -3053,6 +3799,7 @@
             null
           ]
         }, 
+        "stack_locals": [], 
         "line": 7, 
         "event": "step_line"
       }, 
@@ -3086,6 +3833,7 @@
             null
           ]
         }, 
+        "stack_locals": [], 
         "line": 10, 
         "event": "step_line"
       }, 
@@ -3129,6 +3877,7 @@
             null
           ]
         }, 
+        "stack_locals": [], 
         "line": 13, 
         "event": "step_line"
       }, 
@@ -3200,6 +3949,23 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "base": 11, 
+              "n": 3
+            }
+          ]
+        ], 
         "line": 1, 
         "event": "call"
       }, 
@@ -3271,6 +4037,23 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "base": 11, 
+              "n": 3
+            }
+          ]
+        ], 
         "line": 2, 
         "event": "step_line"
       }, 
@@ -3344,6 +4127,24 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "accumulate", 
+            {
+              "previous": 11, 
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "base": 11, 
+              "n": 3
+            }
+          ]
+        ], 
         "line": 3, 
         "event": "step_line"
       }, 
@@ -3419,6 +4220,25 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 1, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 11
+            }
+          ]
+        ], 
         "line": 4, 
         "event": "step_line"
       }, 
@@ -3509,6 +4329,31 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "square", 
+            {
+              "x": 1
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 1, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 11
+            }
+          ]
+        ], 
         "line": 10, 
         "event": "call"
       }, 
@@ -3599,6 +4444,31 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "square", 
+            {
+              "x": 1
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 1, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 11
+            }
+          ]
+        ], 
         "line": 11, 
         "event": "step_line"
       }, 
@@ -3691,6 +4561,32 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "square", 
+            {
+              "__return__": 1, 
+              "x": 1
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 1, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 11
+            }
+          ]
+        ], 
         "line": 11, 
         "event": "return"
       }, 
@@ -3783,6 +4679,32 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "add", 
+            {
+              "a": 11, 
+              "b": 1
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 1, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 11
+            }
+          ]
+        ], 
         "line": 7, 
         "event": "call"
       }, 
@@ -3875,6 +4797,32 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "add", 
+            {
+              "a": 11, 
+              "b": 1
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 1, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 11
+            }
+          ]
+        ], 
         "line": 8, 
         "event": "step_line"
       }, 
@@ -3969,6 +4917,33 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "add", 
+            {
+              "a": 11, 
+              "__return__": 12, 
+              "b": 1
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 1, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 11
+            }
+          ]
+        ], 
         "line": 8, 
         "event": "return"
       }, 
@@ -4044,6 +5019,25 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 1, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 12
+            }
+          ]
+        ], 
         "line": 3, 
         "event": "step_line"
       }, 
@@ -4119,6 +5113,25 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 2, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 12
+            }
+          ]
+        ], 
         "line": 4, 
         "event": "step_line"
       }, 
@@ -4209,6 +5222,31 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "square", 
+            {
+              "x": 2
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 2, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 12
+            }
+          ]
+        ], 
         "line": 10, 
         "event": "call"
       }, 
@@ -4299,6 +5337,31 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "square", 
+            {
+              "x": 2
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 2, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 12
+            }
+          ]
+        ], 
         "line": 11, 
         "event": "step_line"
       }, 
@@ -4391,6 +5454,32 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "square", 
+            {
+              "__return__": 4, 
+              "x": 2
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 2, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 12
+            }
+          ]
+        ], 
         "line": 11, 
         "event": "return"
       }, 
@@ -4483,6 +5572,32 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "add", 
+            {
+              "a": 12, 
+              "b": 4
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 2, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 12
+            }
+          ]
+        ], 
         "line": 7, 
         "event": "call"
       }, 
@@ -4575,6 +5690,32 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "add", 
+            {
+              "a": 12, 
+              "b": 4
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 2, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 12
+            }
+          ]
+        ], 
         "line": 8, 
         "event": "step_line"
       }, 
@@ -4669,6 +5810,33 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "add", 
+            {
+              "a": 12, 
+              "__return__": 16, 
+              "b": 4
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 2, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 12
+            }
+          ]
+        ], 
         "line": 8, 
         "event": "return"
       }, 
@@ -4744,6 +5912,25 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 2, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 16
+            }
+          ]
+        ], 
         "line": 3, 
         "event": "step_line"
       }, 
@@ -4819,6 +6006,25 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 3, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 16
+            }
+          ]
+        ], 
         "line": 4, 
         "event": "step_line"
       }, 
@@ -4909,6 +6115,31 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "square", 
+            {
+              "x": 3
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 3, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 16
+            }
+          ]
+        ], 
         "line": 10, 
         "event": "call"
       }, 
@@ -4999,6 +6230,31 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "square", 
+            {
+              "x": 3
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 3, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 16
+            }
+          ]
+        ], 
         "line": 11, 
         "event": "step_line"
       }, 
@@ -5091,6 +6347,32 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "square", 
+            {
+              "__return__": 9, 
+              "x": 3
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 3, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 16
+            }
+          ]
+        ], 
         "line": 11, 
         "event": "return"
       }, 
@@ -5183,6 +6465,32 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "add", 
+            {
+              "a": 16, 
+              "b": 9
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 3, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 16
+            }
+          ]
+        ], 
         "line": 7, 
         "event": "call"
       }, 
@@ -5275,6 +6583,32 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "add", 
+            {
+              "a": 16, 
+              "b": 9
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 3, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 16
+            }
+          ]
+        ], 
         "line": 8, 
         "event": "step_line"
       }, 
@@ -5369,6 +6703,33 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "add", 
+            {
+              "a": 16, 
+              "__return__": 25, 
+              "b": 9
+            }
+          ], 
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 3, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 16
+            }
+          ]
+        ], 
         "line": 8, 
         "event": "return"
       }, 
@@ -5444,6 +6805,25 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 3, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 25
+            }
+          ]
+        ], 
         "line": 3, 
         "event": "step_line"
       }, 
@@ -5519,6 +6899,25 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 3, 
+              "n": 3, 
+              "base": 11, 
+              "previous": 25
+            }
+          ]
+        ], 
         "line": 5, 
         "event": "step_line"
       }, 
@@ -5596,6 +6995,26 @@
             null
           ]
         }, 
+        "stack_locals": [
+          [
+            "accumulate", 
+            {
+              "term": [
+                "REF", 
+                3
+              ], 
+              "combiner": [
+                "REF", 
+                2
+              ], 
+              "i": 3, 
+              "n": 3, 
+              "base": 11, 
+              "__return__": 25, 
+              "previous": 25
+            }
+          ]
+        ], 
         "line": 5, 
         "event": "return"
       }, 
@@ -5639,6 +7058,7 @@
             null
           ]
         }, 
+        "stack_locals": [], 
         "line": 13, 
         "event": "return"
       }

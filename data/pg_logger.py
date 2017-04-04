@@ -53,7 +53,7 @@ import pg_encoder
 # upper-bound on the number of executed lines, in order to guard against
 # infinite loops
 #MAX_EXECUTED_LINES = 300
-MAX_EXECUTED_LINES = 1000 # on 2016-05-01, I increased the limit from 300 to 1000 for Python due to popular user demand! and I also improved the warning message
+MAX_EXECUTED_LINES = 100 # on 2016-05-01, I increased the limit from 300 to 1000 for Python due to popular user demand! and I also improved the warning message
 
 #DEBUG = False
 DEBUG = True
@@ -849,6 +849,7 @@ class PGLogger(bdb.Bdb):
 
         # each element is a pair of (function name, ENCODED locals dict)
         encoded_stack_locals = []
+        stack_locals = []
 
 
         # returns a dict with keys: function name, frame id, id of parent frame, encoded_locals dict
@@ -1048,6 +1049,16 @@ class PGLogger(bdb.Bdb):
           if cur_name == '<module>':
             break
 
+          #
+          # Modified by Ryo Suzuki
+          #
+          encoded_locals = {}
+          for (k, v) in get_user_locals(cur_frame).items():
+            # don't display some built-in locals ...
+            if k != '__module__':
+              encoded_locals[k] = self.encoder.encode(v, False)
+          stack_locals.append((cur_name, encoded_locals))
+
           # do this check because in some cases, certain frames on the
           # stack might NOT be tracked, so don't push a stack entry for
           # those frames. this happens when you have a callback function
@@ -1069,6 +1080,8 @@ class PGLogger(bdb.Bdb):
             encoded_stack_locals.append(create_encoded_stack_entry(cur_frame))
             if not top_frame:
                 top_frame = cur_frame
+
+
           i -= 1
 
         zombie_encoded_stack_locals = [create_encoded_stack_entry(e) for e in zombie_frames_to_render]
@@ -1175,6 +1188,7 @@ class PGLogger(bdb.Bdb):
                              ordered_globals=[],
                              stack_to_render=[],
                              heap={},
+                             stack_locals=[],
                              stdout=self.get_user_stdout())
         else:
           trace_entry = dict(line=lineno,
@@ -1184,6 +1198,7 @@ class PGLogger(bdb.Bdb):
                              ordered_globals=ordered_globals,
                              stack_to_render=stack_to_render,
                              heap=self.encoder.get_heap(),
+                             stack_locals=stack_locals,
                              stdout=self.get_user_stdout())
           if encoded_probe_vals:
             trace_entry['probe_exprs'] = encoded_probe_vals
@@ -1564,7 +1579,6 @@ def exec_script_str(script_str, raw_input_lst_json=False, options_json=False, fi
   except bdb.BdbQuit:
     pass
   finally:
-    print(logger.trace)
     return logger
 
 

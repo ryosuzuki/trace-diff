@@ -815,7 +815,9 @@ class DataVisualizer {
       .attr('class', 'variableTr')
       .attr('id', function(d, i) {
           return myViz.owner.generateID(varnameToCssID('global__' + d + '_tr')); // make globally unique (within the page)
-      });
+      })
+      .attr('data-name', function(d, i) { return d }) // ryosuzuki
+
 
 
     var globalVarTableCells = globalVarTable
@@ -1046,7 +1048,8 @@ class DataVisualizer {
       .attr('class', 'variableTr')
       .attr('id', function(d, i) {
           return myViz.owner.generateID(varnameToCssID(d.frame.unique_hash + '__' + d.varname + '_tr')); // make globally unique (within the page)
-      });
+      })
+      .attr('data-name', function(d, i) { return d.varname }) // ryosuzuki
 
 
     var stackVarTableCells = stackVarTable
@@ -1055,7 +1058,7 @@ class DataVisualizer {
 
     stackVarTableCells.enter()
       .append('td')
-      .attr('class', function(d, i) {return (i == 0) ? 'stackFrameVar' : 'stackFrameValue';});
+      .attr('class', function(d, i) { return (i == 0) ? 'stackFrameVar' : 'stackFrameValue';})
 
     stackVarTableCells
       .order() // VERY IMPORTANT to put in the order corresponding to data elements

@@ -24,10 +24,13 @@ class PythonTutor extends Component {
     const options = {
       embeddedMode: true,
       lang: 'py2',
-      startingInstruction: 0,
+      startingInstruction: 10,
       editCodeBaseURL: 'visualize.html'
     }
     const demoViz = new ExecutionVisualizer('demoViz', data, options);
+
+    $('.variableTr[data-name="previous"]').addClass('highlight-var-name')
+
   }
 
   render() {

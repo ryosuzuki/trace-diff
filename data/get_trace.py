@@ -16,28 +16,28 @@ for item in items:
   after = item['after']
   test = item['test']
 
-  # before_ast = []
-  # after_ast = []
+  before_ast = []
+  after_ast = []
 
-  # for line in before.splitlines():
-  #   line = line.strip()
-  #   try:
-  #     ast = parse.make_ast(line)
-  #   except Exception as err:
-  #     ast = { 'error': True }
-  #   print line
-  #   before_ast.append(ast)
+  for line in before.splitlines():
+    line = line.strip()
+    try:
+      ast = parse.make_ast(line)
+    except Exception as err:
+      ast = { 'error': True }
+    print line
+    before_ast.append(ast)
 
-  # for line in after.splitlines():
-  #   line = line.strip()
-  #   try:
-  #     ast = parse.make_ast(line)
-  #   except Exception as err:
-  #     ast = { 'error': True }
-  #   after_ast.append(ast)
+  for line in after.splitlines():
+    line = line.strip()
+    try:
+      ast = parse.make_ast(line)
+    except Exception as err:
+      ast = { 'error': True }
+    after_ast.append(ast)
 
-  # item['beforeAst'] = before_ast
-  # item['afterAst'] = after_ast
+  item['beforeAst'] = before_ast
+  item['afterAst'] = after_ast
 
 
   keywords = re.findall(r"[\w]+", test)
@@ -96,11 +96,8 @@ for item in items:
   item['beforeTraces'] = beforeTraces
   item['afterTraces'] = afterTraces
 
-# with open('example.json', 'w') as file:
-#   json.dump([items[0]], file, indent = 2)
-
-with open('test.json', 'w') as file:
+with open('example.json', 'w') as file:
   json.dump([items[0]], file, indent = 2)
 
-# with open(path, 'w') as file:
-#   json.dump(items, file)
+with open(path, 'w') as file:
+  json.dump(items, file)

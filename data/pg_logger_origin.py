@@ -200,6 +200,9 @@ class PGLogger(bdb.Bdb):
                            event=event_type,
                            func_name=tos[0].f_code.co_name,
                            globals=encoded_globals,
+                           ordered_globals=ordered_globals,
+                           stack_to_render=stack_to_render,
+                           heap=self.encoder.get_heap(),
                            stack_locals=encoded_stack_locals)
                            # stdout=get_user_stdout(tos[0]))
 

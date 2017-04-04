@@ -1188,6 +1188,8 @@ class PGLogger(bdb.Bdb):
           if encoded_probe_vals:
             trace_entry['probe_exprs'] = encoded_probe_vals
 
+
+
         # optional column numbers for greater precision
         # (only relevant in Py2crazy, a hacked CPython that supports column numbers)
         if self.crazy_mode:
@@ -1268,8 +1270,10 @@ class PGLogger(bdb.Bdb):
 
 
     def _runscript(self, script_str):
+
         self.executed_script = script_str
         self.executed_script_lines = self.executed_script.splitlines()
+
 
         for (i, line) in enumerate(self.executed_script_lines):
           line_no = i + 1
@@ -1372,6 +1376,15 @@ class PGLogger(bdb.Bdb):
         user_globals.update({"__name__"    : "__main__",
                              "__builtins__" : user_builtins})
 
+        #
+        # Modified by Ryo Suzuki
+        #
+        self.run(script_str, user_globals, user_globals)
+
+        #
+        # Commented out by Ryo Suzuki
+        #
+        """
         try:
           # enforce resource limits RIGHT BEFORE running script_str
 
@@ -1417,6 +1430,7 @@ class PGLogger(bdb.Bdb):
             for a in dir(sys.modules['gc']):
               delattr(sys.modules['gc'], a)
             del sys.modules['gc']
+
 
             # sys.modules contains an in-memory cache of already-loaded
             # modules, so if you delete modules from here, they will
@@ -1467,7 +1481,7 @@ class PGLogger(bdb.Bdb):
               self.trace.append(trace_entry)
 
           raise bdb.BdbQuit # need to forceably STOP execution
-
+        """
 
     def force_terminate(self):
       #self.finalize()
@@ -1512,6 +1526,7 @@ class PGLogger(bdb.Bdb):
         # common case
         return self.finalizer_func(self.executed_script, self.trace)
 
+    # END _runscript
 
 import json
 
@@ -1521,6 +1536,7 @@ def finalizer_func(output_list, trace):
 
 # the MAIN meaty function!!!
 def exec_script_str(script_str, raw_input_lst_json=False, options_json=False, finalizer_func=finalizer_func):
+
   if options_json:
     options = json.loads(options_json)
   else:
@@ -1530,8 +1546,7 @@ def exec_script_str(script_str, raw_input_lst_json=False, options_json=False, fi
 
   py_crazy_mode = ('py_crazy_mode' in options and options['py_crazy_mode'])
 
-  logger = PGLogger(options['cumulative_mode'], options['heap_primitives'], options['show_only_outputs'], finalizer_func,
-                    crazy_mode=py_crazy_mode)
+  logger = PGLogger(options['cumulative_mode'], options['heap_primitives'], options['show_only_outputs'], finalizer_func, crazy_mode=py_crazy_mode)
 
   # TODO: refactor these NOT to be globals
   global input_string_queue
@@ -1545,12 +1560,12 @@ def exec_script_str(script_str, raw_input_lst_json=False, options_json=False, fi
 
   try:
     logger._runscript(script_str)
+    logger.finalize()
   except bdb.BdbQuit:
     pass
   finally:
-    # logger.finalize()
-    print(pg_logger.trace)
-    return pg_logger
+    print(logger.trace)
+    return logger
 
 
 

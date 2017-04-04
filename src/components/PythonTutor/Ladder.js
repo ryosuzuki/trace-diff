@@ -189,9 +189,10 @@ class Ladder extends Component {
           { event.html.map((html, index) => {
             return <span key={ index }className={ `hljs-${html.className}` }>{ html.text }</span>
           }) }
+          {/*
           &nbsp;
           <i className="fa fa-long-arrow-right fa-fw"></i><a onClick={ this.onClick.bind(this, index, event.line) }> why ?</a>
-
+          */}
 
         </p>
       </div>

@@ -27,8 +27,8 @@ class Record {
           this.addValue(traces, i, func)
         }
       }
-      if (trace.event === 'call') this.addCall(trace)
-      if (trace.event === 'return') this.addReturn(trace)
+      if (trace.event === 'call') this.addCall(trace, i)
+      if (trace.event === 'return') this.addReturn(trace, i)
     }
 
     // for (let key of Object.keys(this.history)) {
@@ -62,7 +62,7 @@ class Record {
     return { history: this.history, ticks: this.ticks, events: this.events }
   }
 
-  addCall(trace) {
+  addCall(trace, step) {
     let func = trace.func_name
     if (func === "<module>") return
     let args = {}
@@ -85,6 +85,7 @@ class Record {
 
     let event = _.clone(node)
     event.line = trace.call_line
+    event.step = step
     this.events.push(event)
 
     let last = _.last(this.stacks)
@@ -97,7 +98,7 @@ class Record {
     this.stacks.push(key)
   }
 
-  addReturn(trace) {
+  addReturn(trace, step) {
     let func = trace.func_name
     if (func === "<module>") return
     let args = {}
@@ -114,14 +115,15 @@ class Record {
 
     let event = _.clone(this.history[key])
     event.line = trace.line
+    event.step = step
     event.type = 'return'
     this.events.push(event)
 
     this.stacks.pop(key)
   }
 
-  addValue(traces, i, func) {
-    let trace = traces[i]
+  addValue(traces, step, func) {
+    let trace = traces[step]
     let variables = trace.locals[func]
     for (let key of Object.keys(variables)) {
       let value = variables[key]
@@ -130,13 +132,13 @@ class Record {
 
       let line
       if (trace.event === 'call') {
-        line = traces[i].line
+        line = traces[step].line
       }
       if (trace.event === 'return') {
-        line = traces[i].line
+        line = traces[step].line
       }
       if (trace.event === 'step_line') {
-        for (let j = i-1; j >= 0; j--) {
+        for (let j = step-1; j >= 0; j--) {
           let prev = traces[j]
           if (prev.func_name === trace.func_name) {
             line = prev.line
@@ -153,6 +155,7 @@ class Record {
       }
       let event = _.clone(node)
       event.line = line
+      event.step = step
       event.index = 0
       if (!this.history[key]) {
         this.history[key] = node
@@ -166,9 +169,9 @@ class Record {
       }
 
       if (!this.ticks[key]) this.ticks[key] = {}
-      this.ticks[key][i] = this.history[key].length
+      this.ticks[key][step] = this.history[key].length
       if (trace.event === 'step_line') {
-        this.ticks[key][i-1] = this.history[key].length
+        this.ticks[key][step-1] = this.history[key].length
       }
     }
   }

@@ -694,7 +694,7 @@ class DataVisualizer {
         $(this).empty()
 
         let html = ''
-        html += `<div class="historyObj" id="${i}">`
+        html += `<div class="${ d.step === curInstr ? 'historyObj higlightHistoryObj' : 'historyObj' }" id="${i}">`
         for (let el of d.html) {
           html += `<span class="hljs-${el.className}">${el.text}</span>`
         }

@@ -19,13 +19,6 @@ class PythonTutor extends Component {
   init() {
     console.log('hello world')
 
-    let options = {
-      embeddedMode: true,
-      lang: 'py2',
-      startingInstruction: 10,
-      editCodeBaseURL: 'visualize.html'
-    }
-
     let beforeHistory = this.generateHistory('before')
     let beforeData = {
       code: this.props.beforeCode,
@@ -33,9 +26,13 @@ class PythonTutor extends Component {
       history: beforeHistory,
       vizId: 'before',
     }
-
-    let beforeViz = new ExecutionVisualizer('beforeViz', beforeData, options);
-    window.beforeViz = beforeViz
+    let beforeOptions = {
+      embeddedMode: true,
+      lang: 'py2',
+      startingInstruction: 10,
+      editCodeBaseURL: 'visualize.html',
+    }
+    window.beforeViz = new ExecutionVisualizer('beforeViz', beforeData, beforeOptions);
 
 
     let afterHistory = this.generateHistory('after')
@@ -45,13 +42,15 @@ class PythonTutor extends Component {
       history: afterHistory,
       vizId: 'after'
     }
-    options.hideCode = true
-    let afterViz = new ExecutionVisualizer('afterViz', afterData, options);
-    window.afterViz = afterViz
+    let afterOptions = {
+      embeddedMode: true,
+      lang: 'py2',
+      startingInstruction: 10,
+      editCodeBaseURL: 'visualize.html',
+      hideCode: true
+    }
+    window.afterViz = new ExecutionVisualizer('afterViz', afterData, afterOptions);
 
-
-    $('.variableTr[data-name="previous"]').addClass('highlight-var-name')
-    window.ladder.init()
   }
 
   generateHistory(type) {

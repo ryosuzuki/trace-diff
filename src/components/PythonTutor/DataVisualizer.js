@@ -19,6 +19,7 @@ class DataVisualizer {
     this.owner = owner;
     this.params = this.owner.params;
     this.curTrace = this.owner.curTrace;
+    this.curHistory = this.owner.curHistory;
 
     this.domRoot = domRoot;
     this.domRootD3 = domRootD3;
@@ -36,6 +37,9 @@ class DataVisualizer {
              <td id="heap_td">
                <div id="heap">
                  <div id="heapHeader">${this.getRealLabel("Objects")}</div>
+               </div>
+               <div id="history">
+                 <div id="historyHeader">${this.getRealLabel("History")}</div>
                </div>
              </td>
            </tr>
@@ -666,6 +670,36 @@ class DataVisualizer {
       }
     });
 
+    //
+    // Modified by Ryo Suzuki
+    //
+    myViz.domRoot.find('#history')
+      .empty()
+      .html(`<div id="heapHeader">${myViz.getRealLabel("History")}</div>`);
+
+    let curHistory = this.curHistory
+    var historyRows = myViz.domRootD3.select('#history')
+      .selectAll('table.historyRow')
+      .attr('id', function(d, i){ return 'historyRow' + i; }) // add unique ID
+      .data(curHistory, function(d) { return d });
+
+    historyRows.enter().append('table')
+      //.each(function(objLst, i) {console.log('NEW ROW:', objLst, i);})
+      .attr('id', function(d, i){ return 'historyRow' + i; }) // add unique ID
+      .attr('class', 'historyRow')
+      .each((function(d, i) {
+        $(this).empty()
+
+        let html = ''
+        html += `<div class="historyObj" id="${i}">`
+        for (let el of d.html) {
+          html += `<span class="hljs-${el.className}">${el.text}</span>`
+        }
+        html += '</div>'
+        $(this).append(html)
+      }))
+
+
     // use d3 to render the heap by mapping curToplevelLayout into <table class="heapRow">
     // and <td class="toplevelHeapObject"> elements
 
@@ -816,7 +850,7 @@ class DataVisualizer {
       .attr('id', function(d, i) {
           return myViz.owner.generateID(varnameToCssID('global__' + d + '_tr')); // make globally unique (within the page)
       })
-      .attr('data-name', function(d, i) { return d }) // ryosuzuki
+      .attr('data-name', function(d, i) { return d }) // Modified by Ryo Suzuki
 
 
 
@@ -1049,7 +1083,7 @@ class DataVisualizer {
       .attr('id', function(d, i) {
           return myViz.owner.generateID(varnameToCssID(d.frame.unique_hash + '__' + d.varname + '_tr')); // make globally unique (within the page)
       })
-      .attr('data-name', function(d, i) { return d.varname }) // ryosuzuki
+      .attr('data-name', function(d, i) { return d.varname }) // Modified by Ryo Suzuki
 
 
     var stackVarTableCells = stackVarTable

@@ -14,47 +14,31 @@ class ExecutionVisualizer {
     this.params = {};
     this.curInputCode = '';
     this.curTrace = [];
-
-    this.codeOutputLines = []
-    // {text: string, lineNumber: number, executionPoints: number[], this.breakpointHere = boolean}[] = [];
-
+    this.codeOutputLines = [] // {text: string, lineNumber: number, executionPoints: number[], this.breakpointHere = boolean}[] = [];
     this.promptForUserInput // boolean;
     this.userInputPromptStr // string;
     this.promptForMouseInput // boolean;
-
     this.curInstr = 0;
-
     this.updateHistory = [];
     this.creationTime // number;
-
-    // API for adding a hook, created by David Pritchard
-    // keys, hook names; values, list of functions
     this.pytutor_hooks = {} // {string?: any[]} = {};
-
-    // represent the current state of the visualizer object; i.e., which
-    // step is it currently visualizing?
     this.prevLineIsReturn // boolean;
     this.curLineIsReturn // boolean;
     this.prevLineNumber // number;
     this.curLineNumber // number;
     this.curLineExceptionMsg // string;
-
-    // true iff trace ended prematurely since maximum instruction limit has
-    // been reached
     this.instrLimitReached = false;
     this.instrLimitReachedWarningMsg // string;
-
     this.hasRendered = false;
     this.visualizerID // number;
-
     this.breakpoints = d3.map(); // d3.Map<{}>  set of execution points to set as breakpoints
     this.sortedBreakpointsList = [];  // sorted and synced with breakpoints
-
 
 
     this.curInputCode = dat.code.replace(/\s*$/g, ""); // kill trailing spaces
     this.params = params;
     this.curTrace = dat.trace;
+    this.curHistory = dat.history;
     this.vizId = dat.vizId
 
     // postprocess the trace

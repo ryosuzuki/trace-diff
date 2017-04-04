@@ -1,4 +1,7 @@
-[{
-  "before": "def foo():\n  return 1 + 1\nfoo()",
-  "after": "def foo():\n  return 1 + 2\nfoo()"
-}]
+[
+  {
+    "before": "def accumulate(combiner, base, n, term):\n    previous = term(base)\n    for i in range(1, n+1):\n        previous = combiner(previous, term(i))\n    return previous",
+    "after": "def accumulate(combiner, base, n, term):\n    previous = base\n    for i in range(1, n+1):\n        previous = combiner(previous, term(i))\n    return previous",
+    "test": "accumulate(add, 11, 3, square)"
+  }
+]

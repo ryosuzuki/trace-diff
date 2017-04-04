@@ -12,29 +12,22 @@ class PythonTutor extends Component {
   }
 
   componentDidMount() {
-    this.init()
   }
 
   init() {
     console.log('hello world')
 
-    $.ajax({
-      method: 'GET',
-      url: `${window.location.pathname}data/sample-pytutor.json`
-    })
-    .then((data) => {
-      console.log(data)
-      window.data = data
-
-      const demoTrace = data
-      const options = {
-        embeddedMode: true,
-        lang: 'py2',
-        startingInstruction: 10,
-        editCodeBaseURL: 'visualize.html'
-      }
-      const demoViz = new ExecutionVisualizer('demoViz', demoTrace, options);
-    })
+    const data = {
+      code: this.props.beforeCode,
+      trace: this.props.beforeTraces
+    }
+    const options = {
+      embeddedMode: true,
+      lang: 'py2',
+      startingInstruction: 0,
+      editCodeBaseURL: 'visualize.html'
+    }
+    const demoViz = new ExecutionVisualizer('demoViz', data, options);
   }
 
   render() {

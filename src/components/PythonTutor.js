@@ -29,7 +29,7 @@ class PythonTutor extends Component {
     let beforeOptions = {
       embeddedMode: true,
       lang: 'py2',
-      startingInstruction: 10,
+      startingInstruction: 0,
       editCodeBaseURL: 'visualize.html',
     }
     window.beforeViz = new ExecutionVisualizer('beforeViz', beforeData, beforeOptions);
@@ -45,7 +45,7 @@ class PythonTutor extends Component {
     let afterOptions = {
       embeddedMode: true,
       lang: 'py2',
-      startingInstruction: 10,
+      startingInstruction: 0,
       editCodeBaseURL: 'visualize.html',
       hideCode: true
     }

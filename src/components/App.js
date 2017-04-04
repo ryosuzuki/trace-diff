@@ -32,7 +32,8 @@ class App extends Component {
   componentDidMount() {
     $.ajax({
       method: 'GET',
-      url: `${window.location.pathname}data/accumulate.json`
+      url: 'https://github.com/ryosuzuki/hint-v2/blob/master/data/accumulate.json?raw=true'
+      // url: `${window.location.pathname}data/accumulate.json`
       // url: `${window.location.pathname}data/example.json`
     })
     .then((items) => {

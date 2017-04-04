@@ -22,6 +22,8 @@ class Trace {
   generate(path) {
     let results = []
     let id = 0
+
+    this.items = this.items.slice(0, 300)
     for (let item of this.items) {
       item = new Item(item, id++)
       item.generate()

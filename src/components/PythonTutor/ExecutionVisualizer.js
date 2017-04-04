@@ -40,6 +40,7 @@ class ExecutionVisualizer {
     this.curTrace = dat.trace;
     this.curHistory = dat.history;
     this.vizId = dat.vizId
+    this.focusKeys = [...new Set(dat.history.map(e => e.key))]
 
     // postprocess the trace
     if (this.curTrace.length > 0) {

@@ -20,7 +20,9 @@ class DataVisualizer {
     this.params = this.owner.params;
     this.curTrace = this.owner.curTrace;
     this.curHistory = this.owner.curHistory;
-    this.vizId = this.owner.vizId;
+    this.aftTrace = this.owner.aftTrace;
+    this.aftHistory = this.owner.aftHistory;
+
     this.focusKeys = this.owner.focusKeys;
 
 
@@ -681,24 +683,55 @@ class DataVisualizer {
       .html(`<div id="heapHeader">${myViz.getRealLabel("History")}</div>`);
 
     let curHistory = this.curHistory
-    var historyRows = myViz.domRootD3.select('#history')
-      .selectAll('table.historyRow')
-      .attr('id', function(d, i){ return 'historyRow' + i; }) // add unique ID
-      .data(curHistory, function(d) { return d });
+    let aftHistory = this.aftHistory
 
-    historyRows.enter().append('table')
-      //.each(function(objLst, i) {console.log('NEW ROW:', objLst, i);})
+    let history = new Array(Math.max(curHistory.length, aftHistory.length))
+    for (let i = 0; i < history.length; i++) {
+      history[i] = { cur: curHistory[i], aft: aftHistory[i] }
+    }
+
+    var historyTable = myViz.domRootD3.select('#history')
+      // .selectAll('table.historyRow')
+      // .attr('id', function(d, i){ return 'historyRow' + i; }) // add unique ID
+      .append('table.history')
+      // .selectAll('table.history')
+      // .data(history)
+
+    historyTable.append('thead')
+      .append('tr')
+      .selectAll('th')
+      .data(['Result', 'Expected'])
+      .enter()
+      .append('th')
+      .text(function(d, i) { return d })
+
+    historyTable.append('tbody')
+      .selectAll('tr')
+      .data(history)
+      .enter()
+      .append('tr')
       .attr('id', function(d, i){ return 'historyRow' + i; }) // add unique ID
-      .attr('class', 'historyRow')
+      .attr('class', function(d, i) {
+        return d.cur.step === curInstr ? 'historyObj higlightHistoryObj' : 'historyObj'
+      })
       .each((function(d, i) {
         $(this).empty()
-
         let html = ''
-        html += `<div class="${ d.step === curInstr ? 'historyObj higlightHistoryObj' : 'historyObj' }" id="${i}">`
-        for (let el of d.html) {
-          html += `<span class="hljs-${el.className}">${el.text}</span>`
+        html += '<td>'
+        if (d.cur) {
+          for (let el of d.cur.html) {
+            html += `<span class="hljs-${el.className}">${el.text}</span>`
+          }
         }
-        html += '</div>'
+        html += '</td>'
+        html += '<td>'
+        if (d.aft) {
+          for (let el of d.aft.html) {
+            html += `<span class="hljs-${el.className}">${el.text}</span>`
+          }
+        }
+        html += '</td>'
+
         $(this).append(html)
       }))
 

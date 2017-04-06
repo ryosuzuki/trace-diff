@@ -20,21 +20,23 @@ class PythonTutor extends Component {
     console.log('hello world')
 
     let beforeHistory = this.generateHistory('before')
-    let beforeData = {
+    let afterHistory = this.generateHistory('after')
+    let data = {
       code: this.props.beforeCode,
       trace: this.props.beforeTraces,
       history: beforeHistory,
-      vizId: 'before',
+      afterTrace: this.props.afterTraces,
+      afterHistory: afterHistory,
     }
-    let beforeOptions = {
+    let options = {
       embeddedMode: true,
       lang: 'py2',
       startingInstruction: 0,
       editCodeBaseURL: 'visualize.html',
     }
-    window.beforeViz = new ExecutionVisualizer('beforeViz', beforeData, beforeOptions);
+    window.viz = new ExecutionVisualizer('viz', data, options);
 
-
+    /*
     let afterHistory = this.generateHistory('after')
     let afterData = {
       code: this.props.afterCode,
@@ -50,6 +52,7 @@ class PythonTutor extends Component {
       hideCode: true
     }
     window.afterViz = new ExecutionVisualizer('afterViz', afterData, afterOptions);
+    */
 
   }
 
@@ -147,8 +150,7 @@ class PythonTutor extends Component {
     return (
       <div className="ui two column centered grid">
         PythonTutor
-        <div id="beforeViz" className="ten wide column"></div>
-        <div id="afterViz" className="five wide column"></div>
+        <div id="viz" className="ten wide column"></div>
       </div>
     )
   }

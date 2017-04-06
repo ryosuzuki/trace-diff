@@ -28,24 +28,24 @@ class NavigationController {
     this.domRoot.append(navHTML);
 
     this.domRoot.find("#jmpFirstInstr").click(() => {
-      // this.owner.renderStep(0);    Modified by Ryo Suzuki
-      window.beforeViz.renderStep(0);
-      window.afterViz.renderStep(0);
+      this.owner.renderStep(0);
+      // window.beforeViz.renderStep(0);
+      // window.afterViz.renderStep(0);
     });
     this.domRoot.find("#jmpLastInstr").click(() => {
-      // this.owner.renderStep(this.nSteps - 1);    Modified by Ryo Suzuki
-      window.beforeViz.renderStep(this.nSteps - 1);
-      window.afterViz.renderStep(this.nSteps - 1);
+      this.owner.renderStep(this.nSteps - 1);
+      // window.beforeViz.renderStep(this.nSteps - 1);
+      // window.afterViz.renderStep(this.nSteps - 1);
     });
     this.domRoot.find("#jmpStepBack").click(() => {
-      // this.owner.stepBack();    Modified by Ryo Suzuki
-      window.beforeViz.stepBack();
-      window.afterViz.stepBack();
+      this.owner.stepBack();
+      // window.beforeViz.stepBack();
+      // window.afterViz.stepBack();
     });
     this.domRoot.find("#jmpStepFwd").click(() => {
-      // this.owner.stepForward();    Modified by Ryo Suzuki
-      window.beforeViz.stepForward();
-      window.afterViz.stepForward();
+      this.owner.stepForward();
+      // window.beforeViz.stepForward();
+      // window.afterViz.stepForward();
     });
 
     // disable controls initially ...

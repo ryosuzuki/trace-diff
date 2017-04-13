@@ -59,7 +59,7 @@ class App extends Component {
 
     $.ajax({
       method: 'GET',
-      url: `${window.location.pathname}data/${params.type}.json`
+      url: `${window.location.pathname}data/${params.type}_example.json`
     })
     .then((items) => {
       console.log('start')
@@ -177,8 +177,7 @@ class App extends Component {
         </div>
         */}
         <div className="ui two column centered grid">
-          <div id="python-tutor" className="fourteen wide column">
-            <h1 className="title">Student</h1>
+          <div id="python-tutor">
             <PythonTutor
               options={ options }
               id={ this.props.id }

@@ -690,10 +690,39 @@ class DataVisualizer {
       history[i] = { cur: curHistory[i], aft: aftHistory[i] }
     }
 
+    let historyTable = myViz.domRootD3.select('#history')
+      .append('div')
+      .attr('id', 'history-table')
+
+    let resultTable = historyTable.append('div')
+      .attr('id', 'result')
+
+    resultTable.append('div')
+      .attr('class', 'history-title')
+      .text('Result')
+
+    resultTable.append('div')
+      .attr('class', 'history-body')
+      .selectAll('p')
+      .data(curHistory)
+      .enter()
+      .append('p')
+      .attr('class', 'history-line')
+      .each((function(d, i) {
+        $(this).empty()
+        let html = ''
+        for (let el of d.html) {
+          html += `<span class="hljs-${el.className}">${el.text}</span>`
+        }
+        $(this).append(html)
+      }))
+
+    /*
     var historyTable = myViz.domRootD3.select('#history')
       // .selectAll('table.historyRow')
       // .attr('id', function(d, i){ return 'historyRow' + i; }) // add unique ID
-      .append('table.history')
+      .append('table')
+      .attr('id', 'table-history') // add unique ID
       // .selectAll('table.history')
       // .data(history)
 
@@ -734,7 +763,7 @@ class DataVisualizer {
 
         $(this).append(html)
       }))
-
+    */
 
     // use d3 to render the heap by mapping curToplevelLayout into <table class="heapRow">
     // and <td class="toplevelHeapObject"> elements

@@ -21,13 +21,15 @@ class Record {
 
     for (let i = 0; i < traces.length; i++) {
       let trace = traces[i]
+      if (trace.event === 'call') this.addCall(trace, i)
+
       for (let func of Object.keys(trace.locals)) {
         let builtin = ['add', 'mul', 'identity', 'square', 'increment', 'triple'].includes(func)
         if (!builtin) {
           this.addValue(traces, i, func)
         }
       }
-      if (trace.event === 'call') this.addCall(trace, i)
+
       if (trace.event === 'return') this.addReturn(trace, i)
     }
 
@@ -62,15 +64,11 @@ class Record {
     return { history: this.history, ticks: this.ticks, events: this.events }
   }
 
-  addCall(trace, step) {
+  addCall(trace, index) {
     let func = trace.func_name
-    if (func === "<module>") return
-    let args = {}
-    for (let key of Object.keys(trace.locals[func])) {
-      let arg = trace.locals[func][key]
-      if (arg !== undefined) args[key] = arg
-    }
-    let key = this.getKey(func, args)
+    if (func === '<module>') return
+
+    let key = this.getKey(func, trace)
     let builtin = ['add', 'mul', 'identity', 'square', 'increment', 'triple'].includes(func)
     let node = {
       type: 'call',
@@ -80,12 +78,12 @@ class Record {
       value: '',
       builtin: builtin,
       history: [],
+      traceIndex: index,
     }
     this.history[key] = node
 
     let event = _.clone(node)
     event.line = trace.call_line
-    event.step = step
     this.events.push(event)
 
     let last = _.last(this.stacks)
@@ -98,32 +96,28 @@ class Record {
     this.stacks.push(key)
   }
 
-  addReturn(trace, step) {
+  addReturn(trace, index) {
     let func = trace.func_name
-    if (func === "<module>") return
-    let args = {}
-    for (let key of Object.keys(trace.locals[func])) {
-      if (key === '__return__') continue
-      let arg = trace.locals[func][key]
-      if (arg !== undefined) args[key] = arg
-    }
-    let key = this.getKey(func, args)
+    if (func === '<module>') return
+
+    let key = this.getKey(func, trace)
     let value = trace.locals[func]['__return__']
+
     this.history[key]['value'] = value
     this.history[key]['history'] = [value]
     this.history[key]['line'] = trace.line
 
     let event = _.clone(this.history[key])
     event.line = trace.line
-    event.step = step
     event.type = 'return'
+    event.traceIndex = index
     this.events.push(event)
 
     this.stacks.pop(key)
   }
 
-  addValue(traces, step, func) {
-    let trace = traces[step]
+  addValue(traces, index, func) {
+    let trace = traces[index]
     let variables = trace.locals[func]
     for (let key of Object.keys(variables)) {
       let value = variables[key]
@@ -132,13 +126,13 @@ class Record {
 
       let line
       if (trace.event === 'call') {
-        line = traces[step].line
+        line = traces[index].line
       }
       if (trace.event === 'return') {
-        line = traces[step].line
+        line = traces[index].line
       }
       if (trace.event === 'step_line') {
-        for (let j = step-1; j >= 0; j--) {
+        for (let j = index-1; j >= 0; j--) {
           let prev = traces[j]
           if (prev.func_name === trace.func_name) {
             line = prev.line
@@ -152,10 +146,10 @@ class Record {
         key: key,
         value: value,
         history: [value],
+        traceIndex: index
       }
       let event = _.clone(node)
       event.line = line
-      event.step = step
       event.index = 0
       if (!this.history[key]) {
         this.history[key] = node
@@ -169,25 +163,41 @@ class Record {
       }
 
       if (!this.ticks[key]) this.ticks[key] = {}
-      this.ticks[key][step] = this.history[key].length
+      this.ticks[key][index] = this.history[key].length
       if (trace.event === 'step_line') {
-        this.ticks[key][step-1] = this.history[key].length
+        this.ticks[key][index-1] = this.history[key].length
       }
     }
   }
 
-  getKey(func, args) {
-    // TODO
-    // Know issue http://0.0.0.0:8080/?id=55
-    // helper(combiner, n-1, term)
-    // x helper(identity, add, 0)
-    // o helper(add, 0, identity)
-    if (func === 'accumulate') {
-      const ks = ['combiner', 'base', 'n', 'term']
-      return `${func}(${ks.map(k => args[k]).join(', ')})`
-    } else {
-      return `${func}(${Object.values(args).join(', ')})`
+  getKey(func, trace) {
+    let locals = {}
+    for (let key of Object.keys(trace.locals[func])) {
+      let local = trace.locals[func][key]
+      if (local !== undefined) locals[key] = local
     }
+
+    /*
+      e.g.
+      funcStr = 'accumulate(combiner, base, n, term)
+      funcName = 'accumulate'
+      funcArgs = 'combiner, base, n, term'
+      args = ['combiner', 'base', 'n', 'term']
+    */
+    let args = []
+    for (let i of Object.keys(trace.heap)) {
+      let heap = trace.heap[i]
+      let funcStr = heap[1]
+      let funcName = funcStr.split('(')[0]
+      if (func === funcName) {
+        let funcArgs = /\(\s*([^)]+?)\s*\)/.exec(funcStr)[1]
+        if (funcArgs) {
+          args = funcArgs.split(/\s*,\s*/)
+        }
+        break
+      }
+    }
+    return `${func}(${args.map(arg => locals[arg]).join(', ')})`
   }
 
   check() {

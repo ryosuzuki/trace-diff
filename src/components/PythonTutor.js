@@ -68,15 +68,26 @@ class PythonTutor extends Component {
       key = 'afterEvents'
     }
 
+
+    const isEqual = (before, after) => {
+      let bool = true
+      if (!before || !after) return false
+      for (let key of ['value', 'key', 'type', 'history']) {
+        if (!_.isEqual(before[key], after[key])) bool = false
+      }
+      return bool
+    }
+
+    let focusKeys = _.union(Object.keys(this.props.beforeHistory), Object.keys(this.props.afterHistory)).map((key) => {
+      if (isEqual(this.props.beforeHistory[key], this.props.afterHistory[key])   && this.props.beforeHistory[key].type !== 'call') return false
+      return key
+    }).filter(key => key)
+
     let indent = 0
     events = events.map((event) => {
-      let focusKeys = _.union(Object.keys(this.props.beforeHistory), Object.keys(this.props.afterHistory)).map((key) => {
-        if (_.isEqual(this.props.beforeHistory[key], this.props.afterHistory[key])) return false
-        return key
-      }).filter(key => key)
       if (!focusKeys.includes(event.key)) return false
       if (event.builtin) return false
-      if (event.type === 'call' && event.children.length === 0) return false
+      // if (event.type === 'call' && event.children.length === 0) return false
 
       let trimmedEvents = events.slice(0, event.id)
       let history = {}
@@ -91,6 +102,11 @@ class PythonTutor extends Component {
         tree.history = history
         tree.analyze(ast)
         event.updates = tree.updates
+
+        if (event.type !== tree.type && event.value !== '') {
+          event.updates = [event.value]
+        }
+
         return event
       } catch (err) {
         event.updates = []
@@ -112,10 +128,10 @@ class PythonTutor extends Component {
 
       switch (event.type) {
         case 'call':
-          event.call = event.children[0]
+          // event.call = event.children[0]
           event.html = [
             { className: 'normal', text: 'call ' },
-            { className: 'keyword', text: event.call },
+            { className: 'keyword', text: event.key },
           ]
           indent++
           event.indent = indent

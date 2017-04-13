@@ -2,6 +2,7 @@
 class Tree {
   constructor() {
     this.history = {}
+    this.event = {}
     this.ast = {}
 
     this.quizes = []
@@ -12,10 +13,11 @@ class Tree {
     this.ast = {}
     this.quizes = []
     this.updates = []
+    this.type = undefined
   }
 
   analyze(ast) {
-    if (ast.error) return false
+    if (!ast || ast.error) return false
     let body = ast.Module.body[0]
     let key = Object.keys(body)[0]
 
@@ -23,12 +25,15 @@ class Tree {
       let el = body[key]
       if (key === 'Assign') {
         this.ast = this.addAssign(el)
+        this.type = 'assign'
       }
       if (key === 'Return') {
         this.ast = this.addReturn(el)
+        this.type = 'return'
       }
       if (key === 'Expr') {
         this.ast = this.addExpr(el)
+        this.type = 'expression'
       }
     }
   }
@@ -39,7 +44,9 @@ class Tree {
     for (let target of el.targets) {
       let tn = this.addNode(target)
       left.push(tn)
-      if (_.last(this.quizes).key === tn.key) this.quizes.pop()
+      if (this.quizes.length > 0 && _.last(this.quizes).key === tn.key) {
+        this.quizes.pop()
+      }
     }
     let key = left.map(target => target.key).join(', ')
     let value = right.value
@@ -187,9 +194,14 @@ class Tree {
       let item = this.addNode(elt)
       items.push(item)
     }
-    let origin = items.map(item => item.origin).join(', ')
-    let key = items.map(item => item.key).join(', ')
-    let value = items.map(item => item.value).join(', ')
+
+    let index = items.map(item => item.key).indexOf(this.event.key)
+    // let origin = items.map(item => item.origin).join(', ')
+    // let key = items.map(item => item.key).join(', ')
+    // let value = items.map(item => item.value).join(', ')
+    let origin = items.map(item => item.origin)[index]
+    let key = items.map(item => item.key)[index]
+    let value = items.map(item => item.value)[index]
     let node = {
       type: 'tuple',
       origin: origin,
@@ -233,12 +245,13 @@ class Tree {
     for (let lu of left.updates) {
       updates.push(`${lu} ${operator[op]} ${right.origin}`)
     }
-    for (let rh of right.updates) {
+    for (let ru of right.updates) {
       let update = `${left.value} ${operator[op]} ${ru}`
       if (!updates.includes(update)) {
         updates.push(update)
       }
     }
+
     updates.push(value)
     let node = {
       type: 'binop',

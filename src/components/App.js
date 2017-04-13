@@ -30,18 +30,44 @@ class App extends Component {
   }
 
   componentDidMount() {
+    const href = window.location.href
+    const params = {}
+    href.replace(
+      new RegExp( "([^?=&]+)(=([^&]*))?", "g" ),
+      function( $0, $1, $2, $3 ){
+        params[ $1 ] = $3;
+      }
+    )
+
+    const types = ['accumulate', 'product', 'g', 'repeated']
+    if (!params.type && params.id) {
+      window.location.href = `/?type=accumulate&id=${params.id}`
+      return false
+    }
+    if (!params.type || !params.id || !types.includes(params.type)) {
+      window.location.href = `${window.location.pathname}?type=accumulate&id=0`
+      return false
+    }
+
     $.ajax({
       method: 'GET',
-      url: `${window.location.pathname}data/accumulate.json`
-      // url: `${window.location.pathname}data/example.json`
+      url: `${window.location.pathname}data/${params.type}.txt`
+    })
+    .then((txt) => {
+      this.updateState({ description: txt })
+    })
+
+    $.ajax({
+      method: 'GET',
+      url: `${window.location.pathname}data/${params.type}.json`
     })
     .then((items) => {
       console.log('start')
+      window.type = params.type
+
+      $(`#type-links #${params.type}`).addClass('primary')
+      const id = Number(params.id)
       this.updateState({ items: items })
-      let id = 0
-      if (window.location.search) {
-        id = Number(window.location.search.split('=')[1])
-      }
       this.setCurrent(id)
 
       items = items.map((item) => {
@@ -69,6 +95,7 @@ class App extends Component {
       this.setCurrent(this.props.id + 1)
     })
   }
+
 
   setCurrent(id) {
     console.log('set current')
@@ -102,7 +129,7 @@ class App extends Component {
       afterEvents: record.afterEvents,
     })
     this.updateState(state)
-    window.history.pushState(null, null, `?id=${id}`)
+    window.history.pushState(null, null, `?type=${window.type}&id=${id}`)
     // window.diffView.generateDiff(id)
 
     window.pythonTutor.init()

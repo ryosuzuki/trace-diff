@@ -680,7 +680,7 @@ class DataVisualizer {
     //
     myViz.domRoot.find('#history')
       .empty()
-      .html(`<div id="heapHeader">${myViz.getRealLabel("History")}</div>`);
+      // .html(`<div id="heapHeader">${myViz.getRealLabel("History")}</div>`);
 
     let curHistory = this.curHistory
     let aftHistory = this.aftHistory
@@ -692,10 +692,10 @@ class DataVisualizer {
 
     let historyTable = myViz.domRootD3.select('#history')
       .append('div')
-      .attr('id', 'history-table')
 
     let resultTable = historyTable.append('div')
       .attr('id', 'result')
+      .attr('class', 'history-table')
 
     resultTable.append('div')
       .attr('class', 'history-title')
@@ -708,6 +708,9 @@ class DataVisualizer {
       .enter()
       .append('p')
       .attr('class', 'history-line')
+      .style('padding-left', function(d, i) {
+        return `${10 * (d.indent - 1)}px`
+      })
       .each((function(d, i) {
         $(this).empty()
         let html = ''
@@ -716,6 +719,34 @@ class DataVisualizer {
         }
         $(this).append(html)
       }))
+
+    let expectedTable = historyTable.append('div')
+      .attr('id', 'expected')
+      .attr('class', 'history-table')
+
+    expectedTable.append('div')
+      .attr('class', 'history-title')
+      .text('Expected')
+
+    expectedTable.append('div')
+      .attr('class', 'history-body')
+      .selectAll('p')
+      .data(aftHistory)
+      .enter()
+      .append('p')
+      .attr('class', 'history-line')
+      .style('padding-left', function(d, i) {
+        return `${10 * (d.indent - 1)}px`
+      })
+      .each((function(d, i) {
+        $(this).empty()
+        let html = ''
+        for (let el of d.html) {
+          html += `<span class="hljs-${el.className}">${el.text}</span>`
+        }
+        $(this).append(html)
+      }))
+
 
     /*
     var historyTable = myViz.domRootD3.select('#history')

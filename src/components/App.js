@@ -59,7 +59,7 @@ class App extends Component {
 
     $.ajax({
       method: 'GET',
-      url: `${window.location.pathname}data/${params.type}_example.json`
+      url: `${window.location.pathname}data/${params.type}.json`
     })
     .then((items) => {
       console.log('start')

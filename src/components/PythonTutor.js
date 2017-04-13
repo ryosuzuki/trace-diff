@@ -10,6 +10,10 @@ import Tree from './Data/Tree'
 class PythonTutor extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      beforeHistory: {},
+      afterHistory: {},
+    }
     window.pythonTutor = this
   }
 
@@ -35,6 +39,8 @@ class PythonTutor extends Component {
       editCodeBaseURL: 'visualize.html',
     }
     window.viz = new ExecutionVisualizer('viz', data, options);
+
+    this.setState(data)
 
     /*
     let afterHistory = this.generateHistory('after')

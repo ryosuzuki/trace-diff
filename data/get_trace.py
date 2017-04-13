@@ -5,7 +5,8 @@ import pg_logger
 import json
 import parse
 
-path = sys.argv[1]
+question_type = sys.argv[1]
+path = question_type + '.json'
 
 items = []
 with open(path) as file:
@@ -44,6 +45,10 @@ for item in items:
   term = None
   combiner_func = ''
   term_func = ''
+  test = test.split('#')[0]
+
+  before = before.replace('    ', '  ')
+  after = after.replace('    ', '  ')
 
   # e.g.
   # product(3, identity)
@@ -52,40 +57,75 @@ for item in items:
   # accumulate(add, 11, 3, square)
   # >>> ['accumulate', 'add', '11', '3', 'square']
   #
+  # add_three = repeated(increment, 3)
+  # >>> ['add_three', 'repeated', 'increment', '3']
+  #
+  # add_three(5)
+  # >>> ['add_three', '5']
+  #
   # repeated(square, 4)(5)
   # >>> ['repeated', 'square', '4', '5']
+  #
 
+  if not keywords:
+    continue
   key = keywords[0]
+
   if key == 'product':
-    term = keywords[1]
+    term = keywords[2]
   elif key == 'accumulate':
     combiner = keywords[1]
     term = keywords[4]
   elif key == 'repeated':
-    term = keywords[2]
+    term = keywords[1]
+  elif key == 'add_three':
+    term = "increment"
+    if keywords[1] == '5':
+      test = "repeated(increment, 3)(5)"
+      item['test'] = test
 
   if combiner == 'add':
-    combiner_func = "\n\ndef add(a, b):\n  return a + b\n"
+    combiner_func = "def add(a, b):\n  return a + b"
   elif combiner == 'mul':
-    combiner_func = "\n\ndef mul(a, b):\n  return a * b\n"
+    combiner_func = "def mul(a, b):\n  return a * b"
 
   if term == 'identity':
-    term_func = "\ndef identity(x):\n  return x\n"
+    term_func = "def identity(x):\n  return x"
   elif term == 'square':
-    term_func = "\ndef square(x):\n  return x * x\n"
+    term_func = "def square(x):\n  return x * x"
   elif term == 'increment':
-    term_func = "\ndef increment(x):\n  return x + 1\n"
+    term_func = "def increment(x):\n  return x + 1"
   elif term == 'triple':
-    term_func = "\ndef triple(x):\n  return 3 * x\n"
+    term_func = "def triple(x):\n  return 3 * x"
 
-  before += combiner_func
-  before += term_func
-  before += '\n'
+  if combiner_func is not '':
+    before += '\n\n'
+    before += combiner_func
+
+  if key == 'add_three' or key == 'repeated':
+    before += '\n\n'
+    before += "def identity(x):\n  return x"
+
+  if term_func is not '':
+    before += '\n\n'
+    before += term_func
+
+  before += '\n\n'
   before += test
 
-  after += combiner_func
-  after += term_func
-  after += '\n'
+  if combiner_func is not '':
+    after += '\n\n'
+    after += combiner_func
+
+  if key == 'add_three' or key == 'repeated':
+    after += '\n\n'
+    after += "def identity(x):\n  return x"
+
+  if term_func is not '':
+    after += '\n\n'
+    after += term_func
+
+  after += '\n\n'
   after += test
 
   beforeTraces = pg_logger.exec_script_str(before).trace
@@ -95,7 +135,8 @@ for item in items:
   item['beforeTraces'] = beforeTraces
   item['afterTraces'] = afterTraces
 
-with open('example.json', 'w') as file:
+
+with open(question_type + '_example.json', 'w') as file:
   json.dump([items[0]], file, indent = 2)
 
 with open(path, 'w') as file:

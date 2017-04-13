@@ -1,0 +1,6488 @@
+[
+  {
+    "diffs": [
+      {
+        "count": 3, 
+        "value": "def repeated(f, n):\n    fn, i = id, 0\n    while n>0:\n"
+      }, 
+      {
+        "count": 1, 
+        "removed": true, 
+        "value": "        fn = compose(f, fn)\n"
+      }, 
+      {
+        "count": 2, 
+        "added": true, 
+        "value": "        fn = compose1(f, fn)\n        n -= 1\n"
+      }, 
+      {
+        "count": 7, 
+        "value": "    return fn\ndef id(x):\n    return x\ndef compose1(f, g):\n    def h(x):\n        return f(g(x))\n    return h"
+      }
+    ], 
+    "code": "def repeated(f, n):\n    fn, i = id, 0\n    while n>0:\n        fn = compose(f, fn)\n        fn = compose1(f, fn)\n        n -= 1\n    return fn\ndef id(x):\n    return x\ndef compose1(f, g):\n    def h(x):\n        return f(g(x))\n    return h\n", 
+    "afterCode": "def repeated(f, n):\n  fn, i = id, 0\n  while n>0:\n    fn = compose1(f, fn)\n    n -= 1\n  return fn\ndef id(x):\n  return x\ndef compose1(f, g):\n  def h(x):\n    return f(g(x))\n  return h\n\ndef identity(x):\n  return x\n\ndef increment(x):\n  return x + 1\n\nadd_three = repeated(increment, 3)", 
+    "log": ">>> add_three = repeated(increment, 3)\nTraceback (most recent call last):\n  File \"C:\\Users\\Gustavo\\Box Sync\\pesquisa\\tutor\\hw02-sp16\\hw02.py\", line 35, in repeated\n    fn = compose(f, fn)\nNameError: name 'compose' is not defined\n\n# Error: expected\n#     \n# but got\n#     NameError", 
+    "addedLine": [
+      {
+        "line": 4, 
+        "code": "        fn = compose1(f, fn)"
+      }, 
+      {
+        "line": 5, 
+        "code": "        n -= 1"
+      }
+    ], 
+    "afterAst": [
+      {
+        "error": true
+      }, 
+      {
+        "Module": {
+          "body": [
+            {
+              "Assign": {
+                "targets": [
+                  {
+                    "Tuple": {
+                      "elts": [
+                        {
+                          "Name": {
+                            "ctx": "Store", 
+                            "id": "fn"
+                          }
+                        }, 
+                        {
+                          "Name": {
+                            "ctx": "Store", 
+                            "id": "i"
+                          }
+                        }
+                      ], 
+                      "ctx": "Store"
+                    }
+                  }
+                ], 
+                "value": {
+                  "Tuple": {
+                    "elts": [
+                      {
+                        "Name": {
+                          "ctx": "Load", 
+                          "id": "id"
+                        }
+                      }, 
+                      {
+                        "Num": {
+                          "n": 0
+                        }
+                      }
+                    ], 
+                    "ctx": "Load"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }, 
+      {
+        "error": true
+      }, 
+      {
+        "Module": {
+          "body": [
+            {
+              "Assign": {
+                "targets": [
+                  {
+                    "Name": {
+                      "ctx": "Store", 
+                      "id": "fn"
+                    }
+                  }
+                ], 
+                "value": {
+                  "Call": {
+                    "keywords": [], 
+                    "kwargs": null, 
+                    "args": [
+                      {
+                        "Name": {
+                          "ctx": "Load", 
+                          "id": "f"
+                        }
+                      }, 
+                      {
+                        "Name": {
+                          "ctx": "Load", 
+                          "id": "fn"
+                        }
+                      }
+                    ], 
+                    "func": {
+                      "Name": {
+                        "ctx": "Load", 
+                        "id": "compose1"
+                      }
+                    }, 
+                    "starargs": null
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }, 
+      {
+        "Module": {
+          "body": [
+            {
+              "AugAssign": {
+                "target": {
+                  "Name": {
+                    "ctx": "Store", 
+                    "id": "n"
+                  }
+                }, 
+                "value": {
+                  "Num": {
+                    "n": 1
+                  }
+                }, 
+                "op": "Sub"
+              }
+            }
+          ]
+        }
+      }, 
+      {
+        "Module": {
+          "body": [
+            {
+              "Return": {
+                "value": {
+                  "Name": {
+                    "ctx": "Load", 
+                    "id": "fn"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }, 
+      {
+        "error": true
+      }, 
+      {
+        "Module": {
+          "body": [
+            {
+              "Return": {
+                "value": {
+                  "Name": {
+                    "ctx": "Load", 
+                    "id": "x"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }, 
+      {
+        "error": true
+      }, 
+      {
+        "error": true
+      }, 
+      {
+        "Module": {
+          "body": [
+            {
+              "Return": {
+                "value": {
+                  "Call": {
+                    "keywords": [], 
+                    "kwargs": null, 
+                    "args": [
+                      {
+                        "Call": {
+                          "keywords": [], 
+                          "kwargs": null, 
+                          "args": [
+                            {
+                              "Name": {
+                                "ctx": "Load", 
+                                "id": "x"
+                              }
+                            }
+                          ], 
+                          "func": {
+                            "Name": {
+                              "ctx": "Load", 
+                              "id": "g"
+                            }
+                          }, 
+                          "starargs": null
+                        }
+                      }
+                    ], 
+                    "func": {
+                      "Name": {
+                        "ctx": "Load", 
+                        "id": "f"
+                      }
+                    }, 
+                    "starargs": null
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }, 
+      {
+        "Module": {
+          "body": [
+            {
+              "Return": {
+                "value": {
+                  "Name": {
+                    "ctx": "Load", 
+                    "id": "h"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ], 
+    "after": "def repeated(f, n):\n    fn, i = id, 0\n    while n>0:\n        fn = compose1(f, fn)\n        n -= 1\n    return fn\ndef id(x):\n    return x\ndef compose1(f, g):\n    def h(x):\n        return f(g(x))\n    return h", 
+    "beforeCode": "def repeated(f, n):\n  fn, i = id, 0\n  while n>0:\n    fn = compose(f, fn)\n  return fn\ndef id(x):\n  return x\ndef compose1(f, g):\n  def h(x):\n    return f(g(x))\n  return h\n\ndef identity(x):\n  return x\n\ndef increment(x):\n  return x + 1\n\nadd_three = repeated(increment, 3)", 
+    "rule": "Apply(ast, CPatch(EditMap(\\node => Update(node, LeafConstNode(NameExpressionNode-compose1)), Selected(\\x => Match(x, StartsWithParent(Node(CallExpressionNode, TChildren(Target(LeafWildcard(\"NameExpressionNode\")), TChildren(Node(ArgNode, TChild(LeafWildcard(\"NameExpressionNode\"))), TChild(Node(ArgNode, TChild(LeafWildcard(\"NameExpressionNode\"))))))))), InOrderSort(ast))), Patch(EditMap(\\node => Insert(node, ConstNode(AugmentedAssignStatementNode-Subtract, Children(LeafConstNode(NameExpressionNode-n), SingleChild(LeafConstNode(ConstantExpressionNode-1)))), 1), Selected(\\x => Match(x, StartsWithParent(Node(WhileStatementNode, TChildren(Node(BinaryExpressionNode-GreaterThan, TChildren(LeafWildcard(\"NameExpressionNode\"), TChild(LeafWildcard(\"ConstantExpressionNode\")))), TChild(Target(Node(SuiteStatementNode, TChild(Node(AssignmentStatementNode, TChildren(LeafWildcard(\"NameExpressionNode\"), TChild(Node(CallExpressionNode, TChildren(LeafWildcard(\"NameExpressionNode\"), TChildren(Node(ArgNode, TChild(LeafWildcard(\"NameExpressionNode\"))), TChild(Node(ArgNode, TChild(LeafWildcard(\"NameExpressionNode\")))))))))))))))))), InOrderSort(ast))))))", 
+    "beforeTraces": [
+      {
+        "ordered_globals": [], 
+        "stdout": "", 
+        "func_name": "<module>", 
+        "stack_to_render": [], 
+        "globals": {}, 
+        "heap": {}, 
+        "stack_locals": [], 
+        "line": 1, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated"
+        ], 
+        "stdout": "", 
+        "func_name": "<module>", 
+        "stack_to_render": [], 
+        "globals": {
+          "repeated": [
+            "REF", 
+            1
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ]
+        }, 
+        "stack_locals": [], 
+        "line": 6, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id"
+        ], 
+        "stdout": "", 
+        "func_name": "<module>", 
+        "stack_to_render": [], 
+        "globals": {
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "id": [
+            "REF", 
+            2
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [], 
+        "line": 8, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1"
+        ], 
+        "stdout": "", 
+        "func_name": "<module>", 
+        "stack_to_render": [], 
+        "globals": {
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "id": [
+            "REF", 
+            2
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ]
+        }, 
+        "stack_locals": [], 
+        "line": 13, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity"
+        ], 
+        "stdout": "", 
+        "func_name": "<module>", 
+        "stack_to_render": [], 
+        "globals": {
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "id": [
+            "REF", 
+            2
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [], 
+        "line": 16, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "<module>", 
+        "stack_to_render": [], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [], 
+        "line": 19, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "repeated", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "f": [
+                "REF", 
+                5
+              ], 
+              "n": 3
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "repeated", 
+            {
+              "f": [
+                "REF", 
+                5
+              ], 
+              "n": 3
+            }
+          ]
+        ], 
+        "line": 1, 
+        "event": "call"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "repeated", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "f": [
+                "REF", 
+                5
+              ], 
+              "n": 3
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "repeated", 
+            {
+              "f": [
+                "REF", 
+                5
+              ], 
+              "n": 3
+            }
+          ]
+        ], 
+        "line": 2, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "repeated", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                2
+              ], 
+              "n": 3
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                2
+              ], 
+              "n": 3
+            }
+          ]
+        ], 
+        "line": 3, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "repeated", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                2
+              ], 
+              "n": 3
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                2
+              ], 
+              "n": 3
+            }
+          ]
+        ], 
+        "line": 4, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "exception_msg": "NameError: global name 'compose' is not defined", 
+        "func_name": "repeated", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                2
+              ], 
+              "n": 3
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                2
+              ], 
+              "n": 3
+            }
+          ]
+        ], 
+        "line": 4, 
+        "event": "exception"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "repeated", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "__return__": null, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                2
+              ], 
+              "n": 3
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i", 
+              "__return__"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "__return__": null, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                2
+              ], 
+              "n": 3
+            }
+          ]
+        ], 
+        "line": 4, 
+        "event": "return"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "exception_msg": "NameError: global name 'compose' is not defined", 
+        "func_name": "<module>", 
+        "stack_to_render": [], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [], 
+        "line": 19, 
+        "event": "exception"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "<module>", 
+        "stack_to_render": [], 
+        "globals": {
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ], 
+          "id": [
+            "REF", 
+            2
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [], 
+        "line": 19, 
+        "event": "return"
+      }
+    ], 
+    "expected": null, 
+    "afterTraces": [
+      {
+        "ordered_globals": [], 
+        "stdout": "", 
+        "func_name": "<module>", 
+        "stack_to_render": [], 
+        "globals": {}, 
+        "heap": {}, 
+        "stack_locals": [], 
+        "line": 1, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated"
+        ], 
+        "stdout": "", 
+        "func_name": "<module>", 
+        "stack_to_render": [], 
+        "globals": {
+          "repeated": [
+            "REF", 
+            1
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ]
+        }, 
+        "stack_locals": [], 
+        "line": 7, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id"
+        ], 
+        "stdout": "", 
+        "func_name": "<module>", 
+        "stack_to_render": [], 
+        "globals": {
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "id": [
+            "REF", 
+            2
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [], 
+        "line": 9, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1"
+        ], 
+        "stdout": "", 
+        "func_name": "<module>", 
+        "stack_to_render": [], 
+        "globals": {
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "id": [
+            "REF", 
+            2
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ]
+        }, 
+        "stack_locals": [], 
+        "line": 14, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity"
+        ], 
+        "stdout": "", 
+        "func_name": "<module>", 
+        "stack_to_render": [], 
+        "globals": {
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "id": [
+            "REF", 
+            2
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [], 
+        "line": 17, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "<module>", 
+        "stack_to_render": [], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [], 
+        "line": 20, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "repeated", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "f": [
+                "REF", 
+                5
+              ], 
+              "n": 3
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "repeated", 
+            {
+              "f": [
+                "REF", 
+                5
+              ], 
+              "n": 3
+            }
+          ]
+        ], 
+        "line": 1, 
+        "event": "call"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "repeated", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "f": [
+                "REF", 
+                5
+              ], 
+              "n": 3
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "repeated", 
+            {
+              "f": [
+                "REF", 
+                5
+              ], 
+              "n": 3
+            }
+          ]
+        ], 
+        "line": 2, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "repeated", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                2
+              ], 
+              "n": 3
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                2
+              ], 
+              "n": 3
+            }
+          ]
+        ], 
+        "line": 3, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "repeated", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                2
+              ], 
+              "n": 3
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                2
+              ], 
+              "n": 3
+            }
+          ]
+        ], 
+        "line": 4, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "compose1", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                2
+              ], 
+              "n": 3
+            }, 
+            "is_highlighted": false, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }, 
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "compose1", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2", 
+            "ordered_varnames": [
+              "f", 
+              "g"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "compose1", 
+            {
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }
+          ], 
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                2
+              ], 
+              "n": 3
+            }
+          ]
+        ], 
+        "line": 9, 
+        "event": "call"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "compose1", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                2
+              ], 
+              "n": 3
+            }, 
+            "is_highlighted": false, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }, 
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "compose1", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2", 
+            "ordered_varnames": [
+              "f", 
+              "g"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "compose1", 
+            {
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }
+          ], 
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                2
+              ], 
+              "n": 3
+            }
+          ]
+        ], 
+        "line": 10, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "compose1", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                2
+              ], 
+              "n": 3
+            }, 
+            "is_highlighted": false, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }, 
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": true, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2_p", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ], 
+          "6": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "compose1", 
+            {
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }
+          ], 
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                2
+              ], 
+              "n": 3
+            }
+          ]
+        ], 
+        "line": 12, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "compose1", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                2
+              ], 
+              "n": 3
+            }, 
+            "is_highlighted": false, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }, 
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                6
+              ], 
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": true, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2_p", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ], 
+          "6": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "compose1", 
+            {
+              "__return__": [
+                "REF", 
+                6
+              ], 
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }
+          ], 
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                2
+              ], 
+              "n": 3
+            }
+          ]
+        ], 
+        "line": 12, 
+        "event": "return"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "repeated", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                6
+              ], 
+              "n": 3
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }, 
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                6
+              ], 
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ], 
+          "6": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                6
+              ], 
+              "n": 3
+            }
+          ]
+        ], 
+        "line": 5, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "repeated", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                6
+              ], 
+              "n": 2
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }, 
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                6
+              ], 
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ], 
+          "6": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                6
+              ], 
+              "n": 2
+            }
+          ]
+        ], 
+        "line": 3, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "repeated", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                6
+              ], 
+              "n": 2
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }, 
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                6
+              ], 
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ], 
+          "6": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                6
+              ], 
+              "n": 2
+            }
+          ]
+        ], 
+        "line": 4, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "compose1", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                6
+              ], 
+              "n": 2
+            }, 
+            "is_highlighted": false, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }, 
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                6
+              ], 
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 3, 
+            "encoded_locals": {
+              "g": [
+                "REF", 
+                6
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "compose1", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f3", 
+            "ordered_varnames": [
+              "f", 
+              "g"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ], 
+          "6": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "compose1", 
+            {
+              "g": [
+                "REF", 
+                6
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }
+          ], 
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                6
+              ], 
+              "n": 2
+            }
+          ]
+        ], 
+        "line": 9, 
+        "event": "call"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "compose1", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                6
+              ], 
+              "n": 2
+            }, 
+            "is_highlighted": false, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }, 
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                6
+              ], 
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 3, 
+            "encoded_locals": {
+              "g": [
+                "REF", 
+                6
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "compose1", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f3", 
+            "ordered_varnames": [
+              "f", 
+              "g"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ], 
+          "6": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "compose1", 
+            {
+              "g": [
+                "REF", 
+                6
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }
+          ], 
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                6
+              ], 
+              "n": 2
+            }
+          ]
+        ], 
+        "line": 10, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "compose1", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                6
+              ], 
+              "n": 2
+            }, 
+            "is_highlighted": false, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }, 
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                6
+              ], 
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 3, 
+            "encoded_locals": {
+              "h": [
+                "REF", 
+                7
+              ], 
+              "g": [
+                "REF", 
+                6
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": true, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f3_p", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ], 
+          "6": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ], 
+          "7": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "compose1", 
+            {
+              "h": [
+                "REF", 
+                7
+              ], 
+              "g": [
+                "REF", 
+                6
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }
+          ], 
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                6
+              ], 
+              "n": 2
+            }
+          ]
+        ], 
+        "line": 12, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "compose1", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                6
+              ], 
+              "n": 2
+            }, 
+            "is_highlighted": false, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }, 
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                6
+              ], 
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 3, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                7
+              ], 
+              "h": [
+                "REF", 
+                7
+              ], 
+              "g": [
+                "REF", 
+                6
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": true, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f3_p", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ], 
+          "6": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ], 
+          "7": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "compose1", 
+            {
+              "__return__": [
+                "REF", 
+                7
+              ], 
+              "h": [
+                "REF", 
+                7
+              ], 
+              "g": [
+                "REF", 
+                6
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }
+          ], 
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                6
+              ], 
+              "n": 2
+            }
+          ]
+        ], 
+        "line": 12, 
+        "event": "return"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "repeated", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                7
+              ], 
+              "n": 2
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }, 
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                6
+              ], 
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 3, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                7
+              ], 
+              "h": [
+                "REF", 
+                7
+              ], 
+              "g": [
+                "REF", 
+                6
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f3_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ], 
+          "6": [
+            "FUNCTION", 
+            "h(x)", 
+            2
+          ], 
+          "7": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                7
+              ], 
+              "n": 2
+            }
+          ]
+        ], 
+        "line": 5, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "repeated", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                7
+              ], 
+              "n": 1
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }, 
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                6
+              ], 
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 3, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                7
+              ], 
+              "h": [
+                "REF", 
+                7
+              ], 
+              "g": [
+                "REF", 
+                6
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f3_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ], 
+          "6": [
+            "FUNCTION", 
+            "h(x)", 
+            2
+          ], 
+          "7": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                7
+              ], 
+              "n": 1
+            }
+          ]
+        ], 
+        "line": 3, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "repeated", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                7
+              ], 
+              "n": 1
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }, 
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                6
+              ], 
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 3, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                7
+              ], 
+              "h": [
+                "REF", 
+                7
+              ], 
+              "g": [
+                "REF", 
+                6
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f3_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ], 
+          "6": [
+            "FUNCTION", 
+            "h(x)", 
+            2
+          ], 
+          "7": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                7
+              ], 
+              "n": 1
+            }
+          ]
+        ], 
+        "line": 4, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "compose1", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                7
+              ], 
+              "n": 1
+            }, 
+            "is_highlighted": false, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }, 
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                6
+              ], 
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 3, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                7
+              ], 
+              "h": [
+                "REF", 
+                7
+              ], 
+              "g": [
+                "REF", 
+                6
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f3_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 4, 
+            "encoded_locals": {
+              "g": [
+                "REF", 
+                7
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "compose1", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f4", 
+            "ordered_varnames": [
+              "f", 
+              "g"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ], 
+          "6": [
+            "FUNCTION", 
+            "h(x)", 
+            2
+          ], 
+          "7": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "compose1", 
+            {
+              "g": [
+                "REF", 
+                7
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }
+          ], 
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                7
+              ], 
+              "n": 1
+            }
+          ]
+        ], 
+        "line": 9, 
+        "event": "call"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "compose1", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                7
+              ], 
+              "n": 1
+            }, 
+            "is_highlighted": false, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }, 
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                6
+              ], 
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 3, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                7
+              ], 
+              "h": [
+                "REF", 
+                7
+              ], 
+              "g": [
+                "REF", 
+                6
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f3_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 4, 
+            "encoded_locals": {
+              "g": [
+                "REF", 
+                7
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "compose1", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f4", 
+            "ordered_varnames": [
+              "f", 
+              "g"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ], 
+          "6": [
+            "FUNCTION", 
+            "h(x)", 
+            2
+          ], 
+          "7": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "compose1", 
+            {
+              "g": [
+                "REF", 
+                7
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }
+          ], 
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                7
+              ], 
+              "n": 1
+            }
+          ]
+        ], 
+        "line": 10, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "compose1", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                7
+              ], 
+              "n": 1
+            }, 
+            "is_highlighted": false, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }, 
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                6
+              ], 
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 3, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                7
+              ], 
+              "h": [
+                "REF", 
+                7
+              ], 
+              "g": [
+                "REF", 
+                6
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f3_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 4, 
+            "encoded_locals": {
+              "h": [
+                "REF", 
+                8
+              ], 
+              "g": [
+                "REF", 
+                7
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": true, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f4_p", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ], 
+          "6": [
+            "FUNCTION", 
+            "h(x)", 
+            2
+          ], 
+          "7": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ], 
+          "8": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "compose1", 
+            {
+              "h": [
+                "REF", 
+                8
+              ], 
+              "g": [
+                "REF", 
+                7
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }
+          ], 
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                7
+              ], 
+              "n": 1
+            }
+          ]
+        ], 
+        "line": 12, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "compose1", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                7
+              ], 
+              "n": 1
+            }, 
+            "is_highlighted": false, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }, 
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                6
+              ], 
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 3, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                7
+              ], 
+              "h": [
+                "REF", 
+                7
+              ], 
+              "g": [
+                "REF", 
+                6
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f3_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 4, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                8
+              ], 
+              "h": [
+                "REF", 
+                8
+              ], 
+              "g": [
+                "REF", 
+                7
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": true, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f4_p", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ], 
+          "6": [
+            "FUNCTION", 
+            "h(x)", 
+            2
+          ], 
+          "7": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ], 
+          "8": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "compose1", 
+            {
+              "__return__": [
+                "REF", 
+                8
+              ], 
+              "h": [
+                "REF", 
+                8
+              ], 
+              "g": [
+                "REF", 
+                7
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }
+          ], 
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                7
+              ], 
+              "n": 1
+            }
+          ]
+        ], 
+        "line": 12, 
+        "event": "return"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "repeated", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                8
+              ], 
+              "n": 1
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }, 
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                6
+              ], 
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 3, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                7
+              ], 
+              "h": [
+                "REF", 
+                7
+              ], 
+              "g": [
+                "REF", 
+                6
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f3_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 4, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                8
+              ], 
+              "h": [
+                "REF", 
+                8
+              ], 
+              "g": [
+                "REF", 
+                7
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f4_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ], 
+          "6": [
+            "FUNCTION", 
+            "h(x)", 
+            2
+          ], 
+          "7": [
+            "FUNCTION", 
+            "h(x)", 
+            3
+          ], 
+          "8": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                8
+              ], 
+              "n": 1
+            }
+          ]
+        ], 
+        "line": 5, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "repeated", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                8
+              ], 
+              "n": 0
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }, 
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                6
+              ], 
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 3, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                7
+              ], 
+              "h": [
+                "REF", 
+                7
+              ], 
+              "g": [
+                "REF", 
+                6
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f3_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 4, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                8
+              ], 
+              "h": [
+                "REF", 
+                8
+              ], 
+              "g": [
+                "REF", 
+                7
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f4_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ], 
+          "6": [
+            "FUNCTION", 
+            "h(x)", 
+            2
+          ], 
+          "7": [
+            "FUNCTION", 
+            "h(x)", 
+            3
+          ], 
+          "8": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                8
+              ], 
+              "n": 0
+            }
+          ]
+        ], 
+        "line": 3, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "repeated", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                8
+              ], 
+              "n": 0
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i"
+            ]
+          }, 
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                6
+              ], 
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 3, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                7
+              ], 
+              "h": [
+                "REF", 
+                7
+              ], 
+              "g": [
+                "REF", 
+                6
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f3_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 4, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                8
+              ], 
+              "h": [
+                "REF", 
+                8
+              ], 
+              "g": [
+                "REF", 
+                7
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f4_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ], 
+          "6": [
+            "FUNCTION", 
+            "h(x)", 
+            2
+          ], 
+          "7": [
+            "FUNCTION", 
+            "h(x)", 
+            3
+          ], 
+          "8": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                8
+              ], 
+              "n": 0
+            }
+          ]
+        ], 
+        "line": 6, 
+        "event": "step_line"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment"
+        ], 
+        "stdout": "", 
+        "func_name": "repeated", 
+        "stack_to_render": [
+          {
+            "frame_id": 1, 
+            "encoded_locals": {
+              "i": 0, 
+              "__return__": [
+                "REF", 
+                8
+              ], 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                8
+              ], 
+              "n": 0
+            }, 
+            "is_highlighted": true, 
+            "is_parent": false, 
+            "func_name": "repeated", 
+            "is_zombie": false, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "repeated_f1", 
+            "ordered_varnames": [
+              "f", 
+              "n", 
+              "fn", 
+              "i", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                6
+              ], 
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 3, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                7
+              ], 
+              "h": [
+                "REF", 
+                7
+              ], 
+              "g": [
+                "REF", 
+                6
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f3_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 4, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                8
+              ], 
+              "h": [
+                "REF", 
+                8
+              ], 
+              "g": [
+                "REF", 
+                7
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f4_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }
+        ], 
+        "globals": {
+          "id": [
+            "REF", 
+            2
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ], 
+          "6": [
+            "FUNCTION", 
+            "h(x)", 
+            2
+          ], 
+          "7": [
+            "FUNCTION", 
+            "h(x)", 
+            3
+          ], 
+          "8": [
+            "FUNCTION", 
+            "h(x)", 
+            null
+          ]
+        }, 
+        "stack_locals": [
+          [
+            "repeated", 
+            {
+              "i": 0, 
+              "__return__": [
+                "REF", 
+                8
+              ], 
+              "f": [
+                "REF", 
+                5
+              ], 
+              "fn": [
+                "REF", 
+                8
+              ], 
+              "n": 0
+            }
+          ]
+        ], 
+        "line": 6, 
+        "event": "return"
+      }, 
+      {
+        "ordered_globals": [
+          "repeated", 
+          "id", 
+          "compose1", 
+          "identity", 
+          "increment", 
+          "add_three"
+        ], 
+        "stdout": "", 
+        "func_name": "<module>", 
+        "stack_to_render": [
+          {
+            "frame_id": 2, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                6
+              ], 
+              "h": [
+                "REF", 
+                6
+              ], 
+              "g": [
+                "REF", 
+                2
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f2_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 3, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                7
+              ], 
+              "h": [
+                "REF", 
+                7
+              ], 
+              "g": [
+                "REF", 
+                6
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f3_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }, 
+          {
+            "frame_id": 4, 
+            "encoded_locals": {
+              "__return__": [
+                "REF", 
+                8
+              ], 
+              "h": [
+                "REF", 
+                8
+              ], 
+              "g": [
+                "REF", 
+                7
+              ], 
+              "f": [
+                "REF", 
+                5
+              ]
+            }, 
+            "is_highlighted": false, 
+            "is_parent": true, 
+            "func_name": "compose1", 
+            "is_zombie": true, 
+            "parent_frame_id_list": [], 
+            "unique_hash": "compose1_f4_p_z", 
+            "ordered_varnames": [
+              "f", 
+              "g", 
+              "h", 
+              "__return__"
+            ]
+          }
+        ], 
+        "globals": {
+          "add_three": [
+            "REF", 
+            8
+          ], 
+          "repeated": [
+            "REF", 
+            1
+          ], 
+          "compose1": [
+            "REF", 
+            3
+          ], 
+          "increment": [
+            "REF", 
+            5
+          ], 
+          "id": [
+            "REF", 
+            2
+          ], 
+          "identity": [
+            "REF", 
+            4
+          ]
+        }, 
+        "heap": {
+          "1": [
+            "FUNCTION", 
+            "repeated(f, n)", 
+            null
+          ], 
+          "2": [
+            "FUNCTION", 
+            "id(x)", 
+            null
+          ], 
+          "3": [
+            "FUNCTION", 
+            "compose1(f, g)", 
+            null
+          ], 
+          "4": [
+            "FUNCTION", 
+            "identity(x)", 
+            null
+          ], 
+          "5": [
+            "FUNCTION", 
+            "increment(x)", 
+            null
+          ], 
+          "6": [
+            "FUNCTION", 
+            "h(x)", 
+            2
+          ], 
+          "7": [
+            "FUNCTION", 
+            "h(x)", 
+            3
+          ], 
+          "8": [
+            "FUNCTION", 
+            "h(x)", 
+            4
+          ]
+        }, 
+        "stack_locals": [], 
+        "line": 20, 
+        "event": "return"
+      }
+    ], 
+    "studentId": 654, 
+    "result": "NameError", 
+    "removedLine": [
+      {
+        "line": 3, 
+        "code": "        fn = compose(f, fn)"
+      }
+    ], 
+    "test": "add_three = repeated(increment, 3)", 
+    "beforeAst": [
+      {
+        "error": true
+      }, 
+      {
+        "Module": {
+          "body": [
+            {
+              "Assign": {
+                "targets": [
+                  {
+                    "Tuple": {
+                      "elts": [
+                        {
+                          "Name": {
+                            "ctx": "Store", 
+                            "id": "fn"
+                          }
+                        }, 
+                        {
+                          "Name": {
+                            "ctx": "Store", 
+                            "id": "i"
+                          }
+                        }
+                      ], 
+                      "ctx": "Store"
+                    }
+                  }
+                ], 
+                "value": {
+                  "Tuple": {
+                    "elts": [
+                      {
+                        "Name": {
+                          "ctx": "Load", 
+                          "id": "id"
+                        }
+                      }, 
+                      {
+                        "Num": {
+                          "n": 0
+                        }
+                      }
+                    ], 
+                    "ctx": "Load"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }, 
+      {
+        "error": true
+      }, 
+      {
+        "Module": {
+          "body": [
+            {
+              "Assign": {
+                "targets": [
+                  {
+                    "Name": {
+                      "ctx": "Store", 
+                      "id": "fn"
+                    }
+                  }
+                ], 
+                "value": {
+                  "Call": {
+                    "keywords": [], 
+                    "kwargs": null, 
+                    "args": [
+                      {
+                        "Name": {
+                          "ctx": "Load", 
+                          "id": "f"
+                        }
+                      }, 
+                      {
+                        "Name": {
+                          "ctx": "Load", 
+                          "id": "fn"
+                        }
+                      }
+                    ], 
+                    "func": {
+                      "Name": {
+                        "ctx": "Load", 
+                        "id": "compose"
+                      }
+                    }, 
+                    "starargs": null
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }, 
+      {
+        "Module": {
+          "body": [
+            {
+              "Return": {
+                "value": {
+                  "Name": {
+                    "ctx": "Load", 
+                    "id": "fn"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }, 
+      {
+        "error": true
+      }, 
+      {
+        "Module": {
+          "body": [
+            {
+              "Return": {
+                "value": {
+                  "Name": {
+                    "ctx": "Load", 
+                    "id": "x"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }, 
+      {
+        "error": true
+      }, 
+      {
+        "error": true
+      }, 
+      {
+        "Module": {
+          "body": [
+            {
+              "Return": {
+                "value": {
+                  "Call": {
+                    "keywords": [], 
+                    "kwargs": null, 
+                    "args": [
+                      {
+                        "Call": {
+                          "keywords": [], 
+                          "kwargs": null, 
+                          "args": [
+                            {
+                              "Name": {
+                                "ctx": "Load", 
+                                "id": "x"
+                              }
+                            }
+                          ], 
+                          "func": {
+                            "Name": {
+                              "ctx": "Load", 
+                              "id": "g"
+                            }
+                          }, 
+                          "starargs": null
+                        }
+                      }
+                    ], 
+                    "func": {
+                      "Name": {
+                        "ctx": "Load", 
+                        "id": "f"
+                      }
+                    }, 
+                    "starargs": null
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }, 
+      {
+        "Module": {
+          "body": [
+            {
+              "Return": {
+                "value": {
+                  "Name": {
+                    "ctx": "Load", 
+                    "id": "h"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ], 
+    "removed": [
+      3
+    ], 
+    "id": 0, 
+    "added": [
+      4, 
+      5
+    ], 
+    "before": "def repeated(f, n):\n    fn, i = id, 0\n    while n>0:\n        fn = compose(f, fn)\n    return fn\ndef id(x):\n    return x\ndef compose1(f, g):\n    def h(x):\n        return f(g(x))\n    return h"
+  }
+]

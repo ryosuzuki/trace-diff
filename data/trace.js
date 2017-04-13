@@ -3,9 +3,19 @@ const jsdiff = require('diff')
 const PythonShell = require('python-shell')
 
 const main = () => {
-  const trace = new Trace()
-  trace.open('accumulate_all_attempts.json')
-  trace.generate('accumulate.json')
+  const args = process.argv.slice(2)
+  const type = args[0]
+  const types = ['accumulate', 'g', 'product', 'repeated']
+  if (types.includes(type)) {
+    console.log(type)
+    const trace = new Trace()
+    trace.open(type)
+    trace.generate(type)
+  } else {
+    console.log(`${type} is not available`)
+    console.log(`available args:`)
+    console.log(types)
+  }
 }
 
 class Trace {
@@ -14,16 +24,19 @@ class Trace {
     this.results = []
   }
 
-  open(path) {
+  open(type) {
+    const path = `${type}_all_attempts.json`
+    console.log(`parse ${path}`)
     const json = fs.readFileSync(path, 'utf8')
     this.items = JSON.parse(json)
   }
 
-  generate(path) {
+  generate(type) {
+    const path = `${type}.json`
+    console.log(`generating ${path}`)
+
     let results = []
     let id = 0
-
-    this.items = this.items.slice(0, 300)
     for (let item of this.items) {
       item = new Item(item, id++)
       item.generate()
@@ -31,8 +44,8 @@ class Trace {
     }
     fs.writeFileSync(path, JSON.stringify(this.results, null, 2))
     console.log('write finish')
-
-    PythonShell.run('get_trace.py', { args: [path] }, (err) => {
+    console.log('analyzing behavior...')
+    PythonShell.run('get_trace.py', { args: [type] }, (err) => {
       if (err) throw err
       console.log('generate finish')
     })
@@ -115,11 +128,14 @@ class Item {
     let pass = parseInt(this.item.failed[this.item.failed.length-2])
     let test = this.item.failed[testIndex]
     test = test.substr(4)
-    test = test.substr(0, test.indexOf(')') + 1)
+    // test = test.substr(0, test.indexOf(')') + 1)
     let expected = this.item.failed[errorIndex+1]
     expected = parseInt(expected.substr(1))
     let result = this.item.failed[errorIndex+3]
-    result = parseInt(result.substr(1))
+    result = result.substr(6)
+    if (!isNaN(parseInt(result))) {
+      result = parseInt(result)
+    }
     let log = this.item.failed.slice(testIndex, errorIndex+4).join('\n')
 
     this.test = test

@@ -685,7 +685,9 @@ class DataVisualizer {
       .append('div')
 
     for (let i = 0; i < 2; i++) {
+
       let key = ['result', 'expected'][i]
+      let title = ['Result', 'Expected'][i]
       let events = (i === 0) ? this.props.beforeEvents : this.props.afterEvents
 
       let column = historyTable.append('div')
@@ -694,7 +696,7 @@ class DataVisualizer {
 
       column.append('div')
         .attr('class', 'history-title')
-        .text('Result')
+        .text(title)
 
       let body = column.append('div')
         .attr('class', 'history-body')
@@ -714,13 +716,21 @@ class DataVisualizer {
         .data(events)
         .enter()
         .append('p')
-        .attr('class', 'history-line')
+        .attr('class', function(d, i) {
+          return i === myViz.props.diffIndex ? 'history-line diff-line' : 'history-line'
+        })
         .style('padding-left', function(d, i) {
-          return `${10 * (d.indent - 1)}px`
+          return `${10 * d.indent}px`
         })
         .each((function(d, i) {
           $(this).empty()
           let html = ''
+          if (i < myViz.props.diffIndex) {
+            html += '<span><i class="fa fa-check fa-fw"></i></span>'
+          } else {
+            html += '<span><i class="fa fa-angle-right fa-fw"></i></span>'
+          }
+          html += '&nbsp;'
           for (let el of d.html) {
             html += `<span class="hljs-${el.className}">${el.text}</span>`
           }

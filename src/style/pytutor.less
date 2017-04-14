@@ -11,7 +11,10 @@ div#history {
 
   .history {
     float: left;
-    width: 50%;
+    width: 49%;
+    padding: 10px;
+    margin-right: 1%;
+    background: #F8F8F9;
   }
 
   .history-title {
@@ -23,15 +26,40 @@ div#history {
     font-family: Monaco, 'Andale Mono', 'Lucida Console', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace;
     font-size: 13px;
 
+    .history-test {
+      background: #fff;
+      padding: 10px;
+    }
+
     .history-lines {
       margin-top: 20px;
+      padding: 10px 0;
+      background: #fff;
     }
 
     p {
-      cursor: pointer;
       padding: 2px 0;
       margin: 0;
     }
+
+    .history-line {
+      cursor: pointer;
+    }
+    .history-line:hover {
+      background: #eee;
+    }
+    .diff-line {
+      background: rgba(255, 0, 0, 0.2);
+      .hljs-number {
+        color: blue;
+      }
+
+    }
+    .diff-line:hover {
+      background: rgba(255, 0, 0, 0.3);
+    }
+
+
   }
 
   #result {

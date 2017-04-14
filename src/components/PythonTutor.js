@@ -26,9 +26,20 @@ class PythonTutor extends Component {
     let beforeEvents = this.generate('before')
     let afterEvents = this.generate('after')
 
+    let diffIndex
+    for (let i = 0; i < beforeEvents.length; i++) {
+      let be = beforeEvents[i]
+      let ae = afterEvents[i]
+      if (be.key !== ae.key || be.value !== ae.value) {
+        diffIndex = i
+        break
+      }
+    }
+
     let data = _.clone(this.props)
     data.beforeEvents = beforeEvents
     data.afterEvents = afterEvents
+    data.diffIndex = diffIndex
     let options = {
       embeddedMode: true,
       lang: 'py2',

@@ -133,8 +133,25 @@ class CodeDisplay {
       lineNumbers: true,
     });
 
-    return false
+    // create a left-most gutter td that spans ALL rows ...
+    // (NB: valign="top" is CRUCIAL for this to work in IE)
+    this.domRoot.find('#pyCodeOutputDiv .CodeMirror-gutters')
+        .prepend('<div id="gutterTD" valign="top" rowspan="' + this.owner.codeOutputLines.length + '"><svg id="leftCodeGutterSVG"/></div>');
 
+    // create prevLineArrow and curLineArrow
+    this.domRootD3.select('svg#leftCodeGutterSVG')
+        .append('polygon')
+        .attr('id', 'prevLineArrow')
+        .attr('points', SVG_ARROW_POLYGON)
+        .attr('fill', lightArrowColor);
+
+    this.domRootD3.select('svg#leftCodeGutterSVG')
+        .append('polygon')
+        .attr('id', 'curLineArrow')
+        .attr('points', SVG_ARROW_POLYGON)
+        .attr('fill', darkArrowColor);
+
+    /*
     // maps codeOutputLines down both table columns
     // TODO: get rid of pesky owner dependency
     var codeOutputD3 = this.domRootD3.select('#pyCodeOutputDiv')
@@ -144,7 +161,7 @@ class CodeDisplay {
       .data(this.owner.codeOutputLines)
       .enter().append('tr')
       .selectAll('td')
-      .data(function(d, i){return [d, d] /* map full data item down both columns */;})
+      .data(function(d, i){return [d, d] ;})
       .enter().append('td')
       .attr('class', function(d, i) {
         // add the togetherjsCloneClick class on here so that we can
@@ -174,25 +191,6 @@ class CodeDisplay {
           return htmlspecialchars(d.text);
         }
       });
-
-    // create a left-most gutter td that spans ALL rows ...
-    // (NB: valign="top" is CRUCIAL for this to work in IE)
-    this.domRoot.find('#pyCodeOutput tr:first')
-        .prepend('<td id="gutterTD" valign="top" rowspan="' + this.owner.codeOutputLines.length + '"><svg id="leftCodeGutterSVG"/></td>');
-
-    // create prevLineArrow and curLineArrow
-    this.domRootD3.select('svg#leftCodeGutterSVG')
-        .append('polygon')
-        .attr('id', 'prevLineArrow')
-        .attr('points', SVG_ARROW_POLYGON)
-        .attr('fill', lightArrowColor);
-
-    this.domRootD3.select('svg#leftCodeGutterSVG')
-        .append('polygon')
-        .attr('id', 'curLineArrow')
-        .attr('points', SVG_ARROW_POLYGON)
-        .attr('fill', darkArrowColor);
-
 
     // 2012-09-05: Disable breakpoints for now to simplify UX
     // 2016-05-01: Revive breakpoint functionality
@@ -227,12 +225,19 @@ class CodeDisplay {
           d3.select(this.parentNode).select('td.cod').style('color', '');
         }
       });
+    */
+
   }
 
   updateCodOutput(smoothTransition=false) {
-    return false
 
+    var gutterTD = this.domRoot.find('#gutterTD')
     var gutterSVG = this.domRoot.find('svg#leftCodeGutterSVG');
+
+    const outerHeight = this.domRoot.find('.CodeMirror-lines').height()
+    gutterTD.height(outerHeight);
+    gutterSVG.height(outerHeight);
+
 
     // one-time initialization of the left gutter
     // (we often can't do this earlier since the entire pane
@@ -240,22 +245,25 @@ class CodeDisplay {
     //  -- the exact format depends on browser)
     if (!this.leftGutterSvgInitialized) {
       // set the gutter's height to match that of its parent
-      gutterSVG.height(gutterSVG.parent().height());
 
-      var firstRowOffsetY = this.domRoot.find('table#pyCodeOutput tr:first').offset().top;
+      // gutterTD.height(gutterTD.parent().height());
+      // gutterSVG.height(gutterSVG.parent().height());
+
+      var firstRowOffsetY = this.domRoot.find('#pyCodeOutputDiv .CodeMirror-gutters').offset().top;
 
       // first take care of edge case when there's only one line ...
-      this.codeRowHeight = this.domRoot.find('table#pyCodeOutput td.cod:first').height();
+      this.codeRowHeight = this.domRoot.find('#pyCodeOutputDiv .CodeMirror-line :first').height();
 
       // ... then handle the (much more common) multi-line case ...
       // this weird contortion is necessary to get the accurate row height on Internet Explorer
       // (simpler methods work on all other major browsers, erghhhhhh!!!)
+
       if (this.owner.codeOutputLines.length > 1) {
-        var secondRowOffsetY = this.domRoot.find('table#pyCodeOutput tr:nth-child(2)').offset().top;
+        var secondRowOffsetY = this.domRoot.find('#pyCodeOutputDiv .CodeMirror-line:nth-child(2)').offset().top;
         this.codeRowHeight = secondRowOffsetY - firstRowOffsetY;
       }
 
-      assert(this.codeRowHeight > 0);
+      // assert(this.codeRowHeight > 0);
 
       var gutterOffsetY = gutterSVG.offset().top;
       var teenyAdjustment = gutterOffsetY - firstRowOffsetY;
@@ -268,9 +276,9 @@ class CodeDisplay {
       this.leftGutterSvgInitialized = true;
     }
 
-    assert(this.arrowOffsetY !== undefined);
-    assert(this.codeRowHeight !== undefined);
-    assert(0 <= this.arrowOffsetY && this.arrowOffsetY <= this.codeRowHeight);
+    // assert(this.arrowOffsetY !== undefined);
+    // assert(this.codeRowHeight !== undefined);
+    // assert(0 <= this.arrowOffsetY && this.arrowOffsetY <= this.codeRowHeight);
 
     // assumes that this.owner.updateLineAndExceptionInfo has already
     // been run, so line number info is up-to-date!
@@ -334,7 +342,7 @@ class CodeDisplay {
       gutterSVG.find('#curLineArrow').hide();
     }
 
-    this.domRootD3.selectAll('#pyCodeOutputDiv td.cod')
+    this.domRootD3.selectAll('#pyCodeOutputDiv .CodeMirror-line ')
       .style('border-top', function(d) {
         if (hasError && (d.lineNumber == curEntry.line)) {
           return '1px solid ' + errorColor;
@@ -355,6 +363,8 @@ class CodeDisplay {
 
     // returns True iff lineNo is visible in pyCodeOutputDiv
     var isOutputLineVisible = (lineNo) => {
+      return true
+      /*
       var lineNoTd = this.domRoot.find('#lineNo' + lineNo);
       var LO = lineNoTd.offset().top;
 
@@ -364,6 +374,7 @@ class CodeDisplay {
 
       // add a few pixels of fudge factor on the bottom end due to bottom scrollbar
       return (PO <= LO) && (LO < (PO + H - 30));
+      */
     }
 
     // smoothly scroll pyCodeOutputDiv so that the given line is at the center

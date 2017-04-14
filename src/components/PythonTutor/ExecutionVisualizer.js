@@ -273,11 +273,13 @@ class ExecutionVisualizer {
         .css('max-height', this.params.codeDivHeight + 'px');
     }
 
+
     // enable left-right draggable pane resizer (originally from David Pritchard)
     base.resizable({
       handles: "e", // "east" (i.e., right)
       minWidth: 100, //otherwise looks really goofy
       resize: (event, ui) => {
+
         this.domRoot.find("#codeDisplayDiv").css("height", "auto"); // redetermine height if necessary
         this.navControls.renderSliderBreakpoints(this.sortedBreakpointsList); // update breakpoint display accordingly on resize
         if (this.params.updateOutputCallback) // report size change

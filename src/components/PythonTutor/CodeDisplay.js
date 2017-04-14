@@ -252,21 +252,25 @@ class CodeDisplay {
       var firstRowOffsetY = this.domRoot.find('#pyCodeOutputDiv .CodeMirror-gutters').offset().top;
 
       // first take care of edge case when there's only one line ...
-      this.codeRowHeight = this.domRoot.find('#pyCodeOutputDiv .CodeMirror-line :first').height();
+      this.codeRowHeight = this.domRoot.find('#pyCodeOutputDiv .CodeMirror-line:first').height();
 
       // ... then handle the (much more common) multi-line case ...
       // this weird contortion is necessary to get the accurate row height on Internet Explorer
       // (simpler methods work on all other major browsers, erghhhhhh!!!)
 
+      /*
       if (this.owner.codeOutputLines.length > 1) {
         var secondRowOffsetY = this.domRoot.find('#pyCodeOutputDiv .CodeMirror-line:nth-child(2)').offset().top;
         this.codeRowHeight = secondRowOffsetY - firstRowOffsetY;
       }
+      */
 
       // assert(this.codeRowHeight > 0);
 
       var gutterOffsetY = gutterSVG.offset().top;
       var teenyAdjustment = gutterOffsetY - firstRowOffsetY;
+
+      teenyAdjustment = -4
 
       // super-picky detail to adjust the vertical alignment of arrows so that they line up
       // well with the pointed-to code text ...

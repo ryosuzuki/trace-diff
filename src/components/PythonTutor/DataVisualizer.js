@@ -743,11 +743,12 @@ class DataVisualizer {
         .each((function(d, i) {
           $(this).empty()
 
-          if (i === curIndex) {
-            $(this).css('border', '3px solid #a6b3b6')
-          } else if (i+0.5 === curIndex) {
-            $(this).css('border-bottom', '3px solid #a6b3b6')
-          }
+          if (i === Math.round(curIndex)) $(this).css('border', '3px solid #a6b3b6')
+          // if (i === curIndex) {
+          //   $(this).css('border', '3px solid #a6b3b6')
+          // } else if (i+0.5 === curIndex) {
+          //   $(this).css('border-bottom', '3px solid #a6b3b6')
+          // }
 
           let html = ''
           if (i < myViz.props.diffIndex) {
@@ -795,6 +796,8 @@ class DataVisualizer {
           animate()
           */
         })
+
+
 
     }
 

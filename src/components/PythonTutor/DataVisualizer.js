@@ -765,10 +765,15 @@ class DataVisualizer {
         .on('mouseover', function(d, i) {
           $(`#result-history-line-${i}`).addClass('hover')
           $(`#expected-history-line-${i}`).addClass('hover')
+
+          $('.current-line').removeClass('current-line')
+          myViz.owner.cm.addLineClass(d.line-1, '', 'current-line')
         })
         .on('mouseout', function(d, i) {
           $(`#result-history-line-${i}`).removeClass('hover')
           $(`#expected-history-line-${i}`).removeClass('hover')
+
+          myViz.owner.cm.removeLineClass(d.line-1, '', 'current-line')
         })
         .on('click', function(d, i) {
           let step = myViz.props.beforeEvents[i].traceIndex

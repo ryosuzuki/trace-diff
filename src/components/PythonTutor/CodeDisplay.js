@@ -133,6 +133,8 @@ class CodeDisplay {
       lineNumbers: true,
     });
 
+    this.owner.cm = myCodeMirror
+
     // create a left-most gutter td that spans ALL rows ...
     // (NB: valign="top" is CRUCIAL for this to work in IE)
     this.domRoot.find('#pyCodeOutputDiv .CodeMirror-gutters')

@@ -37,7 +37,7 @@ class ProgramOutputBox {
       stdoutHeight = heightOverride;
     }
     // do this only after adding outputsHTML to the DOM
-    this.domRoot.find('#pyStdout').width('420px')
+    this.domRoot.find('#pyStdout').width('450px')
                                   .height(stdoutHeight)
                                   .resizable();
   }

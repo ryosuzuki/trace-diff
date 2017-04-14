@@ -690,15 +690,15 @@ class DataVisualizer {
       let title = ['Result', 'Expected'][i]
       let events = (i === 0) ? this.props.beforeEvents : this.props.afterEvents
 
-      let column = historyTable.append('div')
+      let content = historyTable.append('div')
         .attr('id', key)
         .attr('class', 'history')
 
-      column.append('div')
+      content.append('div')
         .attr('class', 'history-title')
         .text(title)
 
-      let body = column.append('div')
+      let body = content.append('div')
         .attr('class', 'history-body')
 
       body.append('div')
@@ -719,6 +719,9 @@ class DataVisualizer {
         .attr('class', function(d, i) {
           return i === myViz.props.diffIndex ? 'history-line diff-line' : 'history-line'
         })
+        .attr('id', function(d, i) {
+          return `${key}-history-line-${i}`
+        })
         .style('padding-left', function(d, i) {
           return `${10 * d.indent}px`
         })
@@ -736,6 +739,17 @@ class DataVisualizer {
           }
           $(this).append(html)
         }))
+        .on('mouseover', function(d, i) {
+          $(`#result-history-line-${i}`).addClass('hover')
+          $(`#expected-history-line-${i}`).addClass('hover')
+        })
+        .on('mouseout', function(d, i) {
+          $(`#result-history-line-${i}`).removeClass('hover')
+          $(`#expected-history-line-${i}`).removeClass('hover')
+        })
+        .on('click', function(d, i) {
+          console.log('click')
+        })
 
     }
 

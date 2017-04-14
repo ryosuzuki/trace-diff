@@ -32,7 +32,7 @@ div#history {
   }
 
   .history-body {
-    font-family: Monaco, 'Andale Mono', 'Lucida Console', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace;
+    // font-family: Monaco, 'Andale Mono', 'Lucida Console', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace;
     font-size: 13px;
 
     .history-test {
@@ -40,35 +40,45 @@ div#history {
       padding: 10px;
     }
 
-    .history-lines {
-      margin-top: 20px;
-      padding: 10px 0;
+    .history-lines-wrapper {
       background: #fff;
+      white-space: nowrap;
+      overflow: scroll;
+      padding: 10px 0;
+      margin-top: 20px;
     }
 
-    p {
-      padding: 2px 0;
+    .history-lines {
+      padding: 0;
       margin: 0;
+      list-style: none;
     }
 
     .history-line {
       cursor: pointer;
+      border: 3px solid white;
+      display: table-caption;
     }
+
     .history-line.hover {
       background: #eee;
+      border-color: #eee;
     }
     .diff-line {
       background: rgba(255, 0, 0, 0.2);
+      border-color: rgba(255, 0, 0, 0);
       .hljs-number {
         color: blue;
       }
-
     }
     .diff-line.hover {
       background: rgba(255, 0, 0, 0.3);
+      border-color: rgba(255, 0, 0, 0);
     }
-
-
+    p {
+      padding: 2px 0;
+      margin: 0;
+    }
   }
 
   #result {

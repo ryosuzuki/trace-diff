@@ -5,7 +5,7 @@ import ProgramOutputBox from './ProgramOutputBox'
 import CodeDisplay from './CodeDisplay'
 
 let curVisualizerID = 1;
-let DEFAULT_EMBEDDED_CODE_DIV_WIDTH = 450;
+let DEFAULT_EMBEDDED_CODE_DIV_WIDTH = 380;
 let DEFAULT_EMBEDDED_CODE_DIV_HEIGHT = 400;
 
 class ExecutionVisualizer {

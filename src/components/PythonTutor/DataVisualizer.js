@@ -724,11 +724,13 @@ class DataVisualizer {
         })
 
       body.append('div')
+        .attr('class', 'history-lines-wrapper')
+        .append('ul')
         .attr('class', 'history-lines')
-        .selectAll('p')
+        .selectAll('li')
         .data(events)
         .enter()
-        .append('p')
+        .append('li')
         .attr('class', function(d, i) {
           return i === myViz.props.diffIndex ? 'history-line diff-line' : 'history-line'
         })
@@ -738,14 +740,15 @@ class DataVisualizer {
         .style('padding-left', function(d, i) {
           return `${10 * d.indent}px`
         })
-        .style('outline', function(d, i) {
-          return i === curIndex ? '3px solid red' : 'none'
-        })
-        .style('border-bottom', function(d, i) {
-          return (i+0.5) === curIndex ? '3px solid red' : 'none'
-        })
         .each((function(d, i) {
           $(this).empty()
+
+          if (i === curIndex) {
+            $(this).css('border', '3px solid #a6b3b6')
+          } else if (i+0.5 === curIndex) {
+            $(this).css('border-bottom', '3px solid #a6b3b6')
+          }
+
           let html = ''
           if (i < myViz.props.diffIndex) {
             html += '<span><i class="fa fa-check fa-fw"></i></span>'

@@ -23,15 +23,12 @@ class PythonTutor extends Component {
   init() {
     console.log('hello world')
 
-    let beforeHistory = this.generateHistory('before')
-    let afterHistory = this.generateHistory('after')
-    let data = {
-      code: this.props.beforeCode,
-      trace: this.props.beforeTraces,
-      history: beforeHistory,
-      afterTrace: this.props.afterTraces,
-      afterHistory: afterHistory,
-    }
+    let beforeEvents = this.generate('before')
+    let afterEvents = this.generate('after')
+
+    let data = _.clone(this.props)
+    data.beforeEvents = beforeEvents
+    data.afterEvents = afterEvents
     let options = {
       embeddedMode: true,
       lang: 'py2',
@@ -62,7 +59,7 @@ class PythonTutor extends Component {
 
   }
 
-  generateHistory(type) {
+  generate(type) {
     let events, asts, key
     if (type === 'before') {
       events = this.props.beforeEvents

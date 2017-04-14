@@ -10,7 +10,7 @@ let DEFAULT_EMBEDDED_CODE_DIV_HEIGHT = 400;
 
 class ExecutionVisualizer {
 
-  constructor(domRootID, dat, params) {
+  constructor(domRootID, data, params) {
     this.params = {};
     this.curInputCode = '';
     this.curTrace = [];
@@ -19,7 +19,7 @@ class ExecutionVisualizer {
     this.userInputPromptStr // string;
     this.promptForMouseInput // boolean;
     this.curInstr = 0;
-    this.updateHistory = [];
+    this.updataeHistory = [];
     this.creationTime // number;
     this.pytutor_hooks = {} // {string?: any[]} = {};
     this.prevLineIsReturn // boolean;
@@ -35,13 +35,11 @@ class ExecutionVisualizer {
     this.sortedBreakpointsList = [];  // sorted and synced with breakpoints
 
 
-    this.curInputCode = dat.code.replace(/\s*$/g, ""); // kill trailing spaces
+    this.curInputCode = data.code.replace(/\s*$/g, ""); // kill trailing spaces
     this.params = params;
-    this.curTrace = dat.trace;
-    this.curHistory = dat.history;
-    this.aftTrace = dat.afterTrace;
-    this.aftHistory = dat.afterHistory;
-    this.focusKeys = [...new Set(dat.history.map(e => e.key))]
+
+    this.props = data
+    this.curTrace = data.beforeTraces;
 
     // postprocess the trace
     if (this.curTrace.length > 0) {

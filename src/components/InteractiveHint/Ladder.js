@@ -7,6 +7,7 @@ import Slider from 'rc-slider'
 import Tooltip from 'rc-tooltip'
 
 import Quiz from './Quiz'
+import ExecutionVisualizer from '../PythonTutor/ExecutionVisualizer'
 
 
 class Ladder extends Component {
@@ -23,6 +24,9 @@ class Ladder extends Component {
       events: [],
       quizIndex: null,
       currentLine: null,
+      diffIndex: null,
+      focusKeys: [],
+      condition: 0,
     }
     window.ladder = this
   }
@@ -34,99 +38,22 @@ class Ladder extends Component {
   }
 
   init() {
-    // this.generate('before')
-    // this.generate('after')
-
-    this.fuga('before')
-    this.fuga('after')
-  }
-
-
-
-  generate(type) {
-    let events, asts, key
-    if (type === 'before') {
-      events = this.props.beforeEvents
-      asts = this.props.beforeAst
-      key = 'beforeEvents'
-    } else {
-      events = this.props.afterEvents
-      asts = this.props.afterAst
-      key = 'afterEvents'
-    }
-
-    let filteredEvents = []
-
-    filteredEvents = events.filter((event) => {
-      // if (event.type === 'call') return false
-      if (event.builtin) return false
-      if (!this.props.focusKeys.includes(event.key)) return false
-      return true
-    })
-
-    filteredEvents = filteredEvents.map((event) => {
-      let trimmedEvents = events.slice(0, event.id)
-      let history = {}
-      for (let e of trimmedEvents) {
-        history[e.key] = e
-      }
-
-      let ast = asts[event.line-1]
-      let tree = new Tree()
-      try {
-        tree.history = history
-        tree.analyze(ast)
-        event.updates = tree.updates
-        return event
-      } catch (err) {
-        return false
-      }
-    }).filter(event => event)
-
-    let state = {}
-    state[key] = filteredEvents
-    this.setState(state, () => {
-      this.translate()
-    })
-  }
-
-  translate() {
-    let text = ''
-    let max = 0
-    let events = []
-    let length = Math.min(this.state.beforeEvents.length, this.state.afterEvents.length)
-    for (let i = 0; i < length; i++) {
-      let beforeEvent = this.state.beforeEvents[i]
-      let afterEvent = this.state.afterEvents[i]
-      let beforeUpdates = _.uniq(beforeEvent.updates).reverse()
-      let afterUpdates = _.uniq(afterEvent.updates).reverse()
-      let result = beforeUpdates[this.state.level]
-      let expected = afterUpdates[this.state.level]
-      if (result === undefined) result = _.last(beforeUpdates)
-      if (expected === undefined) expected = _.last(afterUpdates)
-
-      max = Math.max(max, beforeUpdates.length - 1)
-      max = Math.max(max, afterUpdates.length - 1)
-
-      let event = beforeEvent
-      event.result = result
-      event.expected = expected
-      events.push(event)
-    }
-
-    let marks = {}
-    marks[0] = 'concrete'
-    marks[max] = 'abstract'
-    this.setState({ events: events, max: max, marks: marks })
+    this.generate('before')
+    this.generate('after')
   }
 
   onChange(value) {
+    if (value > this.state.max) return false
     this.setState({ level: value }, () => {
       this.init()
     })
   }
 
   onClick(index, line, event) {
+    this.onChange(this.state.level + 1)
+    return false
+
+
     $(event.target).removeClass('primary')
     setTimeout(() => {
       let target = $(`#hoge .CodeMirror`)
@@ -150,21 +77,81 @@ class Ladder extends Component {
   }
 
 
-  onMouseOver(line) {
+  onMouseOver(event, index) {
+    let line = event.line
+    $(`.history-line.line-${index}`).addClass('hover')
+
     let popup = $('.popup')
     if (!popup.hasClass('visible')) {
       window.cm.addLineClass(line-1, '', 'current-line')
     }
   }
 
-  onMouseOut(line) {
+  onMouseOut(event, index) {
+    let line = event.line
+    $(`.history-line.line-${index}`).removeClass('hover')
+
     let popup = $('.popup')
     if (!popup.hasClass('visible')) {
       window.cm.removeLineClass(line-1, '', 'current-line')
     }
   }
 
-  fuga(type) {
+  initVisualization(id = 0) {
+    let data = {
+      code: this.props.beforeCode,
+      trace: this.props.beforeTraces,
+      history: this.state.beforeEvents,
+      afterTrace: this.props.afterTraces,
+      afterHistory: this.state.afterEvents,
+    }
+    if (id === 1) {
+      data.history = []
+      data.afterTrace = []
+      data.afterHistory = []
+    }
+    let options = {
+      embeddedMode: true,
+      lang: 'py2',
+      startingInstruction: 0,
+      editCodeBaseURL: 'visualize.html',
+      // hideCode: true,
+    }
+    window.viz = new ExecutionVisualizer('viz', data, options);
+    window.viz.renderStep(0)
+    this.setState({ condition: id })
+  }
+
+  visualize(index) {
+    if (!window.viz.renderStep) {
+      this.initVisualization(this.state.condition)
+    }
+
+    let startIndex
+    let stopIndex
+    if (index === 0) {
+      startIndex = this.state.beforeEvents[index].traceIndex
+      stopIndex = this.state.beforeEvents[index].traceIndex
+    } else {
+      startIndex = this.state.beforeEvents[index-1].traceIndex
+      stopIndex = this.state.beforeEvents[index].traceIndex
+    }
+
+    let count = startIndex
+    const animate = () => {
+      let timer = setTimeout(animate, 100)
+      window.viz.renderStep(count)
+      count++
+      if (count > stopIndex) {
+        clearTimeout(timer)
+      }
+    }
+
+    animate()
+
+  }
+
+  generate(type) {
     let events, asts, key
     if (type === 'before') {
       events = this.props.beforeEvents
@@ -176,16 +163,25 @@ class Ladder extends Component {
       key = 'afterEvents'
     }
 
+    const isEqual = (before, after) => {
+      let bool = true
+      if (!before || !after) return false
+      for (let key of ['value', 'key', 'type', 'history']) {
+        if (!_.isEqual(before[key], after[key])) bool = false
+      }
+      return bool
+    }
+
+    let focusKeys = _.union(Object.keys(this.props.beforeHistory), Object.keys(this.props.afterHistory)).map((key) => {
+      if (isEqual(this.props.beforeHistory[key], this.props.afterHistory[key])   && this.props.beforeHistory[key].type !== 'call') return false
+      return key
+    }).filter(key => key)
 
     let indent = 0
     events = events.map((event) => {
-      let focusKeys = _.union(Object.keys(this.props.beforeHistory), Object.keys(this.props.afterHistory)).map((key) => {
-        if (_.isEqual(this.props.beforeHistory[key], this.props.afterHistory[key])) return false
-        return key
-      }).filter(key => key)
       if (!focusKeys.includes(event.key)) return false
-      if (event.builtin) return false
-      if (event.type === 'call' && event.children.length === 0) return false
+      if (window.type !== 'repeated' && event.builtin) return false
+      // if (event.type === 'call' && event.children.length === 0) return false
 
       let trimmedEvents = events.slice(0, event.id)
       let history = {}
@@ -200,11 +196,17 @@ class Ladder extends Component {
         tree.history = history
         tree.analyze(ast)
         event.updates = tree.updates
+
+        if (event.type !== tree.type && event.value !== '') {
+          event.updates = [event.value]
+        }
+
         return event
       } catch (err) {
         event.updates = []
         return event
       }
+
     }).filter(event => event)
 
     let max = this.state.max
@@ -218,10 +220,10 @@ class Ladder extends Component {
 
       switch (event.type) {
         case 'call':
-          event.call = event.children[0]
+          event.call = // event.children[0]
           event.html = [
             { className: 'normal', text: 'call ' },
-            { className: 'keyword', text: event.call },
+            { className: 'keyword', text: event.key },
           ]
           indent++
           event.indent = indent
@@ -249,29 +251,60 @@ class Ladder extends Component {
 
     let state = {}
     let marks = {}
+    if (max > 3) max = 3
     marks[0] = 'concrete'
     marks[max] = 'abstract'
     state['max'] = max
     state['marks'] = marks
+    state['focusKeys'] = focusKeys
     state[key] = events
-    this.setState(state)
+    this.setState(state, () => {
+      window.quizes.map((quiz, index) => { quiz.init() })
+
+      let diffIndex
+      if (this.state.beforeEvents.length === 0
+       || this.state.afterEvents.length === 0) return
+      for (let i = 0; i < this.state.beforeEvents.length; i++) {
+        let be = this.state.beforeEvents[i]
+        let ae = this.state.afterEvents[i]
+        if (be.key !== ae.key || be.value !== ae.value) {
+          diffIndex = i
+          break
+        }
+      }
+      this.setState({ diffIndex: diffIndex })
+
+      this.initVisualization(this.state.condition)
+    })
   }
 
 
-  hoge(event, index) {
+  renderEvent(event, index) {
+    let showWhy = true
+    if (event.type === 'call') showWhy = false
+    if (event.updates.length < 2) showWhy = false
+    let className = 'history-line'
+    className += ` line-${index} `
+    if (this.state.diffIndex === index && (this.state.condition === 0 || this.state.condition === 3))  className += ' diff-line'
+    let conditions = [0, 3]
     return (
-      <div key={ index } >
-        <p style={{ paddingLeft: `${10 * event.indent}px` }}
-          onMouseOver={ this.onMouseOver.bind(this, event.line) }
-          onMouseOut={ this.onMouseOut.bind(this, event.line) }
+      <div className={ className } data-index={ index } key={ index }>
+        <p style={{ paddingLeft: `${10 * event.indent}px` , cursor: 'pointer' }}
+          onMouseOver={ this.onMouseOver.bind(this, event, index) }
+          onMouseOut={ this.onMouseOut.bind(this, event, index) }
+          onClick={ this.visualize.bind(this, index) }
         >
+          <span style={{ display: (this.state.condition === 0 || this.state.condition === 3) ? 'inline' : 'none' }}>
+            { index < this.state.diffIndex ? <i className="fa fa-check fa-fw"></i> : <i className="fa fa-fw fa-angle-right"></i> }
+          &nbsp;
+          </span>
           { event.html.map((html, index) => {
-            return <span key={ index }className={ `hljs-${html.className}` }>{ html.text }</span>
+            return <span key={ index } className={ `hljs-${html.className}` }>{ html.text }</span>
           }) }
+          <span id={ `why-${index}` } style={{ display: showWhy ? 'inline' : 'none' }}>
           &nbsp;
           <i className="fa fa-long-arrow-right fa-fw"></i><a onClick={ this.onClick.bind(this, index, event.line) }> why ?</a>
-
-
+          </span>
         </p>
       </div>
     )
@@ -288,71 +321,37 @@ class Ladder extends Component {
     })
 
     return (
-      <div id='ladder' className="ladder">
+      <div id='ladder'>
         <div className="ui two column grid">
           <div className="eight wide column">
             <h2>Result</h2>
-            <pre><code className="hljs">
-              { this.state.beforeEvents.map((event, index) => {
-                return this.hoge(event, index)
-              }) }
-            </code></pre>
+            <Highlight className="python">
+              { `${this.props.test}\n>>> ${this.props.result}` }
+            </Highlight>
+            <div id="result-ladder" className="ladder">
+              <pre><code className="hljs">
+                { this.state.beforeEvents.map((event, index) => {
+                  return this.renderEvent(event, index)
+                }) }
+              </code></pre>
+            </div>
           </div>
           <div className="eight wide column">
             <h2>Expected</h2>
-            <pre><code className="hljs">
-              { this.state.afterEvents.map((event, index) => {
-                return this.hoge(event, index)
-              }) }
-            </code></pre>
+            <Highlight className="python">
+              { `${this.props.test}\n>>> ${this.props.expected}` }
+            </Highlight>
+            <div id="expected-ladder" className="ladder">
+              <pre><code className="hljs">
+                { this.state.afterEvents.map((event, index) => {
+                  return this.renderEvent(event, index)
+                }) }
+              </code></pre>
+            </div>
           </div>
 
-          { /*this.state.events.map((event, index) => {
-            if (event.result === undefined) return null
-            switch (event.type) {
-              case 'call':
-                if (event.children.length === 0) return null
-                return (
-                  <div key={ index }>
-                    { event.children.map((child) => {
-                      return <p><span className="hljs-keyword">{ `${event.key} `}</span> calls <span className="hljs-number">{ ` ${child} ` }</span></p>
-                    }) }
-                  </div>
-                )
-              case 'return':
-                return (
-                  <div key={ index }>
-                    <p>
-                      <span className="hljs-keyword">{ `${event.key} `}</span>
-                      returns
-                      <span className="hljs-number">{ ` ${event.result} ` }</span>
-                      should be
-                      <span className="hljs-number">{ ` ${event.expected} ` }</span>
-                      <br />
-                      <i className="fa fa-long-arrow-right fa-fw"></i><a onClick={ this.onClick.bind(this, index, event.line) }> why { `${event.key} returns ${event.result} ?` }</a>
-                    </p>
-                  </div>
-                )
-              default:
-                return (
-                  <div key={ index }>
-                    <p>
-                      <span className="hljs-keyword">{ `${event.key} `}</span>
-                      =
-                      <span className="hljs-number">{ ` ${event.result} ` }</span>
-                      should be
-                      <span className="hljs-number">{ ` ${event.expected} ` }</span>
-                      <br />
-                      <i className="fa fa-long-arrow-right fa-fw"></i><a onClick={ this.onClick.bind(this, index, event.line) }> why { `${ event.key } = ${ event.result } ?` }</a>
-                    </p>
-                  </div>
-                )
-            }
-          }) */ }
 
-
-          <div style={{ width: '10%'}}></div>
-          <div style={{ width: '80%'}}>
+          <div id="control-ladder" className="ladder" style={{ width: '50%'}}>
             <Slider
               dots
               min={ 0 }
@@ -363,11 +362,12 @@ class Ladder extends Component {
               onChange={ this.onChange.bind(this) }
             />
           </div>
-          <div style={{ width: '10%'}}></div>
+
         </div>
 
         <div className="ui fluid popup bottom center transition inline-hint">
           { this.state.beforeEvents.map((event, index) => {
+            if (event.type === 'call') return null
             let question = ''
             question += 'Q. Why '
             question += event.key
@@ -394,6 +394,7 @@ class Ladder extends Component {
                 <h1><b>{ question }</b></h1>
                 <Quiz
                   id={ `quiz-${ index }` }
+                  index={ index }
                   options={ this.props.options }
                   line={ event.line }
                   currentCode={ this.props.currentCode }
@@ -407,9 +408,6 @@ class Ladder extends Component {
           }) }
           <button className="ui basic button close-button" onClick={ this.onClose.bind(this) } style={{ float: 'right' }}>Close</button>
         </div>
-
-
-
       </div>
     )
   }
@@ -432,41 +430,3 @@ const handle = (props) => {
     </Tooltip>
   );
 };
-
-/*
-
-  translate(compare = false) {
-    let events = this.props.beforeEvents
-    // .filter(event => this.props.focusKeys.includes(event.key))
-    let filteredEvents = []
-    let text = ''
-    for (let event of events) {
-      switch (event.type) {
-        case 'call':
-          if (event.children.length === 0) continue
-          for (let child of event.children) {
-            text += `${event.key} calls ${child}`
-          }
-          break
-        case 'return':
-          if (event.builtin) continue
-          text += `${event.key} returns ${event.value}`
-          break
-        default:
-          if (!this.props.focusKeys.includes(event.key)) continue
-          if (event.index === 0) {
-            text += `${event.key} is initialized with ${event.value}`
-          } else {
-            text += `${event.key} is updated to ${event.value}`
-          }
-          break
-      }
-      text += ` at line ${ event.line }`
-      text += '\n'
-      if (event.type !== 'call') filteredEvents.push(event)
-    }
-    this.setState({ text: text, events: filteredEvents })
-  }
-
-
- */

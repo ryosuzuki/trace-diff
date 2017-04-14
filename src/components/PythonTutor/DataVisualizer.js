@@ -19,12 +19,8 @@ class DataVisualizer {
     this.owner = owner;
     this.params = this.owner.params;
     this.curTrace = this.owner.curTrace;
-    this.curHistory = this.owner.curHistory;
-    this.aftTrace = this.owner.aftTrace;
-    this.aftHistory = this.owner.aftHistory;
-
-    this.focusKeys = this.owner.focusKeys;
-
+    this.props = this.owner.props
+    this.focusKeys = [...new Set(this.props.beforeEvents.map(e => e.key))]
 
     this.domRoot = domRoot;
     this.domRootD3 = domRootD3;
@@ -682,70 +678,57 @@ class DataVisualizer {
       .empty()
       // .html(`<div id="heapHeader">${myViz.getRealLabel("History")}</div>`);
 
-    let curHistory = this.curHistory
-    let aftHistory = this.aftHistory
 
-    let history = new Array(Math.max(curHistory.length, aftHistory.length))
-    for (let i = 0; i < history.length; i++) {
-      history[i] = { cur: curHistory[i], aft: aftHistory[i] }
-    }
+    let data = []
 
     let historyTable = myViz.domRootD3.select('#history')
       .append('div')
 
-    let resultTable = historyTable.append('div')
-      .attr('id', 'result')
-      .attr('class', 'history-table')
+    for (let i = 0; i < 2; i++) {
+      let key = ['result', 'expected'][i]
+      let events = (i === 0) ? this.props.beforeEvents : this.props.afterEvents
 
-    resultTable.append('div')
-      .attr('class', 'history-title')
-      .text('Result')
+      let column = historyTable.append('div')
+        .attr('id', key)
+        .attr('class', 'history')
 
-    resultTable.append('div')
-      .attr('class', 'history-body')
-      .selectAll('p')
-      .data(curHistory)
-      .enter()
-      .append('p')
-      .attr('class', 'history-line')
-      .style('padding-left', function(d, i) {
-        return `${10 * (d.indent - 1)}px`
-      })
-      .each((function(d, i) {
-        $(this).empty()
-        let html = ''
-        for (let el of d.html) {
-          html += `<span class="hljs-${el.className}">${el.text}</span>`
-        }
-        $(this).append(html)
-      }))
+      column.append('div')
+        .attr('class', 'history-title')
+        .text('Result')
 
-    let expectedTable = historyTable.append('div')
-      .attr('id', 'expected')
-      .attr('class', 'history-table')
+      let body = column.append('div')
+        .attr('class', 'history-body')
 
-    expectedTable.append('div')
-      .attr('class', 'history-title')
-      .text('Expected')
+      body.append('div')
+        .attr('class', 'history-test')
+        .html(function(d, i) {
+          let html = ''
+          html += `<p>${myViz.props.test}</p>`
+          html += `<p>>>> ${myViz.props[key]}</p>`
+          return html
+        })
 
-    expectedTable.append('div')
-      .attr('class', 'history-body')
-      .selectAll('p')
-      .data(aftHistory)
-      .enter()
-      .append('p')
-      .attr('class', 'history-line')
-      .style('padding-left', function(d, i) {
-        return `${10 * (d.indent - 1)}px`
-      })
-      .each((function(d, i) {
-        $(this).empty()
-        let html = ''
-        for (let el of d.html) {
-          html += `<span class="hljs-${el.className}">${el.text}</span>`
-        }
-        $(this).append(html)
-      }))
+      body.append('div')
+        .attr('class', 'history-lines')
+        .selectAll('p')
+        .data(events)
+        .enter()
+        .append('p')
+        .attr('class', 'history-line')
+        .style('padding-left', function(d, i) {
+          return `${10 * (d.indent - 1)}px`
+        })
+        .each((function(d, i) {
+          $(this).empty()
+          let html = ''
+          for (let el of d.html) {
+            html += `<span class="hljs-${el.className}">${el.text}</span>`
+          }
+          $(this).append(html)
+        }))
+
+    }
+
 
 
     /*

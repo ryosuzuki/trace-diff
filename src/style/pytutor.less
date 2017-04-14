@@ -9,22 +9,29 @@ div#history {
   margin-top: 30px;
   width: 100%;
 
-  .history-table {
+  .history {
     float: left;
     width: 50%;
   }
 
   .history-title {
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
 
-  .history-line {
-    cursor: pointer;
-    padding: 2px 0;
-    margin: 0;
+  .history-body {
     font-family: Monaco, 'Andale Mono', 'Lucida Console', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace;
     font-size: 13px;
+
+    .history-lines {
+      margin-top: 20px;
+    }
+
+    p {
+      cursor: pointer;
+      padding: 2px 0;
+      margin: 0;
+    }
   }
 
   #result {

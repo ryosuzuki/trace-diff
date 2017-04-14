@@ -178,8 +178,7 @@ class PythonTutor extends Component {
 
   render() {
     return (
-      <div className="ui two column centered grid">
-        PythonTutor
+      <div className="ui one column centered grid">
         <div id="viz" className="sixteen wide column"></div>
       </div>
     )

@@ -35,7 +35,7 @@ class ExecutionVisualizer {
     this.sortedBreakpointsList = [];  // sorted and synced with breakpoints
 
 
-    this.curInputCode = data.code.replace(/\s*$/g, ""); // kill trailing spaces
+    this.curInputCode = data.beforeCode.replace(/\s*$/g, ""); // kill trailing spaces
     this.params = params;
 
     this.props = data

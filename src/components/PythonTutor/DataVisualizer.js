@@ -748,7 +748,30 @@ class DataVisualizer {
           $(`#expected-history-line-${i}`).removeClass('hover')
         })
         .on('click', function(d, i) {
-          console.log('click')
+          let step = myViz.props.beforeEvents[i].traceIndex
+          myViz.owner.renderStep(step)
+          /*
+          let startIndex
+          let stopIndex
+          if (i === 0) {
+            startIndex = 0
+            stopIndex = myViz.props.beforeEvents[i].traceIndex
+          } else {
+            startIndex = myViz.props.beforeEvents[i-1].traceIndex
+            stopIndex = myViz.props.beforeEvents[i].traceIndex
+          }
+
+          let count = startIndex
+          const animate = () => {
+            let timer = setTimeout(animate, 100)
+            myViz.owner.renderStep(count)
+            count++
+            if (count > stopIndex) {
+              clearTimeout(timer)
+            }
+          }
+          animate()
+          */
         })
 
     }

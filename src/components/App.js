@@ -176,53 +176,49 @@ class App extends Component {
           </div>
         </div>
         */}
-        <div className="ui two column centered grid">
-          <div id="python-tutor">
-            <PythonTutor
-              options={ options }
-              id={ this.props.id }
-              code={ this.props.code }
-              before={ this.props.before }
-              after={ this.props.after }
+        <PythonTutor
+          options={ options }
+          id={ this.props.id }
+          code={ this.props.code }
+          before={ this.props.before }
+          after={ this.props.after }
 
-              test={ this.props.test }
-              expected={ this.props.expected }
-              result={ this.props.result }
-              log={ this.props.log }
+          test={ this.props.test }
+          expected={ this.props.expected }
+          result={ this.props.result }
+          log={ this.props.log }
 
-              step={ this.props.step }
-              stop={ this.props.stop }
+          step={ this.props.step }
+          stop={ this.props.stop }
 
-              currentCode={ this.props.currentCode }
-              beforeCode={ this.props.beforeCode }
-              afterCode={ this.props.afterCode }
-              added={ this.props.added }
-              removed={ this.props.removed }
-              addedLine={ this.props.addedLine }
-              removedLine={ this.props.removedLine }
-              diffs={ this.props.diffs }
+          currentCode={ this.props.currentCode }
+          beforeCode={ this.props.beforeCode }
+          afterCode={ this.props.afterCode }
+          added={ this.props.added }
+          removed={ this.props.removed }
+          addedLine={ this.props.addedLine }
+          removedLine={ this.props.removedLine }
+          diffs={ this.props.diffs }
 
-              traces={ this.props.traces }
-              beforeTraces={ this.props.beforeTraces }
-              afterTraces={ this.props.afterTraces }
+          traces={ this.props.traces }
+          beforeTraces={ this.props.beforeTraces }
+          afterTraces={ this.props.afterTraces }
 
-              beforeHistory={ this.props.beforeHistory}
-              afterHistory={ this.props.afterHistory}
+          beforeHistory={ this.props.beforeHistory}
+          afterHistory={ this.props.afterHistory}
 
-              beforeEvents={ this.props.beforeEvents}
-              afterEvents={ this.props.afterEvents}
+          beforeEvents={ this.props.beforeEvents}
+          afterEvents={ this.props.afterEvents}
 
-              beforeTicks={ this.props.beforeTicks}
-              afterTicks={ this.props.afterTicks}
+          beforeTicks={ this.props.beforeTicks}
+          afterTicks={ this.props.afterTicks}
 
-              beforeAst={ this.props.beforeAst}
-              afterAst={ this.props.afterAst}
+          beforeAst={ this.props.beforeAst}
+          afterAst={ this.props.afterAst}
 
-              commonKeys={ this.props.commonKeys}
-              focusKeys={ this.props.focusKeys}
-            />
-          </div>
-        </div>
+          commonKeys={ this.props.commonKeys}
+          focusKeys={ this.props.focusKeys}
+        />
       </div>
     )
   }

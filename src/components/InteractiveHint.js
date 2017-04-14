@@ -32,14 +32,36 @@ class InteractiveHint extends Component {
     // this.cm.addLineWidget(3, msg, { coverGutter: true })
   }
 
+  showCondition(id) {
+    switch (id) {
+      case 1:
+        $('.ladder').hide()
+        break
+      case 2:
+        $('.ladder').hide()
+        $('#result-ladder').show()
+        $('#control-ladder').show()
+        break
+      case 3:
+        $('.ladder').show()
+        break
+    }
+    window.ladder.initVisualization(id)
+  }
+
   render() {
     return (
       <div>
-        <h1>Interactive Hint</h1>
-
         <div className="ui message hint-message">
-          <div className="ui two column grid">
-            <div className="eleven wide column">
+
+          <div className="ui fourteen column grid">
+            <button className="ui basic button" onClick={ this.showCondition.bind(this, 1) }>Condition 1</button>
+            <button className="ui basic button" onClick={ this.showCondition.bind(this, 2) }>Condition 2</button>
+            <button className="ui basic button" onClick={ this.showCondition.bind(this, 3) }>Condition 3</button>
+          </div>
+
+          <div className="ui three column grid">
+            <div className="five wide column">
               <h2>Code</h2>
               <div id="hoge">
               <CodeMirror
@@ -49,21 +71,16 @@ class InteractiveHint extends Component {
               />
               </div>
             </div>
-            <div className="five wide column">
-              <h2>Failed Test Result</h2>
-              <Highlight className="python">
-                { this.props.log }
-              </Highlight>
-            </div>
-          </div>
-          <div className="ui two column grid">
-            <div className="sixteen wide column">
+            <div className="eleven wide column">
               <Ladder
                 beforeHistory={ this.props.beforeHistory }
                 afterHistory={ this.props.afterHistory }
 
                 beforeEvents={ this.props.beforeEvents }
                 afterEvents={ this.props.afterEvents }
+
+                beforeTraces={ this.props.beforeTraces }
+                afterTraces={ this.props.afterTraces }
 
                 beforeAst={ this.props.beforeAst }
                 afterAst={ this.props.afterAst }
@@ -79,6 +96,7 @@ class InteractiveHint extends Component {
                 result={ this.props.result }
                 root={ this }
               />
+              <div id="viz" style={{ marginTop: '50px' }}></div>
 
               {/*
               <Play
@@ -89,11 +107,12 @@ class InteractiveHint extends Component {
               />
               */}
 
-
-
             </div>
           </div>
         </div>
+        <button className="ui basic button" onClick={ () => { $('#answer').toggle(); window.answer.init() } }>Show Answer</button>
+        <br/>
+
         <Answer
           options={ this.props.options }
           id={ this.props.id }

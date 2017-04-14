@@ -24,6 +24,7 @@ class CodeDisplay {
     this.domRootD3 = domRootD3;
     this.codToDisplay = codToDisplay;
 
+    /*
     var codeDisplayHTML =
       '<div id="codeDisplayDiv">\
          <div id="langDisplayDiv"></div>\
@@ -33,6 +34,14 @@ class CodeDisplay {
          </div>\
          <div id="legendDiv"/>\
          <div id="codeFooterDocs">Click a line of code to set a breakpoint; use the Back and Forward buttons to jump there.</div>\
+       </div>';
+    */
+
+    var codeDisplayHTML =
+      '<div id="codeDisplayDiv">\
+         <div id="langDisplayDiv"></div>\
+         <div id="pyCodeOutputDiv"/></div>\
+         <div id="legendDiv"/>\
        </div>';
 
     this.domRoot.append(codeDisplayHTML);
@@ -115,6 +124,16 @@ class CodeDisplay {
   renderPyCodeOutput() {
     var myCodOutput = this; // capture
     this.domRoot.find('#pyCodeOutputDiv').empty();
+
+    var target = document.getElementById('pyCodeOutputDiv')
+    var myCodeMirror = CodeMirror(target, {
+      value: this.owner.props.beforeCode,
+      mode:  'python',
+      theme: 'base16-light',
+      lineNumbers: true,
+    });
+
+    return false
 
     // maps codeOutputLines down both table columns
     // TODO: get rid of pesky owner dependency
@@ -211,6 +230,8 @@ class CodeDisplay {
   }
 
   updateCodOutput(smoothTransition=false) {
+    return false
+
     var gutterSVG = this.domRoot.find('svg#leftCodeGutterSVG');
 
     // one-time initialization of the left gutter

@@ -11,6 +11,26 @@ var rightwardNudgeHack = true;
 
 class DataVisualizer {
 
+  // Modified by Ryo Suzuki
+  updateData(level) {
+    let beforeEvents = window.pythonTutor.generate('before', level)
+    let afterEvents = window.pythonTutor.generate('after', level)
+    let diffIndex
+    for (let i = 0; i < beforeEvents.length; i++) {
+      let be = beforeEvents[i]
+      let ae = afterEvents[i]
+      if (be.key !== ae.key || be.value !== ae.value) {
+        diffIndex = i
+        break
+      }
+    }
+    this.props.beforeEvents = beforeEvents
+    this.props.afterEvents = afterEvents
+    this.props.diffIndex = diffIndex
+    this.level = level
+    return true
+  }
+
   constructor(owner, domRoot, domRootD3) {
     this.curTrace = [];
     this.curTraceLayouts = [];
@@ -21,6 +41,8 @@ class DataVisualizer {
     this.curTrace = this.owner.curTrace;
     this.props = this.owner.props
     this.focusKeys = [...new Set(this.props.beforeEvents.map(e => e.key))]
+    this.level = 0
+    this.updateData(this.level)
 
     this.domRoot = domRoot;
     this.domRootD3 = domRootD3;
@@ -697,6 +719,7 @@ class DataVisualizer {
       }
     }
 
+
     for (let i = 0; i < 2; i++) {
 
       let key = ['result', 'expected'][i]
@@ -718,8 +741,10 @@ class DataVisualizer {
         .attr('class', 'history-test')
         .html(function(d, i) {
           let html = ''
-          html += `<p>${myViz.props.test}</p>`
-          html += `<p>>>> ${myViz.props[key]}</p>`
+          html += hljs.highlight('python', myViz.props.test, true).value
+          html += '</br>'
+          html += '>>> '
+          html += hljs.highlight('python', `${myViz.props[key]}`, true).value
           return html
         })
 
@@ -742,7 +767,6 @@ class DataVisualizer {
         })
         .each((function(d, i) {
           $(this).empty()
-
           if (i === Math.round(curIndex)) $(this).css('border', '3px solid #a6b3b6')
           // if (i === curIndex) {
           //   $(this).css('border', '3px solid #a6b3b6')
@@ -760,7 +784,19 @@ class DataVisualizer {
           for (let el of d.html) {
             html += `<span class="hljs-${el.className}">${el.text}</span>`
           }
+
+          let showWhy = true
+          if (d.type === 'call') showWhy = false
+          if (d.updates.length < 2) showWhy = false
+          if (showWhy) {
+            html += '<span>'
+            html += '&nbsp;'
+            html += '<i class="fa fa-long-arrow-right fa-fw"></i>'
+            html += `<a class="why-button"> why ?</a>`
+            html += '</span>'
+          }
           $(this).append(html)
+
         }))
         .on('mouseover', function(d, i) {
           $(`#result-history-line-${i}`).addClass('hover')
@@ -776,6 +812,10 @@ class DataVisualizer {
           myViz.owner.cm.removeLineClass(d.line-1, '', 'current-line')
         })
         .on('click', function(d, i) {
+          if ($(event.target).hasClass('why-button')) {
+            myViz.updateData(myViz.level+1)
+          }
+
           let step = myViz.props.beforeEvents[i].traceIndex
           myViz.owner.renderStep(step)
           /*
@@ -801,8 +841,6 @@ class DataVisualizer {
           animate()
           */
         })
-
-
 
     }
 

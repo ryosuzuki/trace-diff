@@ -70,7 +70,7 @@ class PythonTutor extends Component {
 
   }
 
-  generate(type) {
+  generate(type, level = 0) {
     let events, asts, key
     if (type === 'before') {
       events = this.props.beforeEvents
@@ -81,7 +81,6 @@ class PythonTutor extends Component {
       asts = this.props.afterAst
       key = 'afterEvents'
     }
-
 
     const isEqual = (before, after) => {
       let bool = true
@@ -129,14 +128,11 @@ class PythonTutor extends Component {
     }).filter(event => event)
 
     let max = 0
-    let level = 0
     events = events.map((event) => {
       let updates = _.uniq(event.updates).reverse()
-      /*
       let value = updates[level]
       if (value === undefined) value = _.last(updates)
       if (value === undefined) value = event.value
-      */
 
       max = Math.max(max, updates.length - 1)
 
@@ -154,7 +150,7 @@ class PythonTutor extends Component {
           event.html = [
             { className: 'keyword', text: event.key },
             { className: 'normal', text: ' returns ' },
-            { className: 'number', text: event.value },
+            { className: 'number', text: value },
           ]
           event.indent = indent
           indent--
@@ -163,7 +159,7 @@ class PythonTutor extends Component {
           event.html = [
             { className: 'keyword', text: event.key },
             { className: 'normal', text: ' = ' },
-            { className: 'number', text: event.value },
+            { className: 'number', text: value },
           ]
           event.indent = indent
           break

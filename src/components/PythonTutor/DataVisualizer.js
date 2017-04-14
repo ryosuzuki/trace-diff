@@ -684,6 +684,19 @@ class DataVisualizer {
     let historyTable = myViz.domRootD3.select('#history')
       .append('div')
 
+    let curIndex
+    for (let i = 0; i < this.props.beforeEvents.length; i++) {
+      let event = this.props.beforeEvents[i]
+      if (event.traceIndex === curInstr) {
+        curIndex = i
+        break
+      }
+      if (event.traceIndex > curInstr) {
+        curIndex = i-0.5
+        break
+      }
+    }
+
     for (let i = 0; i < 2; i++) {
 
       let key = ['result', 'expected'][i]
@@ -724,6 +737,12 @@ class DataVisualizer {
         })
         .style('padding-left', function(d, i) {
           return `${10 * d.indent}px`
+        })
+        .style('outline', function(d, i) {
+          return i === curIndex ? '3px solid red' : 'none'
+        })
+        .style('border-bottom', function(d, i) {
+          return (i+0.5) === curIndex ? '3px solid red' : 'none'
         })
         .each((function(d, i) {
           $(this).empty()

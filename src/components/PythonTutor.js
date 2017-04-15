@@ -21,25 +21,7 @@ class PythonTutor extends Component {
   }
 
   init() {
-    console.log('hello world')
-
-    let beforeEvents = this.generate('before')
-    let afterEvents = this.generate('after')
-
-    let diffIndex
-    for (let i = 0; i < beforeEvents.length; i++) {
-      let be = beforeEvents[i]
-      let ae = afterEvents[i]
-      if (be.key !== ae.key || be.value !== ae.value) {
-        diffIndex = i
-        break
-      }
-    }
-
     let data = _.clone(this.props)
-    data.beforeEvents = beforeEvents
-    data.afterEvents = afterEvents
-    data.diffIndex = diffIndex
     let options = {
       embeddedMode: true,
       lang: 'py2',
@@ -47,27 +29,6 @@ class PythonTutor extends Component {
       editCodeBaseURL: 'visualize.html',
     }
     window.viz = new ExecutionVisualizer('viz', data, options);
-
-    this.setState(data)
-
-    /*
-    let afterHistory = this.generateHistory('after')
-    let afterData = {
-      code: this.props.afterCode,
-      trace: this.props.afterTraces,
-      history: afterHistory,
-      vizId: 'after'
-    }
-    let afterOptions = {
-      embeddedMode: true,
-      lang: 'py2',
-      startingInstruction: 0,
-      editCodeBaseURL: 'visualize.html',
-      hideCode: true
-    }
-    window.afterViz = new ExecutionVisualizer('afterViz', afterData, afterOptions);
-    */
-
   }
 
   generate(type, level = 0) {
@@ -167,7 +128,7 @@ class PythonTutor extends Component {
       return event
     })
 
-    return events
+    return { events: events, focusKeys: focusKeys, max: max }
   }
 
 

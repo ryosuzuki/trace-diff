@@ -13,8 +13,13 @@ class DataVisualizer {
 
   // Modified by Ryo Suzuki
   updateData(level) {
-    let beforeEvents = window.pythonTutor.generate('before', level)
-    let afterEvents = window.pythonTutor.generate('after', level)
+    let beforeData = window.pythonTutor.generate('before', level)
+    let beforeEvents = beforeData.events
+    let afterData = window.pythonTutor.generate('after', level)
+    let afterEvents = afterData.events
+
+    let max = Math.max(beforeData.max, afterData.max)
+    let focusKeys = beforeData.focusKeys
     let diffIndex
     for (let i = 0; i < beforeEvents.length; i++) {
       let be = beforeEvents[i]
@@ -24,10 +29,13 @@ class DataVisualizer {
         break
       }
     }
+    if (max > 3) max = 3
     this.props.beforeEvents = beforeEvents
     this.props.afterEvents = afterEvents
     this.props.diffIndex = diffIndex
+    this.focusKeys = focusKeys
     this.level = level
+    this.max = max
     return true
   }
 
@@ -40,7 +48,7 @@ class DataVisualizer {
     this.params = this.owner.params;
     this.curTrace = this.owner.curTrace;
     this.props = this.owner.props
-    this.focusKeys = [...new Set(this.props.beforeEvents.map(e => e.key))]
+    this.focusKeys = []
     this.level = 0
     this.updateData(this.level)
 
@@ -719,9 +727,7 @@ class DataVisualizer {
       }
     }
 
-
     for (let i = 0; i < 2; i++) {
-
       let key = ['result', 'expected'][i]
       let title = ['Result', 'Expected'][i]
       let events = (i === 0) ? this.props.beforeEvents : this.props.afterEvents
@@ -788,6 +794,8 @@ class DataVisualizer {
           let showWhy = true
           if (d.type === 'call') showWhy = false
           if (d.updates.length < 2) showWhy = false
+          if (myViz.level >= myViz.max) showWhy = false
+          /*
           if (showWhy) {
             html += '<span>'
             html += '&nbsp;'
@@ -795,6 +803,7 @@ class DataVisualizer {
             html += `<a class="why-button"> why ?</a>`
             html += '</span>'
           }
+          */
           $(this).append(html)
 
         }))
@@ -812,10 +821,9 @@ class DataVisualizer {
           myViz.owner.cm.removeLineClass(d.line-1, '', 'current-line')
         })
         .on('click', function(d, i) {
-          if ($(event.target).hasClass('why-button')) {
-            myViz.updateData(myViz.level+1)
-          }
-
+          // if ($(event.target).hasClass('why-button')) {
+          //   myViz.updateData(myViz.level+1)
+          // }
           let step = myViz.props.beforeEvents[i].traceIndex
           myViz.owner.renderStep(step)
           /*
@@ -843,6 +851,30 @@ class DataVisualizer {
         })
 
     }
+
+    historyTable.append('div')
+      .attr('id', 'slider')
+      .style('width', '20%')
+      .style('float', 'left')
+      .style('margin-top', '30px')
+      .style('margin-left', '10%')
+      .append('div')
+      .attr('id', 'custom-handle')
+      .attr('class', 'ui-slider-handle')
+
+    $("#slider").slider({
+      range: "max",
+      min: 0,
+      max: myViz.max,
+      value: myViz.level,
+      slide: function( event, ui ) {
+        myViz.updateData(ui.value)
+        myViz.owner.updateOutput();
+      },
+      // create: function() {
+      //   $('#custom-handle').text($(this).slider('value'));
+      // },
+    });
 
 
 

@@ -773,7 +773,9 @@ class DataVisualizer {
         })
         .each((function(d, i) {
           $(this).empty()
-          if (i === Math.round(curIndex)) $(this).css('border', '3px solid #a6b3b6')
+          if (curInstr > 0 && i === Math.round(curIndex)) {
+            $(this).css('border', '3px solid #a6b3b6')
+          }
           // if (i === curIndex) {
           //   $(this).css('border', '3px solid #a6b3b6')
           // } else if (i+0.5 === curIndex) {
@@ -812,13 +814,22 @@ class DataVisualizer {
           $(`#expected-history-line-${i}`).addClass('hover')
 
           $('.current-line').removeClass('current-line')
-          myViz.owner.cm.addLineClass(d.line-1, '', 'current-line')
+          $('.highlight-line').removeClass('highlight-line')
+          if (i === myViz.props.diffIndex) {
+            myViz.owner.cm.addLineClass(d.line-1, '', 'highlight-line')
+          } else {
+            myViz.owner.cm.addLineClass(d.line-1, '', 'current-line')
+          }
         })
         .on('mouseout', function(d, i) {
           $(`#result-history-line-${i}`).removeClass('hover')
           $(`#expected-history-line-${i}`).removeClass('hover')
 
-          myViz.owner.cm.removeLineClass(d.line-1, '', 'current-line')
+          if (i === myViz.props.diffIndex) {
+            myViz.owner.cm.removeLineClass(d.line-1, '', 'highlight-line')
+          } else {
+            myViz.owner.cm.removeLineClass(d.line-1, '', 'current-line')
+          }
         })
         .on('click', function(d, i) {
           // if ($(event.target).hasClass('why-button')) {

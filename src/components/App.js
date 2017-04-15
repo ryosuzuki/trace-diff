@@ -158,15 +158,12 @@ class App extends Component {
 
     return (
       <div>
-        {/*
-        <div className="ui two column centered grid">
-          <div className="sixteen wide column">
-            <h1 id="top-title" className="ui center aligned huge header">
-              Exploring the Design Space of Automated Hints -
-              <a href="https://github.com/ryosuzuki/hint-mockup/" target="blank">
-                <i className="fa fa-fw fa-github-alt"></i> GitHub
-              </a>
-            </h1>
+        <div className="ui two column centered grid" style={{ marginTop: '20px' }}>
+          <div id="type-links" className="six wide column">
+            <a id="g" className="ui basic button" href="?type=g&id=0">g</a>
+            <a id="product" className="ui basic button" href="?type=product&id=0">product</a>
+            <a id="accumulate" className="ui basic button" href="?type=accumulate&id=0">accumulate</a>
+            <a id="repeated" className="ui basic button" href="?type=repeated&id=0">repeated</a>
           </div>
           <div id="control-panel" className="eight wide column">
             <ControlPanel
@@ -175,7 +172,6 @@ class App extends Component {
             />
           </div>
         </div>
-        */}
         <PythonTutor
           options={ options }
           id={ this.props.id }

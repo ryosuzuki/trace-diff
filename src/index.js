@@ -18,7 +18,6 @@ import 'highlight.js/styles/tomorrow.css'
 import './style/codemirror.less'
 import './style/markdown.less'
 import './style/hint-message.less'
-import './style/commit-graph.less'
 import './style/pytutor.less'
 import './style/main.less'
 

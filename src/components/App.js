@@ -7,8 +7,6 @@ import Mousetrap from 'mousetrap'
 import ControlPanel from './ControlPanel'
 import DiffView from './HintView/DiffView'
 import HintView from './HintView/Index'
-import MockupView from './HintMockup/Index'
-import MixedHint from './MixedHint'
 import InteractiveHint from './InteractiveHint'
 import Stream from './Data/Stream'
 import Record from './Data/Record'
@@ -130,13 +128,11 @@ class App extends Component {
     })
     this.updateState(state)
     window.history.pushState(null, null, `?type=${window.type}&id=${id}`)
-    // window.diffView.generateDiff(id)
 
     window.pythonTutor.init()
 
     setTimeout(() => {
       console.log('call init')
-
       // window.pythonTutor.init()
     }, 500)
 

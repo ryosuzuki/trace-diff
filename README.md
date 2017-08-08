@@ -4,6 +4,9 @@ TraceDiff: Debugging Unexpected Code Behavior Using Trace Divergences
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+### [Online Demo](https://ryosuzuki.github.io/trace-diff)
+
+![](https://github.com/ryosuzuki/trace-diff/raw/master/resources/demo.gif)
 
 
 ## Installation

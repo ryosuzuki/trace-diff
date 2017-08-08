@@ -1,8 +1,8 @@
 {
-  "name": "hint-mockup",
+  "name": "trace-diff",
   "version": "1.0.0",
-  "description": "Demo for hint design ",
-  "main": "dist/bundle.js ",
+  "description": "TraceDiff: Debugging Unexpected Code Behavior Using Trace Divergences",
+  "main": "src/index.js ",
   "scripts": {
     "start": "webpack-dev-server --hot --inline",
     "build": "webpack --color --progress",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ryosuzuki/hint-mockup.git"
+    "url": "git+https://github.com/ryosuzuki/trace-diff.git"
   },
   "author": "Ryo Suzuki <ryosuzk@googlemail.com> (http://ryosuzuki.org/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ryosuzuki/hint-mockup/issues"
+    "url": "https://github.com/ryosuzuki/trace-diff/issues"
   },
-  "homepage": "https://github.com/ryosuzuki/hint-mockup#readme",
+  "homepage": "https://github.com/ryosuzuki/trace-diff#readme",
   "dependencies": {
     "async": "^2.1.4",
     "body-parser": "^1.15.2",

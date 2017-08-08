@@ -1,9 +1,15 @@
 # TraceDiff
 
-TraceDiff: Debugging Unexpected Code Behavior Using Trace Divergences
+TraceDiff: Debugging Unexpected Code Behavior Using Trace Divergences [VL/HCC 2017]
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+## Installation
+
+```shell
+npm install
+npm start
+```
 
 ### [Online Demo](https://ryosuzuki.github.io/trace-diff)
 
@@ -56,13 +62,8 @@ Map the error to the cause by abstracting expressions: It enables the student to
 }
 ```
 
+## Acknowledgements
 
-# Installation
-
-```shell
-npm install
-npm start
-```
-
-Open [http://localhost:8080/](http://localhost:8080/)
+This is a joint work between the University of Colorado Boulder, UC Berkeley, Federal University of Campina Grande, and University of Wisconsin-Madison. 
+This research was supported by the NSF Expeditions in Computing award CCF 1138996, NSF CAREER award IIS 1149799, CAPES 8114/15-3, an NDSEG fellowship, a Google CS Capacity Award, and the Nakajima Foundation.
 

@@ -27,7 +27,7 @@ Recent advances in program synthesis offer means to automatically debug student 
 
 ## Features 
 
-### Filtere 
+### Filter
 Focus attention by extracting important steps: It extracts important control flow steps by identifying a list of variables and function calls that take on different values.
 
 <img src="https://github.com/ryosuzuki/trace-diff/raw/master/resources/filter.png" width="500">
@@ -45,7 +45,7 @@ Explore behavior through interactive program visualization: Integrate Python Tut
 <img src="https://github.com/ryosuzuki/trace-diff/raw/master/resources/trace.png" width="500">
 
 
-### Abstract
+### Abstraction
 Map the error to the cause by abstracting expressions: It enables the student to interactively map a concrete value (e.g., `sum = 3` and `return 11`) back to the expressions that computed these values, such as variables and function calls (e.g., `sum = add(1, 2)` and `return total`) to help locate the cause of the bug.
 
 <img src="https://github.com/ryosuzuki/trace-diff/raw/master/resources/abstract.png" width="500">

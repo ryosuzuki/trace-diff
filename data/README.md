@@ -18,6 +18,71 @@ node trace.js repeated
 ```
 
 
+# Example Data Structure
+
+This is an example input data for TraceDiff
+
+```json
+{
+  "diffs": "...",
+  "code": "...",
+  "beforeCode": "...",
+  "afterCode": "...",
+  "log": "...",
+  "expected": 25,
+  "result": 135,
+  "beforeAst": [
+    "...",
+  ],
+  "afterAst": [
+    "...",
+  ],
+  "beforeTraces": [
+    {
+      "ordered_globals": [ "accumulate" ],
+      "stdout": "",
+      "func_name": "<module>",
+      "stack_to_render": [],
+      "globals": {
+        "accumulate": [ "REF", 1 ]
+      },
+      "heap": {
+        "1": [ "FUNCTION", "accumulate(combiner, base, n, term)", null ]
+      },
+      "stack_locals": [],
+      "line": 7,
+      "event": "step_line"
+    },
+    {
+      "...": "..."
+    }
+  ],
+  "afterTraces": [
+    {
+      "ordered_globals": [ "accumulate" ],
+      "stdout": "",
+      "func_name": "<module>",
+      "stack_to_render": [],
+      "globals": {
+        "accumulate": [ "REF", 1 ]
+      },
+      "heap": {
+        "1": [ "FUNCTION", "accumulate(combiner, base, n, term)", null ]
+      },
+      "stack_locals": [],
+      "line": 7,
+      "event": "step_line"
+    },
+    {
+      "...": "..."
+    }
+  ],
+}
+```
+
+
+
+
 # Example Problems
 
 ## Question: Accumulate

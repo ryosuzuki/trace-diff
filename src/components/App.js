@@ -44,14 +44,6 @@ class App extends Component {
 
     $.ajax({
       method: 'GET',
-      url: `${window.location.pathname}data/${params.type}.txt`
-    })
-    .then((txt) => {
-      this.updateState({ description: txt })
-    })
-
-    $.ajax({
-      method: 'GET',
       url: `${window.location.pathname}data/${params.type}.json`
     })
     .then((items) => {

@@ -3,18 +3,13 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import actions from '../redux/actions'
 import Mousetrap from 'mousetrap'
-
-import ControlPanel from './ControlPanel'
-import DiffView from './HintView/DiffView'
-import HintView from './HintView/Index'
-import InteractiveHint from './InteractiveHint'
-import Stream from './Data/Stream'
-import Record from './Data/Record'
-import Tree from './Data/Tree'
+import Datastore from 'nedb'
 
 import PythonTutor from './PythonTutor'
+import ControlPanel from './ControlPanel'
+import Stream from './Data/Stream'
+import Record from './Data/Record'
 
-import Datastore from 'nedb'
 const db = new Datastore()
 
 class App extends Component {

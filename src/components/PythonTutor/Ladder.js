@@ -6,8 +6,6 @@ import Tree from '../Data/Tree'
 import Slider from 'rc-slider'
 import Tooltip from 'rc-tooltip'
 
-// import Quiz from './Quiz'
-
 
 class Ladder extends Component {
   constructor(props) {

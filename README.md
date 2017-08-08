@@ -12,7 +12,8 @@ npm install
 npm start
 ```
 
-### [Online Demo](https://ryosuzuki.github.io/trace-diff)
+
+## [Online Demo](https://ryosuzuki.github.io/trace-diff)
 
 ![](https://github.com/ryosuzuki/trace-diff/raw/master/resources/demo.gif)
 

@@ -44,7 +44,7 @@ class App extends Component {
 
     $.ajax({
       method: 'GET',
-      url: `${window.location.pathname}data/${params.type}.json`
+      url: `${window.location.pathname}data/generated/${params.type}.json`
     })
     .then((items) => {
       console.log('start')

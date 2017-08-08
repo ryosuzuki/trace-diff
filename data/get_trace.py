@@ -6,7 +6,7 @@ import json
 import parse
 
 question_type = sys.argv[1]
-path = question_type + '.json'
+path = './generated/' + question_type + '.json'
 
 items = []
 with open(path) as file:
@@ -136,7 +136,7 @@ for item in items:
   item['afterTraces'] = afterTraces
 
 
-with open(question_type + '_example.json', 'w') as file:
+with open('./examples/' + question_type + '_example.json', 'w') as file:
   json.dump([items[0]], file, indent = 2)
 
 with open(path, 'w') as file:

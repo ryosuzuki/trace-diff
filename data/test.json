@@ -1,4 +1,0 @@
-[{
-  "before": "def foo():\n  return 1 + 1\nfoo()",
-  "after": "def foo():\n  return 1 + 2\nfoo()"
-}]

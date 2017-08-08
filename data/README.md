@@ -1,13 +1,20 @@
 
-# Generating dataset
+# Generate Input Dataset
 
-Run the following command
+Run the following command to generate dataset which includes code traces and abstract syntax tree information.
+
 ```
 node trace.js accumulate
 ```
 
-It generates `accumulate.json` and `accumulate_example.json` from `accumulate_all_attempts.json`
-`accumulate_example.json` is a subset of `accumulate.json`.
+It generates
+```
+./generated/accumulate.json
+./examples/accumulate_example.json
+```
+from `./raw/accumulate_all_attempts.json`
+
+`accumulate_example.json` is just a subset of `accumulate.json`.
 
 
 Other commands:
@@ -52,9 +59,6 @@ This is an example input data for TraceDiff
       "stack_locals": [],
       "line": 7,
       "event": "step_line"
-    },
-    {
-      "...": "..."
     }
   ],
   "afterTraces": [
@@ -72,9 +76,6 @@ This is an example input data for TraceDiff
       "stack_locals": [],
       "line": 7,
       "event": "step_line"
-    },
-    {
-      "...": "..."
     }
   ],
 }

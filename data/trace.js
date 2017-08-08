@@ -25,14 +25,14 @@ class Trace {
   }
 
   open(type) {
-    const path = `${type}_all_attempts.json`
+    const path = `./raw/${type}_all_attempts.json`
     console.log(`parse ${path}`)
     const json = fs.readFileSync(path, 'utf8')
     this.items = JSON.parse(json)
   }
 
   generate(type) {
-    const path = `${type}.json`
+    const path = `./generated/${type}.json`
     console.log(`generating ${path}`)
 
     let results = []

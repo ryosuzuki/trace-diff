@@ -69,3 +69,6 @@ Map the error to the cause by abstracting expressions: It enables the student to
 This is a joint work between the University of Colorado Boulder, UC Berkeley, Federal University of Campina Grande, and University of Wisconsin-Madison. 
 This research was supported by the NSF Expeditions in Computing award CCF 1138996, NSF CAREER award IIS 1149799, CAPES 8114/15-3, an NDSEG fellowship, a Google CS Capacity Award, and the Nakajima Foundation.
 
+
+## License 
+MIT

@@ -18,11 +18,12 @@ node trace.js repeated
 ```
 
 
-# Problems
+# Example Problems
 
 ## Question: Accumulate
 Show that both summation and product are instances of a more general function, called accumulate, with the following signature:
 
+```python
 def accumulate(combiner, base, n, term):
   """Return the result of combining the first N terms in a sequence.  The
   terms to be combined are TERM(1), TERM(2), ..., TERM(N).  COMBINER is a
@@ -42,7 +43,7 @@ def accumulate(combiner, base, n, term):
   72
   """
   "*** YOUR CODE HERE ***"
-
+```
 
 accumulate(combiner, base, n, term) takes the following arguments:
 
@@ -51,19 +52,21 @@ accumulate(combiner, base, n, term) takes the following arguments:
 - base: value that specifies what value to use to start the accumulation.
 
 For example, accumulate(add, 11, 3, square) is
-
+```python
 11 + square(1) + square(2) + square(3)
-
+```
 
 
 
 ## Question: G function
 A mathematical function G on positive integers is defined by two cases:
-
+```python
 G(n) = n,                                       if n <= 3
 G(n) = G(n - 1) + 2 * G(n - 2) + 3 * G(n - 3),  if n > 3
+```
 Write a recursive function g that computes G(n). Then, write an iterative function g_iter that also computes G(n):
 
+```python
 def g(n):
   """Return the value of G(n), computed recursively.
 
@@ -82,13 +85,14 @@ def g(n):
   True
   """
   "*** YOUR CODE HERE ***"
-
+```
 
 
 
 ## Question: Product
-The summation(term, n) function from lecture adds up term(1) + ... + term(n) Write a similar product(n, term) function that returns term(1) * ... * term(n). Show how to define the factorial function in terms of product. Hint: try using the identity function for factorial.
+The summation(term, n) function from lecture adds up `term(1) + ... + term(n)` Write a similar product(n, term) function that returns `term(1) * ... * term(n)`. Show how to define the factorial function in terms of product. Hint: try using the identity function for factorial.
 
+```python
 def product(n, term):
   """Return the product of the first n terms in a sequence.
 
@@ -105,7 +109,7 @@ def product(n, term):
   14400
   """
   "*** YOUR CODE HERE ***"
-
+```
 
 
 
@@ -117,7 +121,7 @@ Implement repeated(f, n):
 
 repeated returns another function that, when given an argument x, will compute f(f(....(f(x))....)) (apply f a total n times). For example, repeated(square, 3)(42) evaluates to square(square(square(42))). Yes, it makes sense to apply the function zero times! See if you can figure out a reasonable function to return for that case.
 
-
+```python
 def repeated(f, n):
   """Return the function that computes the nth application of f.
 
@@ -142,3 +146,4 @@ def compose1(f, g):
     def h(x):
         return f(g(x))
     return h
+```

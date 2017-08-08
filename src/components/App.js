@@ -7,8 +7,8 @@ import Datastore from 'nedb'
 
 import PythonTutor from './PythonTutor'
 import ControlPanel from './ControlPanel'
-import Stream from './Data/Stream'
-import Record from './Data/Record'
+import Stream from './Trace/Stream'
+import Record from './Trace/Record'
 
 const db = new Datastore()
 

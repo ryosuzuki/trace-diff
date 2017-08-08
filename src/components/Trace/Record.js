@@ -221,35 +221,3 @@ class Record {
 }
 
 export default Record
-
-
-/*
-
-  addValue(traces, i, func) {
-    let trace = traces[i]
-    let variables = trace.locals[func]
-    for (let key of Object.keys(variables)) {
-      let value = variables[key]
-      if (key === '__return__') continue
-      if (value === undefined) continue
-
-      if (!this.history[key]) this.history[key] = []
-      if (!this.lines[key]) this.lines[key] = []
-      if (!this.ticks[key]) this.ticks[key] = {}
-
-      let line = trace.line
-      if (trace.event === 'step_line') {
-        line = traces[i-1].line
-      }
-      let last = _.last(this.history[key])
-      if (last === undefined || last !== value) {
-        this.history[key].push(value)
-        this.lines[key].push(line)
-      }
-      this.ticks[key][i] = this.history[key].length
-      if (trace.event === 'step_line') {
-        this.ticks[key][i-1] = this.history[key].length
-      }
-    }
-  }
- */

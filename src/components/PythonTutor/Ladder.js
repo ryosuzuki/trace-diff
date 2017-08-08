@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Highlight from 'react-highlight'
 import CodeMirror from 'react-codemirror'
 import 'codemirror/mode/python/python'
-import Tree from '../Data/Tree'
+import Tree from '../Trace/Tree'
 import Slider from 'rc-slider'
 import Tooltip from 'rc-tooltip'
 

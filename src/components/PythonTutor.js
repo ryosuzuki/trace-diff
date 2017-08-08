@@ -5,7 +5,7 @@ import _ from 'lodash'
 
 import ExecutionVisualizer from './PythonTutor/ExecutionVisualizer'
 import Ladder from './PythonTutor/Ladder'
-import Tree from './Data/Tree'
+import Tree from './Trace/Tree'
 
 class PythonTutor extends Component {
   constructor(props) {

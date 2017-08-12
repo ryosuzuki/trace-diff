@@ -2,6 +2,8 @@
 
 TraceDiff: Debugging Unexpected Code Behavior Using Trace Divergences [VL/HCC 2017]
 
+[[PDF]](http://ryosuzuki.org/publications/vlhcc-2017.pdf)
+
 [![npm](https://img.shields.io/npm/v/npm.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
